@@ -1,4 +1,7 @@
+import { useTranslation } from 'react-i18next';
 import { ThemeToggle, DirectionToggle } from './components/ui/ThemeToggle';
+import { LanguageSwitcher } from './components/molecules';
+import { useDirection } from './hooks';
 
 function FeatureCard({
   title,
@@ -18,13 +21,13 @@ function FeatureCard({
 }
 
 function WelcomeSection() {
+  const { t } = useTranslation();
+
   return (
     <div className="form-section dark:bg-gray-800 dark:border-gray-700">
-      <h2 className="form-title dark:text-white">Welcome to the Portal</h2>
+      <h2 className="form-title dark:text-white">{t('welcome.title')}</h2>
       <p className="form-description dark:text-gray-300">
-        This application demonstrates a complete design system with dark mode,
-        RTL layout support, and accessibility features for government-grade
-        applications.
+        {t('welcome.subtitle')}
       </p>
       <div className="space-x-4-rtl flex">
         <button className="btn-primary">Get Started</button>
@@ -37,19 +40,22 @@ function WelcomeSection() {
 }
 
 function Header() {
+  const { t } = useTranslation();
+
   return (
     <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 py-4 mb-8">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-              Social Support Portal
+              {t('header.title')}
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-300">
-              مدخل الدعم الاجتماعي | Government Services
+              {t('header.subtitle')}
             </p>
           </div>
           <div className="space-x-4-rtl flex items-center">
+            <LanguageSwitcher />
             <ThemeToggle />
             <DirectionToggle />
           </div>
@@ -104,6 +110,8 @@ function RTLDemo() {
 }
 
 function App() {
+  useDirection(); // Initialize direction management
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       <a href="#main-content" className="skip-link">
