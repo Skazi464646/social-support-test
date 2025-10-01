@@ -49,3 +49,6 @@ export interface ThemeContextType {
   setTheme: (theme: Theme) => void;
   isDark: boolean;
 }
+
+// Form types
+export * from './form.types';
