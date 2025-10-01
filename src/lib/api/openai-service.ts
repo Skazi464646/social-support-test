@@ -1,10 +1,21 @@
 /**
- * OpenAI Service - Frontend Integration
- * Module 5 - Step 1: Real OpenAI Integration with Streaming + Abort
+ * OpenAI Service - Enhanced with Security Features
+ * Module 5 - Step 2: Enhanced with rate limiting, deduplication, privacy safeguards, and retry logic
  * 
  * SECURITY NOTE: This uses frontend API key for temporary implementation.
  * Will be moved to serverless endpoint in future step.
  */
+
+import { aiRateLimiter } from '@/lib/utils/rate-limiter';
+import { requestDeduplicator } from '@/lib/utils/request-deduplicator';
+import { retryOpenAICall } from '@/lib/utils/retry-logic';
+import { 
+  redactPII, 
+  sanitizeForLogging, 
+  generateRequestId, 
+  generateSessionId,
+  validateInputSafety 
+} from '@/lib/utils/privacy-utils';
 
 interface OpenAIMessage {
   role: 'system' | 'user' | 'assistant';
@@ -47,10 +58,11 @@ export interface AIAssistResponse {
 class OpenAIService {
   private readonly baseURL = 'https://api.openai.com/v1/chat/completions';
   private readonly apiKey: string;
-  private pendingRequests = new Map<string, AbortController>();
+  private readonly sessionId: string;
 
   constructor() {
     this.apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+    this.sessionId = generateSessionId();
     
     if (!this.apiKey) {
       console.warn('OpenAI API key not found. AI features will be disabled.');
@@ -63,84 +75,140 @@ class OpenAIService {
 
   async generateSuggestion(
     request: AIAssistRequest,
-    requestId: string = `req_${Date.now()}`
+    requestId: string = generateRequestId()
   ): Promise<AIAssistResponse> {
     if (!this.isAvailable) {
       throw new Error('OpenAI API key not configured');
     }
 
-    // Cancel any existing request with same ID
-    this.cancelRequest(requestId);
-
-    const controller = new AbortController();
-    this.pendingRequests.set(requestId, controller);
-
-    try {
-      const prompt = this.buildPrompt(request);
-      const openAIRequest: OpenAIRequest = {
-        model: 'gpt-4-turbo-preview',
-        messages: [
-          {
-            role: 'system',
-            content: this.getSystemPrompt(request.language)
-          },
-          {
-            role: 'user',
-            content: prompt
-          }
-        ],
-        max_tokens: 500,
-        temperature: 0.7,
-        stream: true
-      };
-
-      const response = await fetch(this.baseURL, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${this.apiKey}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(openAIRequest),
-        signal: controller.signal,
-      });
-
-      if (!response.ok) {
-        throw new Error(`OpenAI API error: ${response.status} ${response.statusText}`);
-      }
-
-      const suggestion = await this.handleStreamResponse(response, controller.signal);
-      
-      this.pendingRequests.delete(requestId);
-
-      return {
-        suggestion: suggestion.trim(),
-        requestId,
-        metadata: {
-          timestamp: Date.now(),
-          tokensUsed: Math.ceil(suggestion.length / 4), // Rough estimate
-        },
-      };
-
-    } catch (error) {
-      this.pendingRequests.delete(requestId);
-      
-      if (error instanceof Error) {
-        if (error.name === 'AbortError') {
-          throw new Error('Request was cancelled');
-        }
-        throw error;
-      }
-      
-      throw new Error('Unknown error occurred');
+    // Rate limiting check
+    if (!aiRateLimiter.isAllowed(this.sessionId)) {
+      const retryAfter = aiRateLimiter.getRetryAfter(this.sessionId);
+      throw new Error(`Rate limit exceeded. Try again in ${Math.ceil(retryAfter / 1000)} seconds.`);
     }
+
+    // Input safety validation
+    const safetyCheck = validateInputSafety(request.currentValue);
+    if (!safetyCheck.safe) {
+      console.warn('[OpenAI] Input safety issues detected:', safetyCheck.issues);
+      // Continue but log the issues for monitoring
+    }
+
+    // Use request deduplication
+    return requestDeduplicator.deduplicate(
+      request.fieldName,
+      request.currentValue,
+      { language: request.language },
+      async (abortSignal) => {
+        return retryOpenAICall(async () => {
+          const startTime = Date.now();
+          
+          try {
+            const prompt = this.buildPrompt(request);
+            const openAIRequest: OpenAIRequest = {
+              model: 'gpt-4-turbo-preview',
+              messages: [
+                {
+                  role: 'system',
+                  content: this.getSystemPrompt(request.language)
+                },
+                {
+                  role: 'user',
+                  content: prompt
+                }
+              ],
+              max_tokens: 500,
+              temperature: 0.7,
+              stream: true
+            };
+
+            // Log request (sanitized)
+            console.log('[OpenAI] Request:', sanitizeForLogging({
+              requestId,
+              fieldName: request.fieldName,
+              language: request.language,
+              inputLength: request.currentValue.length,
+              model: openAIRequest.model,
+            }));
+
+            const response = await fetch(this.baseURL, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${this.apiKey}`,
+                'Content-Type': 'application/json',
+                'X-Request-ID': requestId,
+              },
+              body: JSON.stringify(openAIRequest),
+              signal: abortSignal,
+            });
+
+            if (!response.ok) {
+              const errorText = await response.text();
+              throw new Error(`OpenAI API error: ${response.status} ${response.statusText} - ${redactPII(errorText)}`);
+            }
+
+            const suggestion = await this.handleStreamResponse(response, abortSignal);
+            const responseTime = Date.now() - startTime;
+            
+            // Log successful response (sanitized)
+            console.log('[OpenAI] Success:', sanitizeForLogging({
+              requestId,
+              responseTime,
+              suggestionLength: suggestion.length,
+              tokensEstimate: Math.ceil(suggestion.length / 4),
+            }));
+
+            return {
+              suggestion: suggestion.trim(),
+              requestId,
+              metadata: {
+                timestamp: Date.now(),
+                tokensUsed: Math.ceil(suggestion.length / 4),
+              },
+            };
+
+          } catch (error) {
+            // Log error (sanitized)
+            console.error('[OpenAI] Error:', sanitizeForLogging({
+              requestId,
+              error: error instanceof Error ? error.message : 'Unknown error',
+              responseTime: Date.now() - startTime,
+            }));
+            
+            throw error;
+          }
+        });
+      }
+    );
   }
 
   cancelRequest(requestId: string): void {
-    const controller = this.pendingRequests.get(requestId);
-    if (controller) {
-      controller.abort();
-      this.pendingRequests.delete(requestId);
-    }
+    // Cancel through deduplicator
+    requestDeduplicator.cancel('', '', { requestId });
+  }
+
+  /**
+   * Cancel all pending requests
+   */
+  cancelAllRequests(): void {
+    requestDeduplicator.cancelAll();
+  }
+
+  /**
+   * Get current rate limit status
+   */
+  getRateLimitStatus(): { tokensAvailable: number; retryAfter: number } {
+    return {
+      tokensAvailable: aiRateLimiter.getTokenCount(this.sessionId),
+      retryAfter: aiRateLimiter.getRetryAfter(this.sessionId),
+    };
+  }
+
+  /**
+   * Get pending request count
+   */
+  getPendingRequestCount(): number {
+    return requestDeduplicator.getPendingCount();
   }
 
   private async handleStreamResponse(response: Response, signal: AbortSignal): Promise<string> {

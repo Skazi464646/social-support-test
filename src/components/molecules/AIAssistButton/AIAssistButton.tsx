@@ -31,6 +31,14 @@ export function AIAssistButton({
       return;
     }
 
+    // Check rate limits before starting
+    const rateLimitStatus = openAIService.getRateLimitStatus();
+    if (rateLimitStatus.tokensAvailable < 1) {
+      const retrySeconds = Math.ceil(rateLimitStatus.retryAfter / 1000);
+      alert(`Rate limit reached. Please wait ${retrySeconds} seconds before trying again.`);
+      return;
+    }
+
     setIsLoading(true);
     setError(null);
 
@@ -47,7 +55,15 @@ export function AIAssistButton({
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       setError(errorMessage);
-      alert(`AI Error: ${errorMessage}`);
+      
+      // Show user-friendly error messages
+      if (errorMessage.includes('Rate limit exceeded')) {
+        alert('You\'re making requests too quickly. Please wait a moment and try again.');
+      } else if (errorMessage.includes('Request was cancelled')) {
+        // Don't show alert for cancelled requests
+      } else {
+        alert(`AI Error: ${errorMessage}`);
+      }
     } finally {
       setIsLoading(false);
     }
