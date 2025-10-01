@@ -4,7 +4,7 @@
  */
 
 import { useState } from 'react';
-import { openAIService } from '@/lib/api/openai-service';
+import { openAIService, getFieldExamples } from '@/lib/ai';
 import type { AIAssistRequest } from '@/lib/api/openai-service';
 
 interface AIAssistButtonProps {
@@ -69,22 +69,43 @@ export function AIAssistButton({
     }
   };
 
+  const examples = getFieldExamples(fieldName);
+  const hasExamples = examples.length > 0;
+
   return (
-    <button 
-      type="button"
-      className={className}
-      onClick={handleClick}
-      disabled={isLoading}
-      title={isLoading ? 'Generating suggestion...' : 'Get AI writing assistance'}
-    >
-      {isLoading ? (
-        <>
-          <span className="animate-spin inline-block w-3 h-3 border border-current border-t-transparent rounded-full mr-1"></span>
-          Thinking...
-        </>
-      ) : (
-        '✨ Help me write'
+    <div className="relative">
+      <button 
+        type="button"
+        className={className}
+        onClick={handleClick}
+        disabled={isLoading}
+        title={isLoading ? 'Generating suggestion...' : 'Get AI writing assistance'}
+      >
+        {isLoading ? (
+          <>
+            <span className="animate-spin inline-block w-3 h-3 border border-current border-t-transparent rounded-full mr-1"></span>
+            Thinking...
+          </>
+        ) : (
+          '✨ Help me write'
+        )}
+      </button>
+      
+      {hasExamples && (
+        <button
+          type="button"
+          className="absolute -bottom-6 right-0 text-xs text-blue-500 hover:text-blue-700 underline"
+          onClick={() => {
+            const exampleText = examples[Math.floor(Math.random() * examples.length)];
+            if (exampleText) {
+              onSuggestionAccept(exampleText);
+            }
+          }}
+          title="Use a sample response"
+        >
+          Use example
+        </button>
       )}
-    </button>
+    </div>
   );
 }

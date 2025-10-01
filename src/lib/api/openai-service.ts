@@ -16,6 +16,16 @@ import {
   generateSessionId,
   validateInputSafety 
 } from '@/lib/utils/privacy-utils';
+import { 
+  getSystemPrompt, 
+  buildUserPrompt, 
+  type PromptContext 
+} from '@/lib/ai/prompt-templates';
+import { 
+  optimizePromptLength, 
+  validatePromptContext, 
+  calculatePromptEfficiency 
+} from '@/lib/ai/prompt-optimizer';
 
 interface OpenAIMessage {
   role: 'system' | 'user' | 'assistant';
@@ -104,17 +114,42 @@ class OpenAIService {
           const startTime = Date.now();
           
           try {
-            const prompt = this.buildPrompt(request);
+            const promptContext: PromptContext = {
+              userContext: request.userContext,
+              currentValue: request.currentValue,
+              language: request.language,
+              fieldConstraints: {
+                minLength: 50,
+                maxLength: 1000,
+                required: true,
+              },
+            };
+
+            // Validate prompt context
+            const validation = validatePromptContext(promptContext);
+            if (validation.warnings.length > 0) {
+              console.warn('[OpenAI] Prompt validation warnings:', validation.warnings);
+            }
+
+            // Build optimized prompts
+            const systemPrompt = getSystemPrompt(request.fieldName, request.language);
+            const userPrompt = buildUserPrompt(request.fieldName, promptContext);
+            const optimizedPrompt = optimizePromptLength(userPrompt, 400);
+
+            // Calculate efficiency metrics
+            const efficiency = calculatePromptEfficiency(optimizedPrompt);
+            console.log('[OpenAI] Prompt efficiency:', efficiency);
+
             const openAIRequest: OpenAIRequest = {
               model: 'gpt-4-turbo-preview',
               messages: [
                 {
                   role: 'system',
-                  content: this.getSystemPrompt(request.language)
+                  content: systemPrompt
                 },
                 {
                   role: 'user',
-                  content: prompt
+                  content: optimizedPrompt
                 }
               ],
               max_tokens: 500,
@@ -266,49 +301,6 @@ class OpenAIService {
     return result;
   }
 
-  private buildPrompt(request: AIAssistRequest): string {
-    const { fieldName, currentValue, userContext } = request;
-    
-    const fieldInstructions: Record<string, string> = {
-      financialSituation: 'Help write a clear, professional description of current financial challenges and circumstances. Focus on specific situations without being overly personal.',
-      employmentCircumstances: 'Help describe current employment status, job search efforts, or workplace challenges that affect financial stability.',
-      reasonForApplying: 'Help explain why financial assistance is needed and how it would help improve the situation.',
-    };
-
-    const instruction = fieldInstructions[fieldName] || 
-      `Help improve the content for the ${fieldName} field in a social support application.`;
-
-    let contextInfo = '';
-    if (userContext.step1) {
-      const employment = userContext.step2?.employmentStatus;
-      if (employment) {
-        contextInfo += `Employment status: ${employment}. `;
-      }
-    }
-
-    return `${instruction}
-
-${contextInfo ? `Context: ${contextInfo}` : ''}
-
-Current input: "${currentValue || '[empty]'}"
-
-Please provide a well-written, professional response that:
-- Is appropriate for a government social support application
-- Is clear and specific without being overly personal
-- Is 2-4 sentences long
-- Maintains a respectful, professional tone
-
-Only return the improved text, no explanations or quotes.`;
-  }
-
-  private getSystemPrompt(language: 'en' | 'ar'): string {
-    const prompts = {
-      en: 'You are a helpful assistant that helps people write clear, professional descriptions for social support applications. Provide helpful, respectful suggestions that maintain dignity while clearly communicating needs.',
-      ar: 'أنت مساعد مفيد يساعد الناس في كتابة أوصاف واضحة ومهنية لطلبات الدعم الاجتماعي. قدم اقتراحات مفيدة ومحترمة تحافظ على الكرامة مع التواصل الواضح للاحتياجات.'
-    };
-    
-    return prompts[language] || prompts.en;
-  }
 }
 
 export const openAIService = new OpenAIService();
