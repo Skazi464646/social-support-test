@@ -6,6 +6,12 @@ import { useController } from 'react-hook-form';
 // TYPES
 // =============================================================================
 
+export interface SelectOption {
+  value: string;
+  label: string;
+  disabled?: boolean;
+}
+
 export interface ValidatedFormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
@@ -17,6 +23,11 @@ export interface ValidatedFormFieldProps<
   label: string;
   required?: boolean;
   helperText?: string;
+  type?: 'text' | 'email' | 'tel' | 'password' | 'number' | 'date' | 'select' | 'checkbox' | 'textarea';
+  options?: SelectOption[];
+  rows?: number;
+  maxLength?: number;
+  showCharCount?: boolean;
 }
 
 // =============================================================================
@@ -53,6 +64,11 @@ export function ValidatedFormField<
   label,
   required = false,
   helperText,
+  type = 'text',
+  options,
+  rows = 4,
+  maxLength,
+  showCharCount = false,
   ...fieldProps
 }: ValidatedFormFieldProps<TFieldValues, TName>) {
   
@@ -69,6 +85,97 @@ export function ValidatedFormField<
   const hasError = !!error;
   const errorMessage = error?.message;
 
+  // Render checkbox field
+  if (type === 'checkbox') {
+    return (
+      <div className="flex items-center">
+        <input
+          ref={ref}
+          type="checkbox"
+          checked={!!value}
+          onChange={(e) => onChange(e.target.checked)}
+          onBlur={onBlur}
+          aria-invalid={hasError}
+          data-dirty={isDirty}
+          data-touched={isTouched}
+          className="rounded border-input text-primary focus:ring-ring focus:ring-2"
+        />
+      </div>
+    );
+  }
+
+  // Render select field
+  if (type === 'select' && options) {
+    return (
+      <FormField
+        {...fieldProps}
+        label={label}
+        required={required}
+        error={errorMessage}
+        helperText={!hasError ? helperText : undefined}
+        hasError={hasError}
+      >
+        <select
+          ref={ref}
+          value={value || ''}
+          onChange={onChange}
+          onBlur={onBlur}
+          aria-invalid={hasError}
+          data-dirty={isDirty}
+          data-touched={isTouched}
+          className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-50 disabled:pointer-events-none"
+        >
+          {options.map((option) => (
+            <option 
+              key={option.value} 
+              value={option.value}
+              disabled={option.disabled}
+            >
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </FormField>
+    );
+  }
+
+  // Render textarea field
+  if (type === 'textarea') {
+    const charCount = typeof value === 'string' ? value.length : 0;
+    const charCountText = maxLength 
+      ? `${charCount}/${maxLength}`
+      : `${charCount} characters`;
+
+    const enhancedHelperText = showCharCount 
+      ? `${helperText || ''} ${charCountText}`.trim()
+      : helperText;
+
+    return (
+      <FormField
+        {...fieldProps}
+        label={label}
+        required={required}
+        error={errorMessage}
+        helperText={!hasError ? enhancedHelperText : undefined}
+        hasError={hasError}
+      >
+        <textarea
+          ref={ref}
+          value={value || ''}
+          onChange={(e) => onChange(e.target.value)}
+          onBlur={onBlur}
+          rows={rows}
+          maxLength={maxLength}
+          aria-invalid={hasError}
+          data-dirty={isDirty}
+          data-touched={isTouched}
+          className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-50 disabled:pointer-events-none resize-none"
+        />
+      </FormField>
+    );
+  }
+
+  // Render regular input field
   return (
     <FormField
       {...fieldProps}
@@ -81,6 +188,7 @@ export function ValidatedFormField<
       value={value}
       onChange={onChange}
       onBlur={onBlur}
+      type={type}
       aria-invalid={hasError}
       data-dirty={isDirty}
       data-touched={isTouched}
@@ -202,32 +310,15 @@ export function TextAreaFormField<
   rows = 4,
   maxLength,
   showCharCount = false,
-  helperText,
   ...props
 }: TextAreaFormFieldProps<TFieldValues, TName>) {
-  
-  const {
-    field: { value },
-  } = useController({
-    name: props.name,
-    control: props.control,
-  });
-
-  const charCount = typeof value === 'string' ? value.length : 0;
-  const charCountText = maxLength 
-    ? `${charCount}/${maxLength}`
-    : `${charCount} characters`;
-
-  const enhancedHelperText = showCharCount 
-    ? `${helperText || ''} ${charCountText}`.trim()
-    : helperText;
-
   return (
     <ValidatedFormField
       {...props}
-      helperText={enhancedHelperText}
-      // Note: We would need to extend FormField to support textarea
-      // For now, this serves as a template for future implementation
+      type="textarea"
+      rows={rows}
+      maxLength={maxLength}
+      showCharCount={showCharCount}
     />
   );
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useFormWizard } from '@/context/FormWizardContext';
@@ -8,6 +8,9 @@ import { ProgressBar } from '@/components/molecules/ProgressBar';
 import { Card } from '@/components/molecules/Card';
 import { useToast } from '@/hooks/useToast';
 import { formSubmissionService, formatSubmissionError, FormSubmissionError } from '@/lib/api/form-submission';
+import { FormStep1 } from '@/components/organisms/FormStep1';
+import { FormStep2 } from '@/components/organisms/FormStep2';
+import { FormStep3 } from '@/components/organisms/FormStep3';
 import { cn } from '@/lib/utils';
 import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, FormStepData } from '@/lib/validation/schemas';
 
@@ -18,7 +21,7 @@ import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, For
 export function FormWizard() {
   const { t } = useTranslation();
   const { state, nextStep, previousStep, updateFormData, markStepComplete, dispatch } = useFormWizard();
-  const { showToast } = useToast();
+  const { success: showSuccess, error: showError } = useToast();
   const [submissionState, setSubmissionState] = useState<{
     isSubmitting: boolean;
     applicationId?: string;
@@ -63,7 +66,11 @@ export function FormWizard() {
         handleAutoSave(data);
       }
     });
-    return () => subscription.unsubscribe();
+    return () => {
+      if (typeof subscription === 'object' && subscription && 'unsubscribe' in subscription) {
+        subscription.unsubscribe();
+      }
+    };
   }, [currentForm, handleAutoSave]);
 
   // Handle step submission
@@ -82,19 +89,17 @@ export function FormWizard() {
         await handleFinalSubmission({ [stepKey]: data });
       } else {
         // Show success message and navigate to next step
-        showToast({
+        showSuccess({
           title: t('form.step_completed'),
           description: t('form.step_saved_successfully'),
-          variant: 'success',
         });
         nextStep();
       }
     } catch (error) {
       console.error('Step submission error:', error);
-      showToast({
+      showError({
         title: t('form.error'),
         description: t('form.step_save_error'),
-        variant: 'destructive',
       });
     }
   };
@@ -122,10 +127,9 @@ export function FormWizard() {
         applicationId: response.applicationId,
       });
 
-      showToast({
+      showSuccess({
         title: t('form.submission_success'),
         description: t('form.submission_success_message', { applicationId: response.applicationId }),
-        variant: 'success',
         duration: 10000,
       });
 
@@ -144,10 +148,9 @@ export function FormWizard() {
 
       const errorInfo = formatSubmissionError(submissionError);
       
-      showToast({
+      showError({
         title: errorInfo.title,
         description: errorInfo.message,
-        variant: 'destructive',
         duration: 8000,
       });
 
@@ -216,21 +219,13 @@ export function FormWizard() {
 
       {/* Form Card */}
       <Card className="p-6 mb-6">
-        <FormProvider {...currentForm}>
+        <FormProvider {...(currentForm as any)}>
           <form onSubmit={currentForm.handleSubmit(handleStepSubmit)}>
-            {/* Step Content Placeholder */}
+            {/* Step Content */}
             <div className="space-y-6">
-              <div className="text-center py-12 border-2 border-dashed border-muted-foreground/25 rounded-lg">
-                <h3 className="text-lg font-medium text-muted-foreground mb-2">
-                  {t(`form.step${state.currentStep}.title`)}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {t(`form.step${state.currentStep}.description`)}
-                </p>
-                <div className="mt-4 text-xs text-muted-foreground">
-                  Step {state.currentStep} component will be implemented in Module 4
-                </div>
-              </div>
+              {state.currentStep === 1 && <FormStep1 />}
+              {state.currentStep === 2 && <FormStep2 />}
+              {state.currentStep === 3 && <FormStep3 />}
             </div>
 
             {/* Navigation */}
@@ -278,8 +273,8 @@ export function FormWizard() {
                   
                   <Button
                     type="submit"
-                    disabled={submissionState.isSubmitting || (submissionState.applicationId && state.currentStep === 3)}
-                    loading={submissionState.isSubmitting}
+                    disabled={submissionState.isSubmitting || Boolean(submissionState.applicationId && state.currentStep === 3)}
+                    isLoading={submissionState.isSubmitting}
                     className="min-w-[100px]"
                   >
                     {submissionState.applicationId && state.currentStep === 3
