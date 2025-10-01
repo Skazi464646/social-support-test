@@ -1,0 +1,38 @@
+{
+  "root": true,
+  "env": {
+    "browser": true,
+    "es2020": true,
+    "node": true
+  },
+  "extends": ["eslint:recommended", "prettier"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": ["@typescript-eslint", "react-hooks", "react-refresh"],
+  "rules": {
+    // Code quality standards (Claude.md guidelines)
+    "complexity": ["error", 10],
+    "max-lines-per-function": ["error", { "max": 50, "skipComments": true }],
+    "max-lines": ["error", { "max": 250, "skipComments": true }],
+
+    // React rules
+    "react-hooks/rules-of-hooks": "error",
+    "react-hooks/exhaustive-deps": "warn",
+    "react-refresh/only-export-components": [
+      "warn",
+      { "allowConstantExport": true }
+    ],
+
+    // General best practices
+    "no-console": "warn",
+    "prefer-const": "error",
+    "no-var": "error",
+    "eqeqeq": "error",
+    "curly": "error",
+    "no-unused-vars": "off"
+  },
+  "ignorePatterns": ["dist", ".eslintrc.json", "vite.config.ts"]
+}
