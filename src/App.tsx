@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { AIAssistButton } from '@/components/molecules/AIAssistButton';
 
 function App() {
   const [step, setStep] = useState(1);
@@ -128,13 +129,15 @@ function App() {
                         rows={4}
                         placeholder="Please describe your current financial challenges..."
                       ></textarea>
-                      <button 
-                        type="button"
-                        className="absolute top-2 right-2 px-3 py-1 text-xs bg-blue-50 text-blue-600 rounded border border-blue-200 hover:bg-blue-100 transition-colors"
-                        onClick={() => alert('AI Assistance coming soon! This will help you write better descriptions.')}
-                      >
-                        ✨ Help me write
-                      </button>
+                      <AIAssistButton 
+                        fieldName="financialSituation"
+                        currentValue=""
+                        onSuggestionAccept={(suggestion: string) => {
+                          // In a real form, this would update the field value
+                          console.log('Accepted suggestion:', suggestion);
+                          alert(`AI suggested: ${suggestion.substring(0, 100)}...`);
+                        }}
+                      />
                     </div>
                   </div>
                 </div>

@@ -16,7 +16,11 @@
     "cancel": "Cancel",
     "submit": "Submit",
     "save": "Save",
-    "close": "Close"
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "yes": "Yes",
+    "no": "No"
   },
   "header": {
     "title": "Social Support Portal",
@@ -25,5 +29,43 @@
   "welcome": {
     "title": "Welcome to Social Support Portal",
     "subtitle": "AI-powered assistance for your needs"
+  },
+  "countries": {
+    "ae": "United Arab Emirates",
+    "sa": "Saudi Arabia", 
+    "qa": "Qatar",
+    "kw": "Kuwait",
+    "bh": "Bahrain",
+    "om": "Oman",
+    "jo": "Jordan",
+    "lb": "Lebanon",
+    "eg": "Egypt",
+    "other": "Other"
+  },
+  "form": {
+    "title": "Social Support Application",
+    "description": "Apply for financial assistance through our secure portal",
+    "step_completed": "Step Completed",
+    "step_saved_successfully": "Your progress has been saved successfully",
+    "error": "Error",
+    "step_save_error": "Failed to save step. Please try again.",
+    "submission_success": "Application Submitted Successfully",
+    "submission_success_message": "Your application has been submitted with ID: {{applicationId}}",
+    "auto_saved": "Auto-saved",
+    "submitted": "Submitted",
+    "application_id": "Application ID",
+    "confirmation_email_sent": "A confirmation email has been sent to your registered email address.",
+    "step1": {
+      "title": "Personal Information",
+      "description": "Please provide your personal details for verification."
+    },
+    "step2": {
+      "title": "Financial Information", 
+      "description": "Please provide details about your financial situation and housing status."
+    },
+    "step3": {
+      "title": "Detailed Information",
+      "description": "Please provide detailed information about your situation to help us better understand your needs."
+    }
   }
 }
