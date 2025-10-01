@@ -23,26 +23,21 @@ export interface FormWizardState {
   currentStep: number;
   formData: FormStepData;
   completedSteps: Set<number>;
-  isValid: Record<number, boolean>;
-  errors: Record<number, Record<string, string>>;
-  isDirty: boolean;
   isSubmitting: boolean;
-  lastSaved?: Date;
+  submitError: string | null;
+  lastSaved: string | null;
 }
 
 export type FormWizardAction =
   | { type: 'SET_STEP'; payload: number }
   | { type: 'NEXT_STEP' }
   | { type: 'PREVIOUS_STEP' }
-  | { type: 'UPDATE_FORM_DATA'; payload: { step: number; data: Partial<FormStepData> } }
-  | { type: 'SET_STEP_VALID'; payload: { step: number; isValid: boolean } }
-  | { type: 'SET_STEP_ERRORS'; payload: { step: number; errors: Record<string, string> } }
+  | { type: 'UPDATE_FORM_DATA'; payload: Partial<FormStepData> }
   | { type: 'MARK_STEP_COMPLETE'; payload: number }
-  | { type: 'SET_DIRTY'; payload: boolean }
   | { type: 'SET_SUBMITTING'; payload: boolean }
+  | { type: 'SET_SUBMIT_ERROR'; payload: string | null }
   | { type: 'RESET_FORM' }
-  | { type: 'LOAD_FROM_STORAGE'; payload: FormStepData }
-  | { type: 'MARK_SAVED' };
+  | { type: 'LOAD_FROM_STORAGE'; payload: { formData: FormStepData; completedSteps: number[]; lastSaved: string | null } };
 
 // =============================================================================
 // FORM FIELD TYPES
