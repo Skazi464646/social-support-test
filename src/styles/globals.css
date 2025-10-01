@@ -46,9 +46,73 @@
     --ring: 224.3 76.3% 48%;
   }
 
+  * {
+    border-color: hsl(var(--border));
+  }
+
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+@layer components {
+  /* RTL-aware spacing utilities */
+  .space-x-2-rtl > * + * {
+    margin-inline-start: 0.5rem;
+  }
+
+  .space-x-4-rtl > * + * {
+    margin-inline-start: 1rem;
+  }
+
+  .ml-auto-rtl {
+    margin-inline-start: auto;
+  }
+
+  .mr-auto-rtl {
+    margin-inline-end: auto;
+  }
+
+  /* Government form styling */
+  .form-section {
+    @apply bg-white border border-gray-200 rounded-lg p-6 shadow-sm;
+  }
+
+  .form-title {
+    @apply text-2xl font-bold text-gray-900 mb-2;
+  }
+
+  .form-description {
+    @apply text-sm text-gray-600 mb-6;
+  }
+
+  .form-grid {
+    @apply grid grid-cols-1 md:grid-cols-2 gap-6;
+  }
+
+  .form-grid-full {
+    @apply md:col-span-2;
+  }
+
+  /* Button variants */
+  .btn-primary {
+    @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-900 px-4 py-2 rounded-md hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline {
+    @apply border border-gray-300 bg-white text-gray-700 px-4 py-2 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed;
   }
 }
 
@@ -57,14 +121,74 @@
   direction: rtl;
 }
 
-[dir='rtl'] .space-x-2 > * + * {
-  margin-left: 0;
-  margin-right: 0.5rem;
+[dir='rtl'] .text-left {
+  text-align: right;
+}
+
+[dir='rtl'] .text-right {
+  text-align: left;
+}
+
+[dir='rtl'] .float-left {
+  float: right;
+}
+
+[dir='rtl'] .float-right {
+  float: left;
+}
+
+[dir='rtl'] .border-l {
+  border-left: none;
+  border-right: 1px solid;
+}
+
+[dir='rtl'] .border-r {
+  border-right: none;
+  border-left: 1px solid;
+}
+
+[dir='rtl'] .rounded-l-md {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  border-top-right-radius: 0.375rem;
+  border-bottom-right-radius: 0.375rem;
+}
+
+[dir='rtl'] .rounded-r-md {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0.375rem;
+  border-bottom-left-radius: 0.375rem;
+}
+
+/* Dark mode utilities */
+.dark .bg-background {
+  background-color: hsl(var(--background));
+}
+
+.dark .text-foreground {
+  color: hsl(var(--foreground));
+}
+
+.dark .border-border {
+  border-color: hsl(var(--border));
 }
 
 /* Focus visible styles for accessibility */
 *:focus-visible {
-  outline: none;
-  ring: 2px solid hsl(var(--ring));
-  ring-offset: 2px;
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Skip to content link for accessibility */
+.skip-link {
+  @apply absolute -top-10 left-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50 focus:top-4;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --border: 0 0% 0%;
+    --ring: 221.2 83.2% 53.3%;
+  }
 }
