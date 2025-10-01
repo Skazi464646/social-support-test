@@ -1,4 +1,5 @@
 // Global type definitions for the Social Support Portal
+import * as React from 'react';
 
 export interface BaseComponentProps {
   className?: string;

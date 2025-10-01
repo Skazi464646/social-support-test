@@ -5,3 +5,6 @@
 // export { PageLayout } from './PageLayout';
 // export { FormLayout } from './FormLayout';
 // export { DashboardLayout } from './DashboardLayout';
+
+// Empty export to make this a proper module
+export {};
