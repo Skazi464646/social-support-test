@@ -20,7 +20,7 @@ import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, For
 // =============================================================================
 
 export function FormWizard() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { state, nextStep, previousStep, updateFormData, markStepComplete, dispatch } = useFormWizard();
   const { success: showSuccess, error: showError } = useToast();
   const [submissionState, setSubmissionState] = useState<{
@@ -49,6 +49,12 @@ export function FormWizard() {
   };
 
   const currentForm = getCurrentForm();
+
+  // Debug form context
+  if (import.meta.env.DEV) {
+    console.log('[FormWizard] Current step:', state.currentStep);
+    console.log('[FormWizard] Current form methods:', currentForm ? Object.keys(currentForm) : 'No form');
+  }
 
   // Initialize forms with localStorage data once it's loaded
   useEffect(() => {
@@ -258,14 +264,14 @@ export function FormWizard() {
 
       {/* Form Card */}
       <Card className="p-6 mb-6">
-        <FormProvider {...(currentForm as any)}>
+        <FormProvider key={`form-${i18n.language}-${state.currentStep}`} {...(currentForm as any)}>
           <FormBlurProvider onFieldBlur={handleFieldBlur}>
             <form onSubmit={currentForm.handleSubmit(handleStepSubmit)}>
               {/* Step Content */}
               <div className="space-y-6">
-                {state.currentStep === 1 && <FormStep1 />}
-                {state.currentStep === 2 && <FormStep2 />}
-                {state.currentStep === 3 && <FormStep3 />}
+                {state.currentStep === 1 && <FormStep1 key={`step1-${i18n.language}`} />}
+                {state.currentStep === 2 && <FormStep2 key={`step2-${i18n.language}`} />}
+                {state.currentStep === 3 && <FormStep3 key={`step3-${i18n.language}`} />}
               </div>
 
             {/* Navigation */}

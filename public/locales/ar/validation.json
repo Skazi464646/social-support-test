@@ -1,0 +1,163 @@
+{
+  "required": "هذا الحقل مطلوب",
+  "invalid_type": "نوع غير صحيح",
+  "invalid_type_expected_string": "متوقع نص، تم استلام {{received}}",
+  "invalid_type_expected_number": "متوقع رقم، تم استلام {{received}}",
+  "invalid_type_expected_boolean": "متوقع قيمة منطقية، تم استلام {{received}}",
+  "invalid_type_expected_date": "متوقع تاريخ، تم استلام {{received}}",
+  "invalid_string": "غير صحيح",
+  "invalid_string_email": "عنوان بريد إلكتروني غير صحيح",
+  "invalid_string_url": "رابط غير صحيح",
+  "invalid_string_regex": "تنسيق غير صحيح",
+  "invalid_string_min": "يجب أن يحتوي النص على {{minimum}} حرف على الأقل",
+  "invalid_string_max": "يجب أن يحتوي النص على {{maximum}} حرف كحد أقصى",
+  "invalid_number": "رقم غير صحيح",
+  "invalid_number_min": "يجب أن يكون الرقم أكبر من أو يساوي {{minimum}}",
+  "invalid_number_max": "يجب أن يكون الرقم أصغر من أو يساوي {{maximum}}",
+  "invalid_number_int": "متوقع عدد صحيح، تم استلام عدد عشري",
+  "invalid_date": "تاريخ غير صحيح",
+  "invalid_date_min": "يجب أن يكون التاريخ بعد {{minimum}}",
+  "invalid_date_max": "يجب أن يكون التاريخ قبل {{maximum}}",
+  "invalid_boolean": "قيمة منطقية غير صحيحة",
+  "invalid_enum_value": "اختيار غير صحيح. متوقع {{options}}، تم استلام '{{received}}'",
+  "invalid_literal": "قيمة نصية غير صحيحة، متوقع {{expected}}",
+  "custom": "قيمة غير صحيحة",
+  "invalid_union": "مدخل غير صحيح",
+  "invalid_union_discriminator": "قيمة مميزة غير صحيحة. متوقع {{options}}",
+  "invalid_arguments": "معاملات دالة غير صحيحة",
+  "invalid_return_type": "نوع إرجاع دالة غير صحيح",
+  "too_small": "يجب أن تحتوي المصفوفة على {{minimum}} عنصر على الأقل",
+  "too_big": "يجب أن تحتوي المصفوفة على {{maximum}} عنصر كحد أقصى",
+  "not_multiple_of": "يجب أن يكون الرقم من مضاعفات {{multipleOf}}",
+  "not_finite": "يجب أن يكون الرقم محدود",
+  "invalid_intersection_types": "لا يمكن دمج نتائج التقاطع",
+  "not_included": "القيمة غير مدرجة في الخيارات الصحيحة",
+  "missing_keys": "مفاتيح مطلوبة مفقودة: {{keys}}",
+  "unrecognized_keys": "مفاتيح غير معروفة في الكائن: {{keys}}",
+  
+  "name": {
+    "too_short": "يجب أن يكون الاسم 2 أحرف على الأقل",
+    "too_long": "يجب ألا يتجاوز الاسم 100 حرف",
+    "invalid_format": "يمكن أن يحتوي الاسم على أحرف ومسافات وشرطات وفواصل عليا فقط"
+  },
+  "nationalId": {
+    "invalid_format": "يجب أن يكون رقم الهوية الوطنية 10 أرقام بالضبط",
+    "invalid_checksum": "يرجى إدخال رقم هوية وطنية صحيح"
+  },
+  "dateOfBirth": {
+    "required": "تاريخ الميلاد مطلوب",
+    "too_young": "يجب أن تكون 18 سنة على الأقل",
+    "future_date": "لا يمكن أن يكون تاريخ الميلاد في المستقبل"
+  },
+  "gender": {
+    "required": "يرجى اختيار الجنس"
+  },
+  "email": {
+    "invalid": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+    "too_short": "يجب أن يكون البريد الإلكتروني 5 أحرف على الأقل",
+    "too_long": "يجب ألا يتجاوز البريد الإلكتروني 100 حرف"
+  },
+  "phone": {
+    "invalid": "يرجى إدخال رقم هاتف صحيح",
+    "too_short": "يجب أن يكون رقم الهاتف 8 أرقام على الأقل",
+    "too_long": "يجب ألا يتجاوز رقم الهاتف 15 رقم"
+  },
+  "address": {
+    "too_short": "يجب أن يكون العنوان 10 أحرف على الأقل",
+    "too_long": "يجب ألا يتجاوز العنوان 200 حرف"
+  },
+  "city": {
+    "too_short": "يجب أن يكون اسم المدينة حرفين على الأقل",
+    "too_long": "يجب ألا يتجاوز اسم المدينة 50 حرف",
+    "invalid_format": "يمكن أن يحتوي اسم المدينة على أحرف فقط"
+  },
+  "state": {
+    "too_short": "يجب أن يكون اسم الولاية/الإمارة حرفين على الأقل",
+    "too_long": "يجب ألا يتجاوز اسم الولاية/الإمارة 50 حرف",
+    "invalid_format": "يمكن أن يحتوي اسم الولاية/الإمارة على أحرف فقط"
+  },
+  "country": {
+    "required": "يرجى اختيار البلد"
+  },
+  "postalCode": {
+    "invalid_format": "يجب أن يكون الرمز البريدي 5 أرقام بالضبط"
+  },
+  "maritalStatus": {
+    "required": "يرجى اختيار الحالة الاجتماعية"
+  },
+  "numberOfDependents": {
+    "required": "يرجى إدخال عدد المعالين",
+    "not_integer": "يجب أن يكون عدد المعالين رقم صحيح",
+    "negative": "لا يمكن أن يكون عدد المعالين سالب",
+    "too_large": "لا يمكن أن يتجاوز عدد المعالين 20"
+  },
+  "employmentStatus": {
+    "required": "يرجى اختيار حالة العمل"
+  },
+  "occupation": {
+    "too_short": "يجب أن تكون المهنة حرفين على الأقل",
+    "too_long": "يجب ألا تتجاوز المهنة 100 حرف"
+  },
+  "employer": {
+    "too_short": "يجب أن يكون اسم جهة العمل حرفين على الأقل",
+    "too_long": "يجب ألا يتجاوز اسم جهة العمل 100 حرف"
+  },
+  "monthlyIncome": {
+    "required": "يرجى إدخال الدخل الشهري",
+    "negative": "لا يمكن أن يكون الدخل الشهري سالب",
+    "too_large": "لا يمكن أن يتجاوز الدخل الشهري 1,000,000"
+  },
+  "monthlyExpenses": {
+    "required": "يرجى إدخال النفقات الشهرية",
+    "negative": "لا يمكن أن تكون النفقات الشهرية سالبة",
+    "too_large": "لا يمكن أن تتجاوز النفقات الشهرية 1,000,000"
+  },
+  "totalSavings": {
+    "negative": "لا يمكن أن تكون المدخرات الإجمالية سالبة",
+    "too_large": "لا يمكن أن تتجاوز المدخرات الإجمالية 10,000,000"
+  },
+  "totalDebt": {
+    "negative": "لا يمكن أن تكون الديون الإجمالية سالبة",
+    "too_large": "لا يمكن أن تتجاوز الديون الإجمالية 10,000,000"
+  },
+  "housingStatus": {
+    "required": "يرجى اختيار حالة السكن"
+  },
+  "monthlyRent": {
+    "negative": "لا يمكن أن يكون الإيجار الشهري سالب",
+    "too_large": "لا يمكن أن يتجاوز الإيجار الشهري 100,000"
+  },
+  "receivingBenefits": {
+    "required": "يرجى اختيار خيار"
+  },
+  "previouslyApplied": {
+    "required": "يرجى اختيار خيار"
+  },
+  "financialSituation": {
+    "too_short": "يرجى تقديم 50 حرف على الأقل لوصف وضعك المالي",
+    "too_long": "لا يمكن أن يتجاوز وصف الوضع المالي 2000 حرف",
+    "too_few_words": "يرجى تقديم 10 كلمات على الأقل لوصف وضعك المالي"
+  },
+  "employmentCircumstances": {
+    "too_short": "يرجى تقديم 50 حرف على الأقل لوصف ظروف عملك",
+    "too_long": "لا يمكن أن يتجاوز وصف ظروف العمل 2000 حرف",
+    "too_few_words": "يرجى تقديم 10 كلمات على الأقل لوصف ظروف عملك"
+  },
+  "reasonForApplying": {
+    "too_short": "يرجى تقديم 50 حرف على الأقل لشرح سبب تقدمك بالطلب",
+    "too_long": "لا يمكن أن يتجاوز سبب التقدم بالطلب 2000 حرف",
+    "too_few_words": "يرجى تقديم 10 كلمات على الأقل لشرح سبب تقدمك بالطلب"
+  },
+  "additionalComments": {
+    "too_long": "لا يمكن أن تتجاوز التعليقات الإضافية 1000 حرف"
+  },
+  "agreeToTerms": {
+    "required": "يجب الموافقة على الشروط والأحكام"
+  },
+  "consentToDataProcessing": {
+    "required": "يجب الموافقة على معالجة البيانات"
+  },
+  "allowContactForClarification": {
+    "required": "يرجى تحديد ما إذا كان بإمكاننا التواصل معك للتوضيح"
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "required": "This field is required",
+  "invalid_type": "Invalid type",
+  "invalid_type_expected_string": "Expected string, received {{received}}",
+  "invalid_type_expected_number": "Expected number, received {{received}}",
+  "invalid_type_expected_boolean": "Expected boolean, received {{received}}",
+  "invalid_type_expected_date": "Expected date, received {{received}}",
+  "invalid_string": "Invalid",
+  "invalid_string_email": "Invalid email address",
+  "invalid_string_url": "Invalid URL",
+  "invalid_string_regex": "Invalid format",
+  "invalid_string_min": "String must contain at least {{minimum}} character(s)",
+  "invalid_string_max": "String must contain at most {{maximum}} character(s)",
+  "invalid_number": "Invalid number",
+  "invalid_number_min": "Number must be greater than or equal to {{minimum}}",
+  "invalid_number_max": "Number must be less than or equal to {{maximum}}",
+  "invalid_number_int": "Expected integer, received float",
+  "invalid_date": "Invalid date",
+  "invalid_date_min": "Date must be after {{minimum}}",
+  "invalid_date_max": "Date must be before {{maximum}}",
+  "invalid_boolean": "Invalid boolean",
+  "invalid_enum_value": "Invalid selection. Expected {{options}}, received '{{received}}'",
+  "invalid_literal": "Invalid literal value, expected {{expected}}",
+  "custom": "Invalid value",
+  "invalid_union": "Invalid input",
+  "invalid_union_discriminator": "Invalid discriminator value. Expected {{options}}",
+  "invalid_arguments": "Invalid function arguments",
+  "invalid_return_type": "Invalid function return type",
+  "too_small": "Array must contain at least {{minimum}} element(s)",
+  "too_big": "Array must contain at most {{maximum}} element(s)",
+  "not_multiple_of": "Number must be a multiple of {{multipleOf}}",
+  "not_finite": "Number must be finite",
+  "invalid_intersection_types": "Intersection results could not be merged",
+  "not_included": "Value is not included in the valid options",
+  "missing_keys": "Required key(s) missing: {{keys}}",
+  "unrecognized_keys": "Unrecognized key(s) in object: {{keys}}",
+  
+  "name": {
+    "too_short": "Name must be at least 2 characters",
+    "too_long": "Name must not exceed 100 characters",
+    "invalid_format": "Name can only contain letters, spaces, hyphens, and apostrophes"
+  },
+  "nationalId": {
+    "invalid_format": "National ID must be exactly 10 digits",
+    "invalid_checksum": "Please enter a valid National ID"
+  },
+  "dateOfBirth": {
+    "required": "Date of birth is required",
+    "too_young": "You must be at least 18 years old",
+    "future_date": "Date of birth cannot be in the future"
+  },
+  "gender": {
+    "required": "Please select your gender"
+  },
+  "email": {
+    "invalid": "Please enter a valid email address",
+    "too_short": "Email must be at least 5 characters",
+    "too_long": "Email must not exceed 100 characters"
+  },
+  "phone": {
+    "invalid": "Please enter a valid phone number",
+    "too_short": "Phone number must be at least 8 digits",
+    "too_long": "Phone number must not exceed 15 digits"
+  },
+  "address": {
+    "too_short": "Address must be at least 10 characters",
+    "too_long": "Address must not exceed 200 characters"
+  },
+  "city": {
+    "too_short": "City name must be at least 2 characters",
+    "too_long": "City name must not exceed 50 characters",
+    "invalid_format": "City name can only contain letters"
+  },
+  "state": {
+    "too_short": "State/Emirate name must be at least 2 characters",
+    "too_long": "State/Emirate name must not exceed 50 characters",
+    "invalid_format": "State/Emirate name can only contain letters"
+  },
+  "country": {
+    "required": "Please select a country"
+  },
+  "postalCode": {
+    "invalid_format": "Postal code must be exactly 5 digits"
+  },
+  "maritalStatus": {
+    "required": "Please select your marital status"
+  },
+  "numberOfDependents": {
+    "required": "Please enter number of dependents",
+    "not_integer": "Number of dependents must be a whole number",
+    "negative": "Number of dependents cannot be negative",
+    "too_large": "Number of dependents cannot exceed 20"
+  },
+  "employmentStatus": {
+    "required": "Please select your employment status"
+  },
+  "occupation": {
+    "too_short": "Occupation must be at least 2 characters",
+    "too_long": "Occupation must not exceed 100 characters"
+  },
+  "employer": {
+    "too_short": "Employer name must be at least 2 characters",
+    "too_long": "Employer name must not exceed 100 characters"
+  },
+  "monthlyIncome": {
+    "required": "Please enter your monthly income",
+    "negative": "Monthly income cannot be negative",
+    "too_large": "Monthly income cannot exceed 1,000,000"
+  },
+  "monthlyExpenses": {
+    "required": "Please enter your monthly expenses",
+    "negative": "Monthly expenses cannot be negative",
+    "too_large": "Monthly expenses cannot exceed 1,000,000"
+  },
+  "totalSavings": {
+    "negative": "Total savings cannot be negative",
+    "too_large": "Total savings cannot exceed 10,000,000"
+  },
+  "totalDebt": {
+    "negative": "Total debt cannot be negative",
+    "too_large": "Total debt cannot exceed 10,000,000"
+  },
+  "housingStatus": {
+    "required": "Please select your housing status"
+  },
+  "monthlyRent": {
+    "negative": "Monthly rent cannot be negative",
+    "too_large": "Monthly rent cannot exceed 100,000"
+  },
+  "receivingBenefits": {
+    "required": "Please select an option"
+  },
+  "previouslyApplied": {
+    "required": "Please select an option"
+  },
+  "financialSituation": {
+    "too_short": "Please provide at least 50 characters describing your financial situation",
+    "too_long": "Financial situation description cannot exceed 2000 characters",
+    "too_few_words": "Please provide at least 10 words describing your financial situation"
+  },
+  "employmentCircumstances": {
+    "too_short": "Please provide at least 50 characters describing your employment circumstances",
+    "too_long": "Employment circumstances description cannot exceed 2000 characters",
+    "too_few_words": "Please provide at least 10 words describing your employment circumstances"
+  },
+  "reasonForApplying": {
+    "too_short": "Please provide at least 50 characters explaining your reason for applying",
+    "too_long": "Reason for applying cannot exceed 2000 characters",
+    "too_few_words": "Please provide at least 10 words explaining your reason for applying"
+  },
+  "additionalComments": {
+    "too_long": "Additional comments cannot exceed 1000 characters"
+  },
+  "agreeToTerms": {
+    "required": "You must agree to the terms and conditions"
+  },
+  "consentToDataProcessing": {
+    "required": "You must consent to data processing"
+  },
+  "allowContactForClarification": {
+    "required": "Please indicate if we can contact you for clarification"
+  }
+}

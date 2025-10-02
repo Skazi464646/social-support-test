@@ -95,6 +95,21 @@ export function useLanguage(): UseLanguageReturn {
     setIsChanging(true);
 
     try {
+      // First, load the required namespaces for the new language
+      const namespacesToLoad = ['form', 'validation'];
+      for (const ns of namespacesToLoad) {
+        try {
+          const response = await fetch(`/locales/${language}/${ns}.json`);
+          if (response.ok) {
+            const data = await response.json();
+            i18n.addResourceBundle(language, ns, data, true, true);
+            console.log(`[useLanguage] Loaded ${language}/${ns} manually`);
+          }
+        } catch (error) {
+          console.warn(`[useLanguage] Failed to load ${language}/${ns}:`, error);
+        }
+      }
+      
       // Change language in i18n
       await i18n.changeLanguage(language);
       
@@ -117,6 +132,7 @@ export function useLanguage(): UseLanguageReturn {
 
     } catch (error) {
       console.error('Failed to change language:', error);
+    } finally {
       setIsChanging(false);
     }
   }, [currentLanguage, i18n]);

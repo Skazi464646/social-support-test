@@ -9,7 +9,7 @@ import type { Step2FormData } from '@/lib/validation/schemas';
 // =============================================================================
 
 export function FormStep2() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['form', 'common']);
   const { control, watch } = useFormContext<Step2FormData>();
 
   // Watch for conditional fields
@@ -25,10 +25,10 @@ export function FormStep2() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t('form.title', 'Financial Information')}
+          {t('step2.title', 'Financial Information')}
         </h2>
         <p className="text-muted-foreground">
-          {t('form.description', 'Please provide details about your financial situation and housing status.')}
+          {t('step2.description', 'Please provide details about your financial situation and housing status.')}
         </p>
       </div>
 
@@ -36,10 +36,10 @@ export function FormStep2() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.family_section', 'Family Information')}
+            {t('family_section', 'Family Information')}
           </Card.Title>
           <Card.Description>
-            {t('form.family_description', 'Information about your family status')}
+            {t('family_description', 'Information about your family status')}
           </Card.Description>
         </Card.Header>
 
@@ -49,17 +49,17 @@ export function FormStep2() {
             <ValidatedFormField
               name="maritalStatus"
               control={control}
-              label={t('form.maritalStatus', 'Marital Status')}
-              helperText={t('form.maritalStatus_help', 'Your current marital status')}
+              label={t('maritalStatus', 'Marital Status')}
+              helperText={t('maritalStatus_help', 'Your current marital status')}
               type="select"
               required
               options={[
-                { value: '', label: t('form.maritalStatus_select', 'Select marital status') },
-                { value: 'single', label: t('form.maritalStatus_options.single', 'Single') },
-                { value: 'married', label: t('form.maritalStatus_options.married', 'Married') },
-                { value: 'divorced', label: t('form.maritalStatus_options.divorced', 'Divorced') },
-                { value: 'widowed', label: t('form.maritalStatus_options.widowed', 'Widowed') },
-                { value: 'separated', label: t('form.maritalStatus_options.separated', 'Separated') },
+                { value: '', label: t('maritalStatus_select', 'Select marital status') },
+                { value: 'single', label: t('maritalStatus_options.single', 'Single') },
+                { value: 'married', label: t('maritalStatus_options.married', 'Married') },
+                { value: 'divorced', label: t('maritalStatus_options.divorced', 'Divorced') },
+                { value: 'widowed', label: t('maritalStatus_options.widowed', 'Widowed') },
+                { value: 'separated', label: t('maritalStatus_options.separated', 'Separated') },
               ]}
             />
 
@@ -67,8 +67,8 @@ export function FormStep2() {
             <ValidatedFormField
               name="numberOfDependents"
               control={control}
-              label={t('form.numberOfDependents', 'Number of Dependents')}
-              helperText={t('form.numberOfDependents_help', 'Children or family members you financially support')}
+              label={t('numberOfDependents', 'Number of Dependents')}
+              helperText={t('numberOfDependents_help', 'Children or family members you financially support')}
               type="number"
               min={0}
               max={20}
@@ -83,10 +83,10 @@ export function FormStep2() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.employment_section', 'Employment Information')}
+            {t('employment_section', 'Employment Information')}
           </Card.Title>
           <Card.Description>
-            {t('form.employment_description', 'Your current employment and income details')}
+            {t('employment_description', 'Your current employment and income details')}
           </Card.Description>
         </Card.Header>
 
@@ -96,20 +96,20 @@ export function FormStep2() {
             <ValidatedFormField
               name="employmentStatus"
               control={control}
-              label={t('form.employmentStatus', 'Employment Status')}
-              helperText={t('form.employmentStatus_help', 'Your current work situation')}
+              label={t('employmentStatus', 'Employment Status')}
+              helperText={t('employmentStatus_help', 'Your current work situation')}
               type="select"
               required
               className="md:col-span-2"
               options={[
-                { value: '', label: t('form.employmentStatus_select', 'Select employment status') },
-                { value: 'employed_full_time', label: t('form.employmentStatus_options.employed', 'Employed (Full-time)') },
-                { value: 'employed_part_time', label: t('form.employmentStatus_options.part_time', 'Employed (Part-time)') },
-                { value: 'self_employed', label: t('form.employmentStatus_options.self_employed', 'Self-employed') },
-                { value: 'unemployed', label: t('form.employmentStatus_options.unemployed', 'Unemployed') },
-                { value: 'retired', label: t('form.employmentStatus_options.retired', 'Retired') },
-                { value: 'student', label: t('form.employmentStatus_options.student', 'Student') },
-                { value: 'disabled', label: t('form.employmentStatus_options.disabled', 'Unable to work (Disability)') },
+                { value: '', label: t('employmentStatus_select', 'Select employment status') },
+                { value: 'employed_full_time', label: t('employmentStatus_options.employed', 'Employed (Full-time)') },
+                { value: 'employed_part_time', label: t('employmentStatus_options.part_time', 'Employed (Part-time)') },
+                { value: 'self_employed', label: t('employmentStatus_options.self_employed', 'Self-employed') },
+                { value: 'unemployed', label: t('employmentStatus_options.unemployed', 'Unemployed') },
+                { value: 'retired', label: t('employmentStatus_options.retired', 'Retired') },
+                { value: 'student', label: t('employmentStatus_options.student', 'Student') },
+                { value: 'disabled', label: t('employmentStatus_options.disabled', 'Unable to work (Disability)') },
               ]}
             />
 
@@ -118,9 +118,9 @@ export function FormStep2() {
               <ValidatedFormField
                 name="occupation"
                 control={control}
-                label={t('form.occupation', 'Occupation')}
-                placeholder={t('form.occupation_placeholder', 'Enter your job title or profession')}
-                helperText={t('form.occupation_help', 'Your current job title or type of business')}
+                label={t('occupation', 'Occupation')}
+                placeholder={t('occupation_placeholder', 'Enter your job title or profession')}
+                helperText={t('occupation_help', 'Your current job title or type of business')}
                 required
               />
             )}
@@ -130,9 +130,9 @@ export function FormStep2() {
               <ValidatedFormField
                 name="employer"
                 control={control}
-                label={t('form.employer', 'Employer Name')}
-                placeholder={t('form.employer_placeholder', 'Enter your employer name')}
-                helperText={t('form.employer_help', 'The company or organization you work for')}
+                label={t('employer', 'Employer Name')}
+                placeholder={t('employer_placeholder', 'Enter your employer name')}
+                helperText={t('employer_help', 'The company or organization you work for')}
                 required
               />
             )}
@@ -141,8 +141,8 @@ export function FormStep2() {
             <ValidatedFormField
               name="monthlyIncome"
               control={control}
-              label={t('form.monthlyIncome', 'Monthly Income (AED)')}
-              helperText={t('form.monthlyIncome_help', 'Your total monthly income from all sources')}
+              label={t('monthlyIncome', 'Monthly Income (AED)')}
+              helperText={t('monthlyIncome_help', 'Your total monthly income from all sources')}
               type="number"
               required
             />
@@ -151,8 +151,8 @@ export function FormStep2() {
             <ValidatedFormField
               name="monthlyExpenses"
               control={control}
-              label={t('form.monthlyExpenses', 'Monthly Expenses (AED)')}
-              helperText={t('form.monthlyExpenses_help', 'Your total monthly living expenses')}
+              label={t('monthlyExpenses', 'Monthly Expenses (AED)')}
+              helperText={t('monthlyExpenses_help', 'Your total monthly living expenses')}
               type="number"
               required
             />
@@ -161,8 +161,8 @@ export function FormStep2() {
             <ValidatedFormField
               name="totalSavings"
               control={control}
-              label={t('form.totalSavings', 'Total Savings (AED)')}
-              helperText={t('form.totalSavings_help', 'Your current savings and bank deposits')}
+              label={t('totalSavings', 'Total Savings (AED)')}
+              helperText={t('totalSavings_help', 'Your current savings and bank deposits')}
               type="number"
               required
             />
@@ -171,8 +171,8 @@ export function FormStep2() {
             <ValidatedFormField
               name="totalDebt"
               control={control}
-              label={t('form.totalDebt', 'Total Debt (AED)')}
-              helperText={t('form.totalDebt_help', 'Your current total debt including loans and credit cards')}
+              label={t('totalDebt', 'Total Debt (AED)')}
+              helperText={t('totalDebt_help', 'Your current total debt including loans and credit cards')}
               type="number"
               required
             />
@@ -184,10 +184,10 @@ export function FormStep2() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.housing_section', 'Housing Information')}
+            {t('housing_section', 'Housing Information')}
           </Card.Title>
           <Card.Description>
-            {t('form.housing_description', 'Your current housing situation')}
+            {t('housing_description', 'Your current housing situation')}
           </Card.Description>
         </Card.Header>
 
@@ -197,18 +197,18 @@ export function FormStep2() {
             <ValidatedFormField
               name="housingStatus"
               control={control}
-              label={t('form.housingStatus', 'Housing Status')}
-              helperText={t('form.housingStatus_help', 'Your current housing arrangement')}
+              label={t('housingStatus', 'Housing Status')}
+              helperText={t('housingStatus_help', 'Your current housing arrangement')}
               type="select"
               required
               className="md:col-span-2"
               options={[
-                { value: '', label: t('form.housingStatus_select', 'Select housing status') },
-                { value: 'own', label: t('form.housingStatus_options.own', 'Own my home') },
-                { value: 'rent', label: t('form.housingStatus_options.rent', 'Rent') },
-                { value: 'living_with_family', label: t('form.housingStatus_options.living_with_family', 'Living with family/friends') },
-                { value: 'homeless', label: t('form.housingStatus_options.homeless', 'Homeless/Temporary shelter') },
-                { value: 'other', label: t('form.housingStatus_options.other', 'Other') },
+                { value: '', label: t('housingStatus_select', 'Select housing status') },
+                { value: 'own', label: t('housingStatus_options.own', 'Own my home') },
+                { value: 'rent', label: t('housingStatus_options.rent', 'Rent') },
+                { value: 'living_with_family', label: t('housingStatus_options.living_with_family', 'Living with family/friends') },
+                { value: 'homeless', label: t('housingStatus_options.homeless', 'Homeless/Temporary shelter') },
+                { value: 'other', label: t('housingStatus_options.other', 'Other') },
               ]}
             />
 
@@ -217,8 +217,8 @@ export function FormStep2() {
               <ValidatedFormField
                 name="monthlyRent"
                 control={control}
-                label={t('form.monthlyRent', 'Monthly Rent (AED)')}
-                helperText={t('form.monthlyRent_help', 'Your monthly rent payment')}
+                label={t('monthlyRent', 'Monthly Rent (AED)')}
+                helperText={t('monthlyRent_help', 'Your monthly rent payment')}
                 type="number"
                 required
               />
@@ -231,10 +231,10 @@ export function FormStep2() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.benefits_section', 'Government Benefits')}
+            {t('benefits_section', 'Government Benefits')}
           </Card.Title>
           <Card.Description>
-            {t('form.benefits_description', 'Information about any government assistance you receive')}
+            {t('benefits_description', 'Information about any government assistance you receive')}
           </Card.Description>
         </Card.Header>
 
@@ -244,12 +244,12 @@ export function FormStep2() {
             <ValidatedFormField
               name="receivingBenefits"
               control={control}
-              label={t('form.receivingBenefits', 'Currently Receiving Government Benefits')}
-              helperText={t('form.receivingBenefits_help', 'Are you currently receiving any form of government assistance?')}
+              label={t('receivingBenefits', 'Currently Receiving Government Benefits')}
+              helperText={t('receivingBenefits_help', 'Are you currently receiving any form of government assistance?')}
               type="select"
               required
               options={[
-                { value: '', label: t('form.receivingBenefits_select', 'Select an option') },
+                { value: '', label: t('receivingBenefits_select', 'Select an option') },
                 { value: 'true', label: t('common.yes', 'Yes') },
                 { value: 'false', label: t('common.no', 'No') },
               ]}
@@ -260,19 +260,19 @@ export function FormStep2() {
               <ValidatedFormField
                 name="benefitTypes"
                 control={control}
-                label={t('form.benefitTypes', 'Types of Benefits Received')}
-                helperText={t('form.benefitTypes_help', 'Select all types of government benefits you currently receive')}
+                label={t('benefitTypes', 'Types of Benefits Received')}
+                helperText={t('benefitTypes_help', 'Select all types of government benefits you currently receive')}
                 type="checkbox-group"
                 required
                 options={[
-                  { value: 'unemployment', label: t('form.benefitTypes_options.unemployment', 'Unemployment Benefits') },
-                  { value: 'disability', label: t('form.benefitTypes_options.disability', 'Disability Benefits') },
-                  { value: 'housing', label: t('form.benefitTypes_options.housing', 'Housing Assistance') },
-                  { value: 'food', label: t('form.benefitTypes_options.food', 'Food Assistance') },
-                  { value: 'medical', label: t('form.benefitTypes_options.medical', 'Medical Assistance') },
-                  { value: 'elderly', label: t('form.benefitTypes_options.elderly', 'Elderly Support') },
-                  { value: 'family', label: t('form.benefitTypes_options.family', 'Family Support') },
-                  { value: 'other', label: t('form.benefitTypes_options.other', 'Other') },
+                  { value: 'unemployment', label: t('benefitTypes_options.unemployment', 'Unemployment Benefits') },
+                  { value: 'disability', label: t('benefitTypes_options.disability', 'Disability Benefits') },
+                  { value: 'housing', label: t('benefitTypes_options.housing', 'Housing Assistance') },
+                  { value: 'food', label: t('benefitTypes_options.food', 'Food Assistance') },
+                  { value: 'medical', label: t('benefitTypes_options.medical', 'Medical Assistance') },
+                  { value: 'elderly', label: t('benefitTypes_options.elderly', 'Elderly Support') },
+                  { value: 'family', label: t('benefitTypes_options.family', 'Family Support') },
+                  { value: 'other', label: t('benefitTypes_options.other', 'Other') },
                 ]}
               />
             )}
@@ -281,12 +281,12 @@ export function FormStep2() {
             <ValidatedFormField
               name="previouslyApplied"
               control={control}
-              label={t('form.previouslyApplied', 'Previously Applied for Social Support')}
-              helperText={t('form.previouslyApplied_help', 'Have you applied for social support from this program before?')}
+              label={t('previouslyApplied', 'Previously Applied for Social Support')}
+              helperText={t('previouslyApplied_help', 'Have you applied for social support from this program before?')}
               type="select"
               required
               options={[
-                { value: '', label: t('form.previouslyApplied_select', 'Select an option') },
+                { value: '', label: t('previouslyApplied_select', 'Select an option') },
                 { value: 'true', label: t('common.yes', 'Yes') },
                 { value: 'false', label: t('common.no', 'No') },
               ]}
@@ -305,10 +305,10 @@ export function FormStep2() {
           </div>
           <div>
             <h4 className="font-medium text-amber-900 dark:text-amber-100 mb-1">
-              {t('form.financial_notice_title', 'Financial Information')}
+              {t('financial_notice_title', 'Financial Information')}
             </h4>
             <p className="text-sm text-amber-800 dark:text-amber-200">
-              {t('form.financial_notice_text', 'All financial information will be verified. Please ensure accuracy as false information may result in application rejection and potential legal consequences.')}
+              {t('financial_notice_text', 'All financial information will be verified. Please ensure accuracy as false information may result in application rejection and potential legal consequences.')}
             </p>
           </div>
         </div>

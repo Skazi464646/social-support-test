@@ -2,6 +2,7 @@ import { FieldPath, FieldValues, Control, RegisterOptions } from 'react-hook-for
 import { FormField, type FormFieldProps } from '@/components/molecules/FormField';
 import { useController } from 'react-hook-form';
 import { useFormBlur } from '@/context/FormBlurContext';
+import { useDirection } from '@/hooks/useLanguage';
 
 // =============================================================================
 // TYPES
@@ -74,6 +75,7 @@ export function ValidatedFormField<
 }: ValidatedFormFieldProps<TFieldValues, TName>) {
   
   const { onFieldBlur } = useFormBlur();
+  const { isRTL } = useDirection();
   
   const {
     field: { onChange, onBlur, value, ref },
@@ -120,6 +122,19 @@ export function ValidatedFormField<
 
   const hasError = !!error;
   const errorMessage = error?.message;
+  
+  // Determine field direction based on type
+  const getFieldDir = () => {
+    // These field types should always be LTR regardless of page direction
+    const ltrFields = ['email', 'tel', 'number', 'date'];
+    if (ltrFields.includes(type)) {
+      return 'ltr';
+    }
+    // For other fields, use auto to let the browser decide based on content
+    return 'auto';
+  };
+  
+  const fieldDir = getFieldDir();
 
   // Render checkbox field
   if (type === 'checkbox') {
@@ -134,6 +149,7 @@ export function ValidatedFormField<
           aria-invalid={hasError}
           data-dirty={isDirty}
           data-touched={isTouched}
+          dir={fieldDir}
           className="rounded border-input text-primary focus:ring-ring focus:ring-2"
         />
       </div>
@@ -190,6 +206,7 @@ export function ValidatedFormField<
                   aria-invalid={hasError}
                   data-dirty={isDirty}
                   data-touched={isTouched}
+                  dir={fieldDir}
                   className="rounded border-input text-primary focus:ring-ring focus:ring-2 disabled:opacity-50 disabled:pointer-events-none"
                 />
                 <span className="text-sm text-foreground select-none">
@@ -222,6 +239,7 @@ export function ValidatedFormField<
           aria-invalid={hasError}
           data-dirty={isDirty}
           data-touched={isTouched}
+          dir={fieldDir}
           className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-50 disabled:pointer-events-none"
         >
           {options.map((option) => (
@@ -268,6 +286,7 @@ export function ValidatedFormField<
           aria-invalid={hasError}
           data-dirty={isDirty}
           data-touched={isTouched}
+          dir={fieldDir}
           className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-50 disabled:pointer-events-none resize-none"
         />
       </FormField>
@@ -291,6 +310,7 @@ export function ValidatedFormField<
       aria-invalid={hasError}
       data-dirty={isDirty}
       data-touched={isTouched}
+      dir={fieldDir}
     />
   );
 }

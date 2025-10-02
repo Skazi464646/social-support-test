@@ -1,0 +1,182 @@
+{
+  "title": "Financial Information",
+  "description": "Please provide details about your financial situation and housing status.",
+  "step1": {
+    "title": "Personal Information",
+    "description": "Please provide your personal details and contact information."
+  },
+  "step2": {
+    "title": "Financial Information",
+    "description": "Please provide details about your financial situation and housing status."
+  },
+  "step3": {
+    "title": "Application Details",
+    "description": "Please describe your situation and reason for applying."
+  },
+  "family_section": "Family Information",
+  "family_description": "Information about your family status",
+  "employment_section": "Employment Information",
+  "employment_description": "Your current employment and income details",
+  "housing_section": "Housing Information",
+  "housing_description": "Your current housing situation",
+  "benefits_section": "Government Benefits",
+  "benefits_description": "Information about any government assistance you receive",
+  "financial_notice_title": "Financial Information",
+  "financial_notice_text": "All financial information will be verified. Please ensure accuracy as false information may result in application rejection and potential legal consequences.",
+  
+  "fullName": "Full Name",
+  "fullName_placeholder": "Enter your full legal name",
+  "fullName_help": "Enter your full legal name as it appears on your official ID",
+  
+  "nationalId": "National ID",
+  "nationalId_placeholder": "Enter your 10-digit National ID",
+  "nationalId_help": "Your Emirates ID or National ID number (10 digits)",
+  
+  "dateOfBirth": "Date of Birth",
+  "dateOfBirth_help": "You must be at least 18 years old to apply",
+  
+  "gender": "Gender",
+  "gender_help": "Your gender as it appears on official documents",
+  "gender_select": "Select your gender",
+  "gender_options": {
+    "male": "Male",
+    "female": "Female",
+    "other": "Other",
+    "prefer_not_to_say": "Prefer not to say"
+  },
+  
+  "email": "Email Address",
+  "email_placeholder": "Enter your email address",
+  "email_help": "We'll use this email to contact you about your application",
+  
+  "phone": "Phone Number",
+  "phone_placeholder": "Enter your phone number",
+  "phone_help": "Include country code (e.g., +971 for UAE)",
+  
+  "address": "Address",
+  "address_placeholder": "Enter your full address",
+  "address_help": "Your current residential address",
+  
+  "city": "City",
+  "city_placeholder": "Enter your city",
+  "city_help": "The city where you currently reside",
+  
+  "state": "State/Emirate",
+  "state_placeholder": "Enter your state or emirate",
+  "state_help": "Your state, province, or emirate",
+  
+  "country": "Country",
+  "country_help": "Your country of residence",
+  "country_select": "Select your country",
+  
+  "postalCode": "Postal Code",
+  "postalCode_placeholder": "Enter postal code",
+  "postalCode_help": "5-digit postal code (optional)",
+  
+  "maritalStatus": "Marital Status",
+  "maritalStatus_help": "Your current marital status",
+  "maritalStatus_select": "Select marital status",
+  "maritalStatus_options": {
+    "single": "Single",
+    "married": "Married",
+    "divorced": "Divorced",
+    "widowed": "Widowed",
+    "separated": "Separated"
+  },
+  
+  "numberOfDependents": "Number of Dependents",
+  "numberOfDependents_help": "Children or family members you financially support",
+  
+  "employmentStatus": "Employment Status",
+  "employmentStatus_help": "Your current work situation",
+  "employmentStatus_select": "Select employment status",
+  "employmentStatus_options": {
+    "employed": "Employed (Full-time)",
+    "part_time": "Employed (Part-time)",
+    "self_employed": "Self-employed",
+    "unemployed": "Unemployed",
+    "retired": "Retired",
+    "student": "Student",
+    "disabled": "Unable to work (Disability)"
+  },
+  
+  "occupation": "Occupation",
+  "occupation_placeholder": "Enter your job title or profession",
+  "occupation_help": "Your current job title or type of business",
+  
+  "employer": "Employer Name",
+  "employer_placeholder": "Enter your employer name",
+  "employer_help": "The company or organization you work for",
+  
+  "monthlyIncome": "Monthly Income (AED)",
+  "monthlyIncome_help": "Your total monthly income from all sources",
+  
+  "monthlyExpenses": "Monthly Expenses (AED)",
+  "monthlyExpenses_help": "Your total monthly living expenses",
+  
+  "totalSavings": "Total Savings (AED)",
+  "totalSavings_help": "Your current savings and bank deposits",
+  
+  "totalDebt": "Total Debt (AED)",
+  "totalDebt_help": "Your current total debt including loans and credit cards",
+  
+  "housingStatus": "Housing Status",
+  "housingStatus_help": "Your current housing arrangement",
+  "housingStatus_select": "Select housing status",
+  "housingStatus_options": {
+    "own": "Own my home",
+    "rent": "Rent",
+    "living_with_family": "Living with family/friends",
+    "homeless": "Homeless/Temporary shelter",
+    "other": "Other"
+  },
+  
+  "monthlyRent": "Monthly Rent (AED)",
+  "monthlyRent_help": "Your monthly rent payment",
+  
+  "receivingBenefits": "Currently Receiving Government Benefits",
+  "receivingBenefits_help": "Are you currently receiving any form of government assistance?",
+  "receivingBenefits_select": "Select an option",
+  
+  "benefitTypes": "Types of Benefits Received",
+  "benefitTypes_help": "Select all types of government benefits you currently receive",
+  "benefitTypes_options": {
+    "unemployment": "Unemployment Benefits",
+    "disability": "Disability Benefits",
+    "housing": "Housing Assistance",
+    "food": "Food Assistance",
+    "medical": "Medical Assistance",
+    "elderly": "Elderly Support",
+    "family": "Family Support",
+    "other": "Other"
+  },
+  
+  "previouslyApplied": "Previously Applied for Social Support",
+  "previouslyApplied_help": "Have you applied for social support from this program before?",
+  "previouslyApplied_select": "Select an option",
+  
+  "financialSituation": "Financial Situation",
+  "financialSituation_placeholder": "Describe your current financial situation in detail...",
+  "financialSituation_help": "Please describe your financial challenges and circumstances that led you to apply for support. Include details about income loss, unexpected expenses, or other financial hardships.",
+  
+  "employmentCircumstances": "Employment Circumstances",
+  "employmentCircumstances_placeholder": "Describe your employment situation...",
+  "employmentCircumstances_help": "Please explain your current employment situation, including any recent job loss, reduced hours, inability to work, or other employment-related challenges.",
+  
+  "reasonForApplying": "Reason for Applying",
+  "reasonForApplying_placeholder": "Explain why you are applying for social support...",
+  "reasonForApplying_help": "Please explain specifically what type of support you need and how it will help improve your situation.",
+  
+  "additionalComments": "Additional Comments",
+  "additionalComments_placeholder": "Any additional information you'd like to share...",
+  "additionalComments_help": "Optional: Any other relevant information that might help us understand your situation better.",
+  
+  "agreeToTerms": "I agree to the terms and conditions",
+  "agreeToTerms_help": "You must agree to the terms and conditions to submit your application",
+  
+  "consentToDataProcessing": "I consent to data processing",
+  "consentToDataProcessing_help": "You must consent to data processing for your application to be reviewed",
+  
+  "allowContactForClarification": "Allow contact for clarification",
+  "allowContactForClarification_help": "Can we contact you if we need clarification on your application?"
+}

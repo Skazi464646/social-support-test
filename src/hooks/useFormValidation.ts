@@ -148,24 +148,27 @@ export function useFormValidation<T extends FieldValues>({
 // =============================================================================
 
 import { 
-  step1Schema, 
-  step2Schema, 
-  step3Schema,
   Step1FormData,
   Step2FormData,
-  Step3FormData,
-  getStepDefaults
+  Step3FormData
 } from '@/lib/validation/schemas';
 
+import { 
+  useValidationSchemas,
+  getStepDefaults as getI18nStepDefaults
+} from '@/lib/validation/i18n-schemas';
+
 /**
- * Hook for Step 1 form validation (Personal Information)
+ * Hook for Step 1 form validation (Personal Information) - Now with i18n support
  */
 export function useStep1Form(options?: Omit<FormValidationOptions<Step1FormData>, 'schema'>) {
   const { defaultValues, ...restOptions } = options ?? {};
+  const schemas = useValidationSchemas();
+  
   return useFormValidation({
-    schema: step1Schema,
+    schema: schemas.step1Schema,
     defaultValues: {
-      ...getStepDefaults(1).step1,
+      ...getI18nStepDefaults(1).step1,
       ...(defaultValues ?? {}),
     },
     ...restOptions,
@@ -173,33 +176,36 @@ export function useStep1Form(options?: Omit<FormValidationOptions<Step1FormData>
 }
 
 /**
- * Hook for Step 2 form validation (Financial Information)
+ * Hook for Step 2 form validation (Financial Information) - Now with i18n support
  */
 export function useStep2Form(options?: Omit<FormValidationOptions<Step2FormData>, 'schema'>) {
   const { defaultValues, ...restOptions } = options ?? {};
+  const schemas = useValidationSchemas();
   
   // Merge defaults with provided values, ensuring proper typing
   const mergedDefaults = {
-    ...getStepDefaults(2).step2,
+    ...getI18nStepDefaults(2).step2,
     ...(defaultValues ?? {}),
   };
   
   return useFormValidation({
-    schema: step2Schema,
+    schema: schemas.step2Schema,
     defaultValues: mergedDefaults,
     ...restOptions,
   });
 }
 
 /**
- * Hook for Step 3 form validation (Descriptive Information)
+ * Hook for Step 3 form validation (Descriptive Information) - Now with i18n support
  */
 export function useStep3Form(options?: Omit<FormValidationOptions<Step3FormData>, 'schema'>) {
   const { defaultValues, ...restOptions } = options ?? {};
+  const schemas = useValidationSchemas();
+  
   return useFormValidation({
-    schema: step3Schema,
+    schema: schemas.step3Schema,
     defaultValues: {
-      ...getStepDefaults(3).step3,
+      ...getI18nStepDefaults(3).step3,
       ...(defaultValues ?? {}),
     },
     ...restOptions,
@@ -228,8 +234,18 @@ export function getFormHookForStep(step: number) {
 
 /**
  * Validate form data for a specific step without using the hook
+ * Note: This function should be used with the i18n validation utilities for proper localized error messages
  */
-export function validateStepData(step: number, data: any) {
+export function validateStepData(step: number, data: any, t?: (key: string, options?: any) => string) {
+  // Import here to avoid circular dependencies
+  const { validateFormStep } = require('@/lib/validation/i18n-schemas');
+  
+  if (t) {
+    return validateFormStep(step, data, t);
+  }
+  
+  // Fallback to hardcoded schemas if no translation function provided
+  const { step1Schema, step2Schema, step3Schema } = require('@/lib/validation/schemas');
   const schemas = [step1Schema, step2Schema, step3Schema];
   const schema = schemas[step - 1];
   
