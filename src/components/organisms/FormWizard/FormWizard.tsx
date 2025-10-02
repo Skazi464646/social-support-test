@@ -20,7 +20,7 @@ import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, For
 // =============================================================================
 
 export function FormWizard() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['form', 'common']);
   const { state, nextStep, previousStep, updateFormData, markStepComplete, dispatch } = useFormWizard();
   const { success: showSuccess, error: showError } = useToast();
   const [submissionState, setSubmissionState] = useState<{
@@ -135,16 +135,16 @@ export function FormWizard() {
       } else {
         // Show success message and navigate to next step
         showSuccess({
-          title: t('form.step_completed'),
-          description: t('form.step_saved_successfully'),
+          title: t('step_completed'),
+          description: t('step_saved_successfully'),
         });
         nextStep();
       }
     } catch (error) {
       console.error('Step submission error:', error);
       showError({
-        title: t('form.error'),
-        description: t('form.step_save_error'),
+        title: t('error'),
+        description: t('step_save_error'),
       });
     }
   };
@@ -173,8 +173,8 @@ export function FormWizard() {
       });
 
       showSuccess({
-        title: t('form.submission_success'),
-        description: t('form.submission_success_message', { applicationId: response.applicationId }),
+        title: t('submission_success'),
+        description: t('submission_success_message', { applicationId: response.applicationId }),
         duration: 10000,
       });
 
@@ -232,7 +232,7 @@ export function FormWizard() {
     return (
       <div className="text-sm text-muted-foreground flex items-center gap-2">
         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-        {t('form.auto_saved')} {timeAgo}
+        {t('auto_saved')} {timeAgo}
       </div>
     );
   };
@@ -242,10 +242,10 @@ export function FormWizard() {
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">
-          {t('form.title')}
+          {t('title')}
         </h1>
         <p className="text-muted-foreground">
-          {t('form.description')}
+          {t('description')}
         </p>
       </div>
 
@@ -314,13 +314,13 @@ export function FormWizard() {
           <div className="text-center">
             <div className="text-green-600 dark:text-green-400 text-2xl mb-2">✓</div>
             <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
-              {t('form.submission_success')}
+              {t('submission_success')}
             </h3>
             <p className="text-green-700 dark:text-green-300 mb-4">
-              {t('form.application_id')}: <strong>{submissionState.applicationId}</strong>
+              {t('application_id')}: <strong>{submissionState.applicationId}</strong>
             </p>
             <p className="text-sm text-green-600 dark:text-green-400">
-              {t('form.confirmation_email_sent')}
+              {t('confirmation_email_sent')}
             </p>
           </div>
         </Card>

@@ -311,7 +311,20 @@ const loadCoreResources = async (): Promise<any> => {
           allowContactForClarification: "Allow contact for clarification",
           allowContactForClarification_help: "You give permission to be contacted if additional information or clarification is needed for your application.",
           final_notice_title: "Application Review",
-          final_notice_text: "Your application will be reviewed by our support team. We may contact you if additional information is needed. Processing typically takes 5-10 business days."
+          final_notice_text: "Your application will be reviewed by our support team. We may contact you if additional information is needed. Processing typically takes 5-10 business days.",
+          
+          // General form messages
+          title: "Social Support Application",
+          description: "Complete this form to apply for social support assistance",
+          step_completed: "Step Completed",
+          step_saved_successfully: "Step saved successfully",
+          error: "Error",
+          step_save_error: "Failed to save step data",
+          submission_success: "Application Submitted Successfully",
+          submission_success_message: "Your application has been submitted with ID: {{applicationId}}",
+          application_id: "Application ID",
+          confirmation_email_sent: "A confirmation email has been sent to your registered email address",
+          auto_saved: "Auto-saved"
         },
         validation: {
           required: "This field is required",
@@ -344,6 +357,18 @@ const loadCoreResources = async (): Promise<any> => {
             accept: 'Accept',
             edit: 'Edit',
             discard: 'Discard'
+          },
+          common: {
+            yes: 'Yes',
+            no: 'No'
+          },
+          progress: {
+            status_current: 'Current step',
+            status_complete: 'Completed step',
+            status_upcoming: 'Upcoming step',
+            step_indicator: 'Step {{step}} of {{total}} – {{status}}',
+            step_label: 'Step {{step}}',
+            nav_label: 'Application progress'
           },
           status: {
             success: 'Success',
@@ -558,7 +583,20 @@ const loadCoreResources = async (): Promise<any> => {
           allowContactForClarification: "السماح بالاتصال للتوضيح",
           allowContactForClarification_help: "تمنح الإذن بالاتصال بك إذا كانت هناك حاجة لمعلومات إضافية أو توضيح لطلبك.",
           final_notice_title: "مراجعة الطلب",
-          final_notice_text: "سيتم مراجعة طلبك من قبل فريق الدعم لدينا. قد نتواصل معك إذا كانت هناك حاجة لمعلومات إضافية. تستغرق المعالجة عادة 5-10 أيام عمل."
+          final_notice_text: "سيتم مراجعة طلبك من قبل فريق الدعم لدينا. قد نتواصل معك إذا كانت هناك حاجة لمعلومات إضافية. تستغرق المعالجة عادة 5-10 أيام عمل.",
+          
+          // General form messages
+          title: "طلب الدعم الاجتماعي",
+          description: "أكمل هذا النموذج للتقدم بطلب للحصول على مساعدة الدعم الاجتماعي",
+          step_completed: "تم إكمال الخطوة",
+          step_saved_successfully: "تم حفظ الخطوة بنجاح",
+          error: "خطأ",
+          step_save_error: "فشل في حفظ بيانات الخطوة",
+          submission_success: "تم إرسال الطلب بنجاح",
+          submission_success_message: "تم إرسال طلبك برقم: {{applicationId}}",
+          application_id: "رقم الطلب",
+          confirmation_email_sent: "تم إرسال رسالة تأكيد إلى عنوان بريدك الإلكتروني المسجل",
+          auto_saved: "حفظ تلقائي"
         },
         validation: {
           required: "هذا الحقل مطلوب",
@@ -591,6 +629,18 @@ const loadCoreResources = async (): Promise<any> => {
             accept: 'قبول',
             edit: 'تحرير',
             discard: 'تجاهل'
+          },
+          common: {
+            yes: 'نعم',
+            no: 'لا'
+          },
+          progress: {
+            status_current: 'الخطوة الحالية',
+            status_complete: 'خطوة مكتملة',
+            status_upcoming: 'خطوة قادمة',
+            step_indicator: 'الخطوة {{step}} من {{total}} – {{status}}',
+            step_label: 'الخطوة {{step}}',
+            nav_label: 'تقدم الطلب'
           },
           status: {
             success: 'نجح',
