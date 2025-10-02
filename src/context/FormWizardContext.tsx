@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import type { FormWizardState, FormWizardAction, FormStepData } from '@/types/form.types';
-import { transformForStorage, transformFromStorage, safeParseStorageData } from '@/lib/utils/form-data-transform';
+import { transformForStorage, transformFromStorage } from '@/lib/utils/form-data-transform';
 
 // =============================================================================
 // CONTEXT
@@ -32,6 +32,7 @@ const initialState: FormWizardState = {
   isSubmitting: false,
   submitError: null,
   lastSaved: null,
+  isLoaded: false,
 };
 
 function formWizardReducer(state: FormWizardState, action: FormWizardAction): FormWizardState {
@@ -73,6 +74,7 @@ function formWizardReducer(state: FormWizardState, action: FormWizardAction): Fo
         formData: action.payload.formData || {},
         completedSteps: new Set(action.payload.completedSteps || []),
         lastSaved: action.payload.lastSaved || null,
+        isLoaded: true,
       };
     
     default:
@@ -94,6 +96,13 @@ export function FormWizardProvider({ children }: { children: ReactNode }) {
       try {
         const parsedData = JSON.parse(saved);
         const transformedFormData = transformFromStorage(parsedData.formData || {});
+        
+        if (import.meta.env?.DEV) {
+          console.log('[FormWizardContext] Loading from localStorage:');
+          console.log('Original data:', parsedData.formData);
+          console.log('Transformed data:', transformedFormData);
+        }
+        
         dispatch({ 
           type: 'LOAD_FROM_STORAGE', 
           payload: {
@@ -104,7 +113,12 @@ export function FormWizardProvider({ children }: { children: ReactNode }) {
       } catch (error) {
         console.error('Failed to parse saved form data:', error);
         localStorage.removeItem('formWizardData');
+        // Mark as loaded even if there was an error
+        dispatch({ type: 'LOAD_FROM_STORAGE', payload: {} });
       }
+    } else {
+      // No saved data, mark as loaded with empty state
+      dispatch({ type: 'LOAD_FROM_STORAGE', payload: {} });
     }
   }, []);
 

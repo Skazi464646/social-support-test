@@ -26,6 +26,7 @@ export interface FormWizardState {
   isSubmitting: boolean;
   submitError: string | null;
   lastSaved: string | null;
+  isLoaded: boolean;
 }
 
 export type FormWizardAction =
@@ -37,7 +38,7 @@ export type FormWizardAction =
   | { type: 'SET_SUBMITTING'; payload: boolean }
   | { type: 'SET_SUBMIT_ERROR'; payload: string | null }
   | { type: 'RESET_FORM' }
-  | { type: 'LOAD_FROM_STORAGE'; payload: { formData: FormStepData; completedSteps: number[]; lastSaved: string | null } };
+  | { type: 'LOAD_FROM_STORAGE'; payload: { formData?: FormStepData; completedSteps?: number[]; lastSaved?: string | null } };
 
 // =============================================================================
 // FORM FIELD TYPES

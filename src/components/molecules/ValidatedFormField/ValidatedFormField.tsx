@@ -1,6 +1,7 @@
 import { FieldPath, FieldValues, Control, RegisterOptions } from 'react-hook-form';
 import { FormField, type FormFieldProps } from '@/components/molecules/FormField';
 import { useController } from 'react-hook-form';
+import { useFormBlur } from '@/context/FormBlurContext';
 
 // =============================================================================
 // TYPES
@@ -72,6 +73,8 @@ export function ValidatedFormField<
   ...fieldProps
 }: ValidatedFormFieldProps<TFieldValues, TName>) {
   
+  const { onFieldBlur } = useFormBlur();
+  
   const {
     field: { onChange, onBlur, value, ref },
     fieldState: { error, isDirty, isTouched },
@@ -108,6 +111,13 @@ export function ValidatedFormField<
     }
   };
 
+  const wrappedOnBlur = () => {
+    // Call the form's onBlur first
+    onBlur();
+    // Then call our custom onFieldBlur for auto-save
+    onFieldBlur();
+  };
+
   const hasError = !!error;
   const errorMessage = error?.message;
 
@@ -120,7 +130,7 @@ export function ValidatedFormField<
           type="checkbox"
           checked={!!value}
           onChange={(e) => wrappedOnChange(e.target.checked)}
-          onBlur={onBlur}
+          onBlur={wrappedOnBlur}
           aria-invalid={hasError}
           data-dirty={isDirty}
           data-touched={isTouched}
@@ -145,7 +155,7 @@ export function ValidatedFormField<
           ref={ref}
           value={value || ''}
           onChange={(e) => wrappedOnChange(e.target.value)}
-          onBlur={onBlur}
+          onBlur={wrappedOnBlur}
           aria-invalid={hasError}
           data-dirty={isDirty}
           data-touched={isTouched}
@@ -189,7 +199,7 @@ export function ValidatedFormField<
           ref={ref}
           value={value || ''}
           onChange={(e) => wrappedOnChange(e.target.value)}
-          onBlur={onBlur}
+          onBlur={wrappedOnBlur}
           rows={rows}
           maxLength={maxLength}
           aria-invalid={hasError}
@@ -213,7 +223,7 @@ export function ValidatedFormField<
       hasError={hasError}
       value={value}
       onChange={wrappedOnChange}
-      onBlur={onBlur}
+      onBlur={wrappedOnBlur}
       type={type}
       aria-invalid={hasError}
       data-dirty={isDirty}

@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState, useRef } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useFormWizard } from '@/context/FormWizardContext';
+import { FormBlurProvider } from '@/context/FormBlurContext';
 import { useStep1Form, useStep2Form, useStep3Form } from '@/hooks/useFormValidation';
 import { Button } from '@/components/atoms/Button';
 import { ProgressBar } from '@/components/molecules/ProgressBar';
@@ -28,18 +29,14 @@ export function FormWizard() {
     error?: FormSubmissionError;
   }>({ isSubmitting: false });
 
-  // Step-specific form hooks
-  const step1Form = useStep1Form({
-    defaultValues: state.formData.step1,
-  });
+  // Track if we've loaded data from localStorage
+  const hasLoadedFromStorageRef = useRef<boolean>(false);
+  const [formsInitialized, setFormsInitialized] = useState(false);
 
-  const step2Form = useStep2Form({
-    defaultValues: state.formData.step2,
-  });
-
-  const step3Form = useStep3Form({
-    defaultValues: state.formData.step3,
-  });
+  // Step-specific form hooks - initialize with empty defaults first
+  const step1Form = useStep1Form();
+  const step2Form = useStep2Form();
+  const step3Form = useStep3Form();
 
   // Get current form based on step
   const getCurrentForm = () => {
@@ -53,46 +50,59 @@ export function FormWizard() {
 
   const currentForm = getCurrentForm();
 
-  // Auto-save on form data change
-  const handleAutoSave = useCallback((data: any) => {
-    const stepKey = `step${state.currentStep}` as keyof FormStepData;
-    updateFormData({ [stepKey]: data });
-  }, [state.currentStep, updateFormData]);
-
-  // Reset form values when step data changes (e.g., from localStorage)
-  // Only reset when localStorage data is first loaded, not on every form change
+  // Initialize forms with localStorage data once it's loaded
   useEffect(() => {
-    const stepKey = `step${state.currentStep}` as keyof FormStepData;
-    const stepData = state.formData[stepKey];
-    
-    // Only reset if we have saved data AND the form is currently empty/default
-    if (stepData && Object.keys(stepData).length > 0) {
-      const currentValues = currentForm.getValues();
-      const hasCurrentData = currentValues && Object.keys(currentValues).some(key => {
-        const value = currentValues[key as keyof typeof currentValues];
-        return value !== '' && value !== 0 && value !== false && value !== null && value !== undefined;
-      });
+    // Wait for localStorage data to be loaded (using the isLoaded flag)
+    if (!hasLoadedFromStorageRef.current && state.isLoaded) {
+      hasLoadedFromStorageRef.current = true;
       
-      // Only reset if form is empty (initial load) to prevent infinite loops
-      if (!hasCurrentData) {
+      if (import.meta.env.DEV) {
+        console.log('[FormWizard] Initializing forms with localStorage data:', state.formData);
+      }
+      
+      // Reset all forms with their respective data (only if data exists)
+      if (state.formData.step1 && Object.keys(state.formData.step1).length > 0) {
+        step1Form.reset(state.formData.step1);
+      }
+      if (state.formData.step2 && Object.keys(state.formData.step2).length > 0) {
+        step2Form.reset(state.formData.step2);
+      }
+      if (state.formData.step3 && Object.keys(state.formData.step3).length > 0) {
+        step3Form.reset(state.formData.step3);
+      }
+      
+      setFormsInitialized(true);
+    }
+  }, [state.isLoaded, state.formData]); // Watch for isLoaded flag
+
+  // Pre-fill when switching steps (if data exists for that step and forms are initialized)
+  useEffect(() => {
+    if (formsInitialized) {
+      const stepKey = `step${state.currentStep}` as keyof FormStepData;
+      const stepData = state.formData[stepKey];
+      
+      if (stepData && Object.keys(stepData).length > 0) {
+        if (import.meta.env.DEV) {
+          console.log(`[FormWizard] Pre-filling Step ${state.currentStep} on step change`);
+        }
         currentForm.reset(stepData);
       }
     }
-  }, [state.currentStep]); // Only depend on step change, not formData
+  }, [state.currentStep, formsInitialized]); // Watch for step changes after forms are initialized
 
-  // Watch form changes for auto-save
-  useEffect(() => {
-    const subscription = currentForm.watch((data) => {
-      if (data && Object.keys(data).length > 0) {
-        handleAutoSave(data);
+  // Save form data on blur (simple and clean)
+  const handleFieldBlur = useCallback(() => {
+    const currentData = currentForm.getValues();
+    if (currentData && Object.keys(currentData).length > 0) {
+      const stepKey = `step${state.currentStep}` as keyof FormStepData;
+      
+      if (import.meta.env.DEV) {
+        console.log(`[FormWizard] Auto-saving Step ${state.currentStep} on field blur`);
       }
-    });
-    return () => {
-      if (typeof subscription === 'object' && subscription && 'unsubscribe' in subscription) {
-        subscription.unsubscribe();
-      }
-    };
-  }, [currentForm, handleAutoSave]);
+      
+      updateFormData({ [stepKey]: currentData });
+    }
+  }, [state.currentStep, updateFormData, currentForm]);
 
   // Handle step submission
   const handleStepSubmit = async (data: Step1FormData | Step2FormData | Step3FormData) => {
@@ -249,13 +259,14 @@ export function FormWizard() {
       {/* Form Card */}
       <Card className="p-6 mb-6">
         <FormProvider {...(currentForm as any)}>
-          <form onSubmit={currentForm.handleSubmit(handleStepSubmit)}>
-            {/* Step Content */}
-            <div className="space-y-6">
-              {state.currentStep === 1 && <FormStep1 />}
-              {state.currentStep === 2 && <FormStep2 />}
-              {state.currentStep === 3 && <FormStep3 />}
-            </div>
+          <FormBlurProvider onFieldBlur={handleFieldBlur}>
+            <form onSubmit={currentForm.handleSubmit(handleStepSubmit)}>
+              {/* Step Content */}
+              <div className="space-y-6">
+                {state.currentStep === 1 && <FormStep1 />}
+                {state.currentStep === 2 && <FormStep2 />}
+                {state.currentStep === 3 && <FormStep3 />}
+              </div>
 
             {/* Navigation */}
             <div className="flex justify-between items-center mt-8 pt-6 border-t">
@@ -351,6 +362,7 @@ export function FormWizard() {
               </div>
             </div>
           </form>
+          </FormBlurProvider>
         </FormProvider>
       </Card>
 
