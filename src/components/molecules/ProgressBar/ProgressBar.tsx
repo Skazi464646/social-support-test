@@ -17,96 +17,105 @@ export interface ProgressBarProps {
 // COMPONENT
 // =============================================================================
 
-export function ProgressBar({ 
-  currentStep, 
-  totalSteps, 
+export function ProgressBar({
+  currentStep,
+  totalSteps,
   completedSteps = new Set(),
-  className 
+  className,
 }: ProgressBarProps) {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === 'ar';
-  
-  const steps = Array.from({ length: totalSteps }, (_, i) => i + 1);
-  const progressPercentage = ((currentStep - 1) / (totalSteps - 1)) * 100;
+
+  const steps = Array.from({ length: totalSteps }, (_, index) => index + 1);
+  const progressRatio = totalSteps > 1 ? Math.min(Math.max((currentStep - 1) / (totalSteps - 1), 0), 1) : 0;
+
+  const getStepStatus = (step: number) => {
+    if (completedSteps.has(step) || step < currentStep) {
+      return 'complete' as const;
+    }
+    if (step === currentStep) {
+      return 'current' as const;
+    }
+    return 'upcoming' as const;
+  };
+
+  const renderSteps = steps.map((step) => {
+    const status = getStepStatus(step);
+
+    const statusText =
+      status === 'current'
+        ? t('progress.status_current', 'Current step')
+        : status === 'complete'
+          ? t('progress.status_complete', 'Completed step')
+          : t('progress.status_upcoming', 'Upcoming step');
+
+    const circleClasses = cn(
+      'relative z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 text-sm font-semibold transition-all duration-300 transform',
+      status === 'complete' && 'bg-[var(--color-green-500)] text-white border-transparent shadow-sm',
+      status === 'current' && 'bg-[var(--color-green-500)] text-white border-transparent shadow-lg scale-105',
+      status === 'upcoming' && 'bg-surface text-muted-foreground border-muted-border'
+    );
+
+    return (
+      <li key={step} className="flex flex-col items-center text-center">
+        <div className={circleClasses} aria-current={status === 'current' ? 'step' : undefined}>
+          <span className="sr-only">
+            {t('progress.step_indicator', {
+              step,
+              total: totalSteps,
+              status: statusText,
+              defaultValue: `Step ${step} of ${totalSteps} – ${statusText}`,
+            })}
+          </span>
+          {status === 'complete' ? (
+            <CheckCircle className="h-4 w-4" aria-hidden="true" />
+          ) : (
+            <span aria-hidden="true">{step}</span>
+          )}
+        </div>
+
+        <div
+          className={cn(
+            'mt-2 min-w-0 px-1 text-xs font-medium text-muted-foreground',
+            (status === 'current' || status === 'complete') && 'text-foreground'
+          )}
+        >
+          {t('progress.step_label', { step })}
+        </div>
+      </li>
+    );
+  });
 
   return (
-    <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
-      {/* Progress Line */}
+    <nav
+      className={cn('w-full', className)}
+      aria-label={t('progress.nav_label', 'Application progress')}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className="relative">
-        {/* Background line */}
-        <div className="absolute top-1/2 inset-x-0 h-0.5 bg-muted -translate-y-1/2" />
-        
-        {/* Progress fill line - adjusts direction based on RTL */}
-        <div 
+        <div className="pointer-events-none absolute inset-x-[20px] top-1/2 h-[2px] -translate-y-1/2 bg-border" aria-hidden="true" />
+        <div
           className={cn(
-            "absolute top-1/2 h-0.5 bg-primary -translate-y-1/2 transition-all duration-300",
-            isRTL ? "right-0" : "left-0"
+            'pointer-events-none absolute inset-y-auto top-1/2 h-[2px] -translate-y-1/2 bg-[var(--color-green-500)] origin-left transition-transform duration-300',
+            isRTL && 'left-auto right-[20px] origin-right',
+            !isRTL && 'left-[20px]'
           )}
-          style={{ 
-            width: `${progressPercentage}%`,
-            transformOrigin: isRTL ? 'right' : 'left'
+          style={{
+            width: 'calc(100% - 40px)',
+            transform: `scaleX(${progressRatio})`,
           }}
+          aria-hidden="true"
         />
-        
-        {/* Step indicators */}
-        <div className={cn(
-          "relative flex",
-          isRTL ? "justify-between flex-row-reverse" : "justify-between"
-        )}>
-          {steps.map((step) => {
-            const isCompleted = completedSteps.has(step);
-            const isCurrent = step === currentStep;
-            const isPast = step < currentStep;
-            
-            return (
-              <div
-                key={step}
-                className="flex flex-col items-center relative"
-                role="progressbar"
-                aria-valuenow={step}
-                aria-valuemin={1}
-                aria-valuemax={totalSteps}
-                aria-current={isCurrent ? 'step' : undefined}
-                aria-label={t('progress.step_indicator', { step, total: totalSteps })}
-              >
-                {/* Step circle */}
-                <div
-                  className={cn(
-                    'w-8 h-8 rounded-full border-2 flex items-center justify-center text-sm font-medium transition-all duration-200 relative z-10',
-                    // Enhanced styling with better contrast
-                    isCompleted && 'bg-green-500 border-green-500 text-white shadow-sm',
-                    isCurrent && !isCompleted && 'bg-primary border-primary text-primary-foreground shadow-sm ring-2 ring-primary/20',
-                    !isCurrent && !isCompleted && !isPast && 'bg-background border-muted-foreground/60 text-muted-foreground',
-                    isPast && !isCompleted && 'bg-muted border-muted text-muted-foreground'
-                  )}
-                  aria-hidden="true"
-                >
-                  {isCompleted ? (
-                    <CheckCircle className="w-4 h-4" />
-                  ) : (
-                    <span className={cn(isRTL && "transform scale-x-[-1]")}>
-                      {step}
-                    </span>
-                  )}
-                </div>
-                
-                {/* Step label */}
-                <div className="mt-2 text-center min-w-0">
-                  <div
-                    className={cn(
-                      'text-xs font-medium whitespace-nowrap px-1',
-                      (isCurrent || isCompleted) && 'text-foreground',
-                      !isCurrent && !isCompleted && 'text-muted-foreground'
-                    )}
-                  >
-                    {t('progress.step_label', { step })}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <ol
+          role="list"
+          className={cn(
+            'relative z-[1] flex w-full items-center justify-between',
+            isRTL && 'flex-row-reverse'
+          )}
+        >
+          {renderSteps}
+        </ol>
       </div>
-    </div>
+    </nav>
   );
 }
