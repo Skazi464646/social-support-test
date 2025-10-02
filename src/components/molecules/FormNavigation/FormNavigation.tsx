@@ -65,24 +65,36 @@ function StepIndicators({ currentStep, completedSteps }: Pick<FormNavigationProp
   );
 }
 
-function ActionButtons({ 
-  currentStep, 
-  isSubmitting, 
-  isSubmitted, 
-  hasError, 
-  onRetry, 
-  isMobile = false 
+function ActionButtons({
+  currentStep,
+  isSubmitting,
+  isSubmitted,
+  hasError,
+  onRetry,
+  isMobile = false,
 }: Omit<FormNavigationProps, 'onDebug'> & { isMobile?: boolean }) {
   const { t } = useTranslation();
   const buttonSize = isMobile ? 'sm' : undefined;
-  
+
   const getSubmitButtonText = () => {
     if (isSubmitted) return t('form.submitted');
     return currentStep === 3 ? t('actions.submit') : t('actions.next');
   };
 
+  const mobileButtonWidths = cn(
+    'flex-1',
+    BUTTON_TOKENS.width.mobileMin,
+    BUTTON_TOKENS.width.mobileMax
+  );
+
   return (
-    <div className={cn(`flex ${BUTTON_TOKENS.gap.buttons}`, isMobile && 'flex-1')}>
+    <div
+      className={cn(
+        'flex items-center',
+        BUTTON_TOKENS.gap.buttons,
+        isMobile && 'flex-shrink-0'
+      )}
+    >
       {hasError && (
         <Button
           type="button"
@@ -90,7 +102,7 @@ function ActionButtons({
           onClick={onRetry}
           disabled={isSubmitting}
           size={buttonSize}
-          className={isMobile ? undefined : BUTTON_TOKENS.width.desktop}
+          className={isMobile ? mobileButtonWidths : BUTTON_TOKENS.width.desktop}
         >
           {t('actions.retry')}
         </Button>
@@ -102,7 +114,7 @@ function ActionButtons({
         isLoading={isSubmitting}
         size={buttonSize}
         className={cn(
-          isMobile ? `flex-1 ${BUTTON_TOKENS.width.mobileMin}` : BUTTON_TOKENS.width.desktop
+          isMobile ? mobileButtonWidths : BUTTON_TOKENS.width.desktop
         )}
       >
         {getSubmitButtonText()}
@@ -127,14 +139,23 @@ export function FormNavigation(props: FormNavigationProps) {
           <StepIndicators currentStep={currentStep} completedSteps={props.completedSteps} />
         </div>
         
-        <div className={`flex justify-between items-center ${BUTTON_TOKENS.gap.sections}`}>
+        <div
+          className={cn(
+            'flex items-center justify-center',
+            BUTTON_TOKENS.gap.sections
+          )}
+        >
           <Button
             type="button"
             variant="outline"
             onClick={onPrevious}
             disabled={currentStep === 1}
             size="sm"
-            className={`flex-1 ${BUTTON_TOKENS.width.mobileMax}`}
+            className={cn(
+              'flex-1',
+              BUTTON_TOKENS.width.mobileMin,
+              BUTTON_TOKENS.width.mobileMax
+            )}
           >
             {t('actions.back')}
           </Button>

@@ -226,15 +226,15 @@ export function AIAssistModal({
           </div>
         </div>
 
-        <div className="flex h-[60vh]">
+        <div className="flex flex-col lg:flex-row lg:h-[60vh] max-h-[80vh]">
           {/* Left Panel - Suggestions */}
-          <div className="w-1/3 border-r border-gray-200 flex flex-col">
+          <div className="w-full lg:w-1/3 flex flex-col border-gray-200 border-b lg:border-b-0 lg:border-r">
             <div className="p-4 border-b border-gray-100">
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   onClick={generateSuggestion}
                   disabled={isLoading}
-                  className="flex-1 bg-blue-600 text-white px-3 py-2 rounded text-sm hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 bg-blue-600 text-white px-3 py-2 rounded text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <>
@@ -249,7 +249,7 @@ export function AIAssistModal({
                   <button
                     onClick={regenerateSuggestion}
                     disabled={isLoading}
-                    className="px-3 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 disabled:opacity-50"
+                    className="px-3 py-2 border border-gray-300 rounded text-sm font-medium hover:bg-gray-50 disabled:opacity-50"
                     title="Generate another suggestion"
                   >
                     🔄
@@ -333,7 +333,7 @@ export function AIAssistModal({
           </div>
 
           {/* Right Panel - Editor */}
-          <div className="flex-1 flex flex-col">
+          <div className="flex-1 w-full flex flex-col">
             <div className="p-4 border-b border-gray-100">
               <div className="flex items-center justify-between">
                 <h3 className="font-medium text-gray-900">Edit Your Response</h3>
@@ -404,21 +404,21 @@ export function AIAssistModal({
 
         {/* Footer */}
         <div className="border-t border-gray-200 px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="text-sm text-gray-500">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-sm text-gray-500 leading-snug">
               Rate limit: {openAIService.getRateLimitStatus().tokensAvailable} requests remaining
             </div>
-            <div className="flex gap-3">
+            <div className="flex flex-col-reverse sm:flex-row gap-3 w-full sm:w-auto">
               <button
                 onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium w-full sm:w-auto"
               >
                 Cancel
               </button>
               <button
                 onClick={acceptSuggestion}
                 disabled={!editedText.trim() || !isValidLength}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium w-full sm:w-auto"
               >
                 Use This Text
               </button>
