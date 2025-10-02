@@ -9,7 +9,7 @@ import type { Step1FormData } from '@/lib/validation/schemas';
 // =============================================================================
 
 export function FormStep1() {
-  const { t, i18n } = useTranslation(['form', 'common']);
+  const { t, i18n } = useTranslation(['form', 'common', 'validation']);
   const { control, watch } = useFormContext<Step1FormData>();
   
   // Debug logging

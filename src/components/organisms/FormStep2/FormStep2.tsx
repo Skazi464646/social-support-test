@@ -9,7 +9,7 @@ import type { Step2FormData } from '@/lib/validation/schemas';
 // =============================================================================
 
 export function FormStep2() {
-  const { t } = useTranslation(['form', 'common']);
+  const { t } = useTranslation(['form', 'common', 'validation']);
   const { control, watch } = useFormContext<Step2FormData>();
 
   // Watch for conditional fields

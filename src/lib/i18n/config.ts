@@ -335,7 +335,18 @@ const loadCoreResources = async (): Promise<any> => {
           },
           email: {
             invalid: "Please enter a valid email address"
-          }
+          },
+          financialSituation: {
+            too_short: "Please provide at least 50 characters describing your financial situation"
+          },
+          employmentCircumstances: {
+            too_short: "Please provide at least 50 characters describing your employment circumstances"
+          },
+          reasonForApplying: {
+            too_short: "Please provide at least 50 characters explaining why you are applying"
+          },
+          invalid_string_min: "Must be at least {{minimum}} characters",
+          invalid_string_max: "Must not exceed {{maximum}} characters"
         },
         common: {
           language: { 
@@ -607,7 +618,18 @@ const loadCoreResources = async (): Promise<any> => {
           },
           email: {
             invalid: "يرجى إدخال عنوان بريد إلكتروني صحيح"
-          }
+          },
+          financialSituation: {
+            too_short: "يرجى تقديم 50 حرفاً على الأقل لوصف وضعك المالي"
+          },
+          employmentCircumstances: {
+            too_short: "يرجى تقديم 50 حرفاً على الأقل لوصف ظروف عملك"
+          },
+          reasonForApplying: {
+            too_short: "يرجى تقديم 50 حرفاً على الأقل لتوضيح سبب تقديم الطلب"
+          },
+          invalid_string_min: "يجب أن يكون {{minimum}} أحرف على الأقل",
+          invalid_string_max: "يجب ألا يتجاوز {{maximum}} حرف"
         },
         common: {
           language: { 

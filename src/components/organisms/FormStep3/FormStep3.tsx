@@ -10,7 +10,7 @@ import type { Step3FormData } from '@/lib/validation/schemas';
 // =============================================================================
 
 export function FormStep3() {
-  const { t } = useTranslation(['form', 'common']);
+  const { t } = useTranslation(['form', 'common', 'validation']);
   const { control } = useFormContext<Step3FormData>();
 
   // For now, we'll simplify the AI context - this can be improved later
