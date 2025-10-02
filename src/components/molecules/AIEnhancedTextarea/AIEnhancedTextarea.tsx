@@ -6,6 +6,7 @@
 import { forwardRef } from 'react';
 import { AIAssistModal } from '@/components/organisms/AIAssistModal';
 import { useAIAssist } from '@/hooks/useAIAssist';
+import { cn } from '@/lib/utils';
 
 interface AIEnhancedTextareaProps {
   fieldName: string;
@@ -93,16 +94,24 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
 
         {/* Character Count */}
         {showCharacterCount && (
-          <div className="flex justify-between items-center mt-1 text-xs">
-            <div>
+          <div className="mt-1 flex flex-col gap-1 text-xs leading-snug text-text-secondary sm:flex-row sm:items-start sm:justify-between">
+            <div className="sm:max-w-[75%]">
               {error && (
-                <span className="text-red-500">{error}</span>
+                <span className="font-medium text-destructive" role="alert">
+                  {error}
+                </span>
               )}
             </div>
-            <div className={`${isValidLength ? 'text-gray-500' : 'text-red-500'}`}>
+            <div
+              className={cn(
+                'sm:text-right font-medium tracking-tight',
+                isValidLength ? 'text-text-secondary' : 'text-destructive'
+              )}
+            >
               {characterCount}/{maxLength}
+              <span className="ms-1">characters</span>
               {minLength > 0 && characterCount < minLength && (
-                <span className="text-red-500 ml-1">
+                <span className="ms-2 text-destructive">
                   (min: {minLength})
                 </span>
               )}

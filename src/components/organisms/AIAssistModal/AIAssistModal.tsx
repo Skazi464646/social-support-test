@@ -5,6 +5,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { openAIService, getFieldExamples, getFieldConstraints } from '@/lib/ai';
+import { cn } from '@/lib/utils';
 import type { AIAssistRequest } from '@/lib/api/openai-service';
 
 interface AIAssistModalProps {
@@ -116,7 +117,7 @@ export function AIAssistModal({
         isEdited: false,
         confidence: 0.85,
       };
-
+      
       setSuggestions(prev => [newSuggestion, ...prev]);
       setActiveSuggestionId(newSuggestion.id);
       setEditedText(newSuggestion.text);
@@ -380,18 +381,22 @@ export function AIAssistModal({
                 />
                 
                 {/* Character Count */}
-                <div className="flex items-center justify-between mt-2 text-sm">
-                  <div className="text-gray-500">
-                    {constraints.length > 0 && (
-                      <div className="text-xs">
-                        <strong>Guidelines:</strong> {constraints.join(', ')}
-                      </div>
+                <div className="mt-1 flex flex-wrap items-end justify-between gap-y-1 text-xs leading-snug text-text-secondary">
+                  {constraints.length > 0 && (
+                    <p className="max-w-full pr-4">
+                      <span className="font-semibold text-text-primary">Guidelines:</span> {constraints.join(', ')}
+                    </p>
+                  )}
+                  <div
+                    className={cn(
+                      'ms-auto self-end text-right font-medium tracking-tight',
+                      isValidLength ? 'text-text-secondary' : 'text-destructive'
                     )}
-                  </div>
-                  <div className={`${isValidLength ? 'text-gray-500' : 'text-red-500'}`}>
-                    {characterCount}/{maxLength} characters
+                  >
+                    {characterCount}/{maxLength}
+                    <span className="ms-1">characters</span>
                     {minLength > 0 && characterCount < minLength && (
-                      <span className="text-red-500 ml-2">
+                      <span className="ms-2 text-destructive">
                         (min: {minLength})
                       </span>
                     )}
