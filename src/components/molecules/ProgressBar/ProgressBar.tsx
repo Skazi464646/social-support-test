@@ -93,10 +93,13 @@ export function ProgressBar({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="relative">
-        <div className="pointer-events-none absolute inset-x-[20px] top-1/2 h-[2px] -translate-y-1/2 bg-border" aria-hidden="true" />
+        <div
+          className="pointer-events-none absolute inset-x-[20px] top-5 h-[2px] bg-border"
+          aria-hidden="true"
+        />
         <div
           className={cn(
-            'pointer-events-none absolute inset-y-auto top-1/2 h-[2px] -translate-y-1/2 bg-[var(--color-green-500)] origin-left transition-transform duration-300',
+            'pointer-events-none absolute top-5 h-[2px] bg-[var(--color-green-500)] origin-left transition-transform duration-300',
             isRTL && 'left-auto right-[20px] origin-right',
             !isRTL && 'left-[20px]'
           )}
