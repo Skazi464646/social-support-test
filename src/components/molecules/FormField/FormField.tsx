@@ -1,10 +1,11 @@
 import * as React from 'react';
+import type { ReactNode } from 'react';
 import { cn } from '@/lib/utils';
 import { useDirection } from '@/hooks/useDirection';
 import { Label, type LabelProps } from '@/components/atoms/Label';
 import { Input, type InputProps } from '@/components/atoms/Input';
 
-export interface FormFieldProps extends Omit<InputProps, 'id'> {
+export interface FormFieldProps extends Omit<InputProps, 'id' | 'children'> {
   id?: string;
   label?: string;
   error?: string;
@@ -12,6 +13,7 @@ export interface FormFieldProps extends Omit<InputProps, 'id'> {
   required?: boolean;
   labelProps?: Omit<LabelProps, 'htmlFor' | 'required'>;
   containerClassName?: string;
+  children?: ReactNode;
 }
 
 const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
@@ -26,6 +28,8 @@ const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
       containerClassName,
       className,
       hasError,
+      children,
+      dangerouslySetInnerHTML, // prevent passing inner HTML to input
       ...inputProps 
     } = props;
 
@@ -35,6 +39,40 @@ const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
     // Use provided ID or generate one
     const fieldId = id || generatedId;
     const fieldHasError = Boolean(error) || Boolean(hasError);
+    const errorId = error ? `${fieldId}-error` : undefined;
+    const helperTextId = helperText ? `${fieldId}-helper` : undefined;
+    const describedBy = [errorId, helperTextId].filter(Boolean).join(' ') || undefined;
+
+    const renderControl = () => {
+      if (children) {
+        if (React.isValidElement(children)) {
+          return React.cloneElement(children, {
+            id: children.props.id ?? fieldId,
+            'aria-invalid': fieldHasError,
+            'aria-required': required,
+            'aria-describedby': describedBy,
+          });
+        }
+
+        return children;
+      }
+
+      const safeInputProps = dangerouslySetInnerHTML
+        ? { ...inputProps }
+        : inputProps;
+
+      return (
+        <FormFieldInput
+          fieldId={fieldId}
+          ref={ref}
+          fieldHasError={fieldHasError}
+          required={Boolean(required)}
+          className={className}
+          inputProps={safeInputProps}
+          describedBy={describedBy}
+        />
+      );
+    };
     
     return (
       <div className={cn('space-y-2', containerClassName)}>
@@ -46,16 +84,7 @@ const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
           labelProps={labelProps}
         />
         
-        <FormFieldInput
-          fieldId={fieldId}
-          ref={ref}
-          fieldHasError={fieldHasError}
-          required={Boolean(required)}
-          error={error}
-          helperText={helperText}
-          className={className}
-          inputProps={inputProps}
-        />
+        {renderControl()}
         
         <FormFieldMessages
           error={error}
@@ -103,21 +132,17 @@ const FormFieldInput = React.forwardRef<HTMLInputElement, {
   fieldId: string;
   fieldHasError: boolean;
   required: boolean;
-  error?: string;
-  helperText?: string;
   className?: string;
   inputProps: Omit<InputProps, 'id' | 'hasError' | 'aria-describedby' | 'aria-invalid' | 'aria-required' | 'className'>;
-}>(({ fieldId, fieldHasError, required, error, helperText, className, inputProps }, ref) => {
-  const errorId = error ? `${fieldId}-error` : undefined;
-  const helperTextId = helperText ? `${fieldId}-helper` : undefined;
-  const ariaDescribedBy = [errorId, helperTextId].filter(Boolean).join(' ') || undefined;
+  describedBy?: string;
+}>(({ fieldId, fieldHasError, required, className, inputProps, describedBy }, ref) => {
   
   return (
     <Input
       id={fieldId}
       ref={ref}
       hasError={fieldHasError}
-      aria-describedby={ariaDescribedBy}
+      aria-describedby={describedBy}
       aria-invalid={fieldHasError}
       aria-required={required}
       className={className}

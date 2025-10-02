@@ -6,7 +6,7 @@ import { useStep1Form, useStep2Form, useStep3Form } from '@/hooks/useFormValidat
 import { Button } from '@/components/atoms/Button';
 import { ProgressBar } from '@/components/molecules/ProgressBar';
 import { Card } from '@/components/molecules/Card';
-import { useToast } from '@/hooks/useToast';
+import { useToast } from '@/context/ToastContext';
 import { formSubmissionService, formatSubmissionError, FormSubmissionError } from '@/lib/api/form-submission';
 import { FormStep1 } from '@/components/organisms/FormStep1';
 import { FormStep2 } from '@/components/organisms/FormStep2';
@@ -261,6 +261,7 @@ export function FormWizard() {
                 <div className="flex gap-2">
                   {submissionState.error && state.currentStep === 3 && (
                     <Button
+                    asChild
                       type="button"
                       variant="outline"
                       onClick={handleRetrySubmission}
@@ -272,6 +273,7 @@ export function FormWizard() {
                   )}
                   
                   <Button
+                  
                     type="submit"
                     disabled={submissionState.isSubmitting || Boolean(submissionState.applicationId && state.currentStep === 3)}
                     isLoading={submissionState.isSubmitting}

@@ -3,8 +3,6 @@
  * Module 5 - Step 2: Enhanced Security Features
  */
 
-import { createHash } from 'crypto';
-
 interface PendingRequest {
   promise: Promise<any>;
   timestamp: number;
@@ -83,7 +81,7 @@ export class RequestDeduplicator {
    * Cancel all pending requests
    */
   cancelAll(): void {
-    for (const [hash, request] of this.pendingRequests) {
+    for (const request of this.pendingRequests.values()) {
       request.abortController.abort();
     }
     this.pendingRequests.clear();
@@ -113,10 +111,10 @@ export class RequestDeduplicator {
   private cleanupExpired(): void {
     const now = Date.now();
     
-    for (const [hash, request] of this.pendingRequests) {
+    for (const [requestHash, request] of this.pendingRequests) {
       if (now - request.timestamp > this.maxAge) {
         request.abortController.abort();
-        this.pendingRequests.delete(hash);
+        this.pendingRequests.delete(requestHash);
       }
     }
   }

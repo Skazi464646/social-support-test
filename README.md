@@ -349,8 +349,6 @@ Before you begin, ensure you have the following installed:
 
 - **Node.js**: v18.0.0 or higher ([Download](https://nodejs.org/))
 - **npm**: v9.0.0 or higher (comes with Node.js)
-  - Or **yarn**: v1.22.0 or higher
-  - Or **pnpm**: v8.0.0 or higher
 
 ```bash
 # Check your versions
@@ -358,46 +356,83 @@ node --version
 npm --version
 ```
 
-### Installation
+### Quick Start
 
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/your-org/social-support-portal.git
-cd social-support-portal
-```
-
-2. **Install dependencies**
+1. **Install dependencies**
 
 ```bash
 npm install
-# or
-yarn install
-# or
-pnpm install
 ```
 
-3. **Set up environment variables**
+2. **Set up environment variables**
+
+Create a `.env.local` file in the root directory:
 
 ```bash
-cp .env.example .env
+VITE_OPENAI_API_KEY=sk-proj-your-key-here
+VITE_AI_ENABLED=true
 ```
 
-Edit `.env` and add your OpenAI API key (see [Environment Variables](#-environment-variables))
+Get your OpenAI API key from [platform.openai.com](https://platform.openai.com/api-keys)
 
-4. **Start the development server**
+3. **Start the development server**
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
 ```
 
-5. **Open your browser**
+4. **Test the application**
 
 Navigate to [http://localhost:5173](http://localhost:5173)
+
+### 🎯 Testing the Full Application
+
+Once the dev server is running, you can test all features:
+
+**1. Navigation & UI**
+- Visit `/` - Landing page with feature showcase
+- Visit `/wizard` - Main form wizard application
+- Visit `/components` - Interactive component library
+
+**2. Form Wizard Flow**
+- Start at Step 1: Personal Information (10+ fields)
+- Continue to Step 2: Financial Information (family/employment)
+- Complete Step 3: AI-Enhanced Descriptions (try the AI assistance!)
+
+**3. AI Assistance Features**
+- Click "✨ Help me write" buttons on any textarea in Step 3
+- Test the AI modal with streaming responses
+- Try editing and regenerating suggestions
+
+**4. Language & Theme Testing**
+- Toggle between English and Arabic (RTL support)
+- Switch between light and dark themes
+- Test keyboard navigation (Tab, Enter, Escape)
+
+**5. Form Persistence**
+- Fill out forms and refresh the page (auto-save)
+- Test validation by submitting with empty required fields
+- Complete the full submission flow
+
+### 🔍 Development Commands
+
+```bash
+# Development
+npm run dev          # Start dev server (http://localhost:5173)
+
+# Type checking and linting  
+npm run typecheck    # Check TypeScript types
+npm run lint         # Run ESLint
+npm run lint:fix     # Fix linting issues
+
+# Testing
+npm run test         # Run all tests
+npm run test:watch   # Run tests in watch mode
+
+# Building
+npm run build        # Build for production
+npm run preview      # Preview production build
+```
 
 ## 🔐 Environment Variables
 

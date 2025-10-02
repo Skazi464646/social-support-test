@@ -186,7 +186,7 @@ class AIService {
    * Cancel all pending requests
    */
   cancelAllRequests(): void {
-    for (const [requestId, controller] of this.pendingRequests) {
+    for (const [, controller] of this.pendingRequests) {
       controller.abort();
     }
     this.pendingRequests.clear();

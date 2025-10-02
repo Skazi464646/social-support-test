@@ -23,7 +23,7 @@ export function AIAssistButton({
   className = "absolute top-2 right-2 px-3 py-1 text-xs bg-blue-50 text-blue-600 rounded border border-blue-200 hover:bg-blue-100 transition-colors"
 }: AIAssistButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
 
   const handleClick = async () => {
     if (!openAIService.isAvailable) {

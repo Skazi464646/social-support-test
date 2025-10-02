@@ -88,11 +88,13 @@ export class FormSubmissionService {
       );
 
       if (!response.data.success) {
+        const errorDetails: Record<string, unknown> = { ...response.data };
+
         throw new FormSubmissionError(
           'SUBMISSION_FAILED',
           response.data.message || 'Application submission failed',
           undefined,
-          response.data
+          errorDetails
         );
       }
 
@@ -203,7 +205,7 @@ export function formatSubmissionError(error: FormSubmissionError): {
   message: string;
   action?: string;
 } {
-  const errorMap: Record<string, { title: string; message: string; action?: string }> = {
+  const errorMap = {
     VALIDATION_ERROR: {
       title: 'Form Validation Error',
       message: 'Please check your form data and try again.',
@@ -233,7 +235,20 @@ export function formatSubmissionError(error: FormSubmissionError): {
       message: 'An unexpected error occurred. Please try again or contact support.',
       action: 'Contact Support',
     },
-  };
+  } satisfies Record<
+    'VALIDATION_ERROR'
+    | 'SUBMISSION_TIMEOUT'
+    | 'NETWORK_ERROR'
+    | 'SERVER_ERROR'
+    | 'SUBMISSION_CANCELLED'
+    | 'UNKNOWN_ERROR',
+    { title: string; message: string; action?: string }
+  >;
 
-  return errorMap[error.code] || errorMap['UNKNOWN_ERROR'];
+  const mappedError = errorMap[error.code as keyof typeof errorMap];
+  if (mappedError) {
+    return mappedError;
+  }
+
+  return errorMap.UNKNOWN_ERROR;
 }

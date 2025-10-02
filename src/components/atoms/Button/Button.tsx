@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Slot } from '@radix-ui/react-slot';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 import { Spinner } from './Spinner';
@@ -40,34 +39,106 @@ export interface ButtonProps
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ 
-    className, 
-    variant, 
-    size, 
-    asChild = false, 
-    isLoading = false,
-    leftIcon,
-    rightIcon,
-    children,
-    disabled,
-    ...props 
-  }, ref) => {
-    const Comp = asChild ? Slot : 'button';
-    
+  (
+    {
+      className,
+      variant,
+      size,
+      asChild = false,
+      isLoading = false,
+      leftIcon,
+      rightIcon,
+      children,
+      disabled,
+      ...rest
+    },
+    ref
+  ) => {
+    const isDisabled = Boolean(disabled || isLoading);
+
+    const renderContent = (content: React.ReactNode) => (
+      <>
+        {isLoading && <Spinner className="mr-2 h-4 w-4" />}
+        {!isLoading && leftIcon ? <span className="mr-2">{leftIcon}</span> : null}
+        {content}
+        {!isLoading && rightIcon ? <span className="ml-2">{rightIcon}</span> : null}
+      </>
+    );
+
+    if (asChild) {
+      if (!React.isValidElement(children)) {
+        if (import.meta.env.DEV) {
+          throw new Error('Button with asChild expects a single React element child.');
+        }
+        return null;
+      }
+
+      const childElement = children as React.ReactElement<any>;
+      const {
+        className: childClassName,
+        children: childContent,
+        onClick: childOnClick,
+        tabIndex: childTabIndex,
+        ...childRest
+      } = childElement.props;
+
+      const {
+        type: _type,
+        onClick: restOnClick,
+        tabIndex: restTabIndex,
+        ...restWithoutType
+      } = rest;
+
+      const mergedClassName = cn(
+        buttonVariants({ variant, size, className }),
+        childClassName
+      );
+
+      const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+        if (isDisabled) {
+          event.preventDefault();
+          event.stopPropagation();
+          return;
+        }
+
+        if (typeof childOnClick === 'function') {
+          childOnClick(event);
+        }
+
+        if (typeof restOnClick === 'function') {
+          restOnClick(event as unknown as React.MouseEvent<HTMLButtonElement>);
+        }
+      };
+
+      const computedTabIndex = isDisabled
+        ? -1
+        : restTabIndex ?? childTabIndex;
+
+      return React.cloneElement(childElement, {
+        ...childRest,
+        ...restWithoutType,
+        className: mergedClassName,
+        ref: ref as React.Ref<any>,
+        onClick: handleClick,
+        'aria-busy': isLoading,
+        'data-loading': isLoading,
+        'aria-disabled': isDisabled ? true : childRest['aria-disabled'],
+        tabIndex: computedTabIndex,
+        children: renderContent(childContent),
+      });
+    }
+
     return (
-      <Comp
+      <button
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
-        disabled={disabled || isLoading}
+        disabled={isDisabled}
         aria-busy={isLoading}
         data-loading={isLoading}
-        {...props}
+        {...rest}
       >
-        {isLoading && <Spinner className="mr-2 h-4 w-4" />}
-        {!isLoading && leftIcon && <span className="mr-2">{leftIcon}</span>}
-        {children}
-        {!isLoading && rightIcon && <span className="ml-2">{rightIcon}</span>}
-      </Comp>
+        {renderContent(children)}
+      </button>
     );
   }
 );

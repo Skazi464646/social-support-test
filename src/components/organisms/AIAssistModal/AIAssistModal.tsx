@@ -45,7 +45,7 @@ export function AIAssistModal({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [streamingText, setStreamingText] = useState('');
+  const [, setStreamingText] = useState('');
   const [showExamples, setShowExamples] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);

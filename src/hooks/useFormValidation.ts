@@ -160,10 +160,14 @@ import {
  * Hook for Step 1 form validation (Personal Information)
  */
 export function useStep1Form(options?: Omit<FormValidationOptions<Step1FormData>, 'schema'>) {
+  const { defaultValues, ...restOptions } = options ?? {};
   return useFormValidation({
     schema: step1Schema,
-    defaultValues: getStepDefaults(1).step1,
-    ...options,
+    defaultValues: {
+      ...getStepDefaults(1).step1,
+      ...(defaultValues ?? {}),
+    },
+    ...restOptions,
   });
 }
 
@@ -171,10 +175,14 @@ export function useStep1Form(options?: Omit<FormValidationOptions<Step1FormData>
  * Hook for Step 2 form validation (Financial Information)
  */
 export function useStep2Form(options?: Omit<FormValidationOptions<Step2FormData>, 'schema'>) {
+  const { defaultValues, ...restOptions } = options ?? {};
   return useFormValidation({
     schema: step2Schema,
-    defaultValues: getStepDefaults(2).step2,
-    ...options,
+    defaultValues: {
+      ...getStepDefaults(2).step2,
+      ...(defaultValues ?? {}),
+    },
+    ...restOptions,
   });
 }
 
@@ -182,10 +190,14 @@ export function useStep2Form(options?: Omit<FormValidationOptions<Step2FormData>
  * Hook for Step 3 form validation (Descriptive Information)
  */
 export function useStep3Form(options?: Omit<FormValidationOptions<Step3FormData>, 'schema'>) {
+  const { defaultValues, ...restOptions } = options ?? {};
   return useFormValidation({
     schema: step3Schema,
-    defaultValues: getStepDefaults(3).step3,
-    ...options,
+    defaultValues: {
+      ...getStepDefaults(3).step3,
+      ...(defaultValues ?? {}),
+    },
+    ...restOptions,
   });
 }
 
