@@ -11,15 +11,12 @@ import type { Step3FormData } from '@/lib/validation/schemas';
 
 export function FormStep3() {
   const { t } = useTranslation();
-  const { control, watch } = useFormContext<{ step3: Step3FormData; step1?: any; step2?: any }>();
+  const { control } = useFormContext<Step3FormData>();
 
-  // Get user context from previous steps for AI assistance
-  const step1Data = watch('step1') || {};
-  const step2Data = watch('step2') || {};
-  
+  // For now, we'll simplify the AI context - this can be improved later
   const userContext = {
-    step1: step1Data,
-    step2: step2Data,
+    step1: {},
+    step2: {},
   };
 
   return (
@@ -27,10 +24,10 @@ export function FormStep3() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t('form.step3.title', 'Detailed Information')}
+          {t('form.title', 'Detailed Information')}
         </h2>
         <p className="text-muted-foreground">
-          {t('form.step3.description', 'Please provide detailed information about your situation to help us better understand your needs.')}
+          {t('form.description', 'Please provide detailed information about your situation to help us better understand your needs.')}
         </p>
       </div>
 
@@ -38,20 +35,20 @@ export function FormStep3() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.step3.financial_section', 'Financial Situation')}
+            {t('form.financial_section', 'Financial Situation')}
           </Card.Title>
           <Card.Description>
-            {t('form.step3.financial_description', 'Describe your current financial challenges and circumstances')}
+            {t('form.financial_description', 'Describe your current financial challenges and circumstances')}
           </Card.Description>
         </Card.Header>
 
         <Card.Content>
           <AIFormField
-            name="step3.financialSituation"
+            name="financialSituation"
             control={control}
-            label={t('form.step3.financialSituation', 'Describe Your Financial Situation')}
-            helperText={t('form.step3.financialSituation_help', 'Please describe your current financial challenges, including specific difficulties you are facing. Minimum 50 characters required.')}
-            placeholder={t('form.step3.financialSituation_placeholder', 'Example: I am facing difficulty paying rent due to reduced income after losing my job. My savings are depleted and I have outstanding bills that I cannot afford...')}
+            label={t('form.financialSituation', 'Describe Your Financial Situation')}
+            helperText={t('form.financialSituation_help', 'Please describe your current financial challenges, including specific difficulties you are facing. Minimum 50 characters required.')}
+            placeholder={t('form.financialSituation_placeholder', 'Example: I am facing difficulty paying rent due to reduced income after losing my job. My savings are depleted and I have outstanding bills that I cannot afford...')}
             fieldName="financialSituation"
             rows={6}
             maxLength={2000}
@@ -66,20 +63,20 @@ export function FormStep3() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.step3.employment_section', 'Employment Circumstances')}
+            {t('form.employment_section', 'Employment Circumstances')}
           </Card.Title>
           <Card.Description>
-            {t('form.step3.employment_description', 'Explain your current employment situation and any related challenges')}
+            {t('form.employment_description', 'Explain your current employment situation and any related challenges')}
           </Card.Description>
         </Card.Header>
 
         <Card.Content>
           <AIFormField
-            name="step3.employmentCircumstances"
+            name="employmentCircumstances"
             control={control}
-            label={t('form.step3.employmentCircumstances', 'Describe Your Employment Circumstances')}
-            helperText={t('form.step3.employmentCircumstances_help', 'Please explain your current work situation, including any recent changes, challenges in finding employment, or barriers you face. Minimum 50 characters required.')}
-            placeholder={t('form.step3.employmentCircumstances_placeholder', 'Example: I was employed as a retail associate for 3 years but was laid off due to company downsizing. I have been actively searching for employment for 6 months but have faced challenges due to limited opportunities in my field...')}
+            label={t('form.employmentCircumstances', 'Describe Your Employment Circumstances')}
+            helperText={t('form.employmentCircumstances_help', 'Please explain your current work situation, including any recent changes, challenges in finding employment, or barriers you face. Minimum 50 characters required.')}
+            placeholder={t('form.employmentCircumstances_placeholder', 'Example: I was employed as a retail associate for 3 years but was laid off due to company downsizing. I have been actively searching for employment for 6 months but have faced challenges due to limited opportunities in my field...')}
             fieldName="employmentCircumstances"
             rows={6}
             maxLength={2000}
@@ -94,20 +91,20 @@ export function FormStep3() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.step3.reason_section', 'Reason for Applying')}
+            {t('form.reason_section', 'Reason for Applying')}
           </Card.Title>
           <Card.Description>
-            {t('form.step3.reason_description', 'Explain why you are seeking social support and how it will help you')}
+            {t('form.reason_description', 'Explain why you are seeking social support and how it will help you')}
           </Card.Description>
         </Card.Header>
 
         <Card.Content>
           <AIFormField
-            name="step3.reasonForApplying"
+            name="reasonForApplying"
             control={control}
-            label={t('form.step3.reasonForApplying', 'Why Are You Applying for Social Support?')}
-            helperText={t('form.step3.reasonForApplying_help', 'Please explain why you need social support, what specific assistance you are seeking, and how this support will help improve your situation. Minimum 50 characters required.')}
-            placeholder={t('form.step3.reasonForApplying_placeholder', 'Example: I am applying for social support to help cover basic living expenses including rent, utilities, and groceries while I search for stable employment. This assistance would provide me with the stability I need to focus on job searching and skills development...')}
+            label={t('form.reasonForApplying', 'Why Are You Applying for Social Support?')}
+            helperText={t('form.reasonForApplying_help', 'Please explain why you need social support, what specific assistance you are seeking, and how this support will help improve your situation. Minimum 50 characters required.')}
+            placeholder={t('form.reasonForApplying_placeholder', 'Example: I am applying for social support to help cover basic living expenses including rent, utilities, and groceries while I search for stable employment. This assistance would provide me with the stability I need to focus on job searching and skills development...')}
             fieldName="reasonForApplying"
             rows={6}
             maxLength={2000}
@@ -122,20 +119,20 @@ export function FormStep3() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.step3.additional_section', 'Additional Information')}
+            {t('form.additional_section', 'Additional Information')}
           </Card.Title>
           <Card.Description>
-            {t('form.step3.additional_description', 'Any additional information you would like to share (optional)')}
+            {t('form.additional_description', 'Any additional information you would like to share (optional)')}
           </Card.Description>
         </Card.Header>
 
         <Card.Content>
           <AIFormField
-            name="step3.additionalComments"
+            name="additionalComments"
             control={control}
-            label={t('form.step3.additionalComments', 'Additional Comments')}
-            helperText={t('form.step3.additionalComments_help', 'Share any other relevant information that might help us understand your situation better. This field is optional.')}
-            placeholder={t('form.step3.additionalComments_placeholder', 'Any additional information about your circumstances, family situation, health issues, or other factors that might be relevant to your application...')}
+            label={t('form.additionalComments', 'Additional Comments')}
+            helperText={t('form.additionalComments_help', 'Share any other relevant information that might help us understand your situation better. This field is optional.')}
+            placeholder={t('form.additionalComments_placeholder', 'Any additional information about your circumstances, family situation, health issues, or other factors that might be relevant to your application...')}
             fieldName="additionalComments"
             rows={4}
             maxLength={1000}
@@ -150,10 +147,10 @@ export function FormStep3() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.step3.consent_section', 'Terms and Consent')}
+            {t('form.consent_section', 'Terms and Consent')}
           </Card.Title>
           <Card.Description>
-            {t('form.step3.consent_description', 'Please review and agree to the following terms')}
+            {t('form.consent_description', 'Please review and agree to the following terms')}
           </Card.Description>
         </Card.Header>
 
@@ -162,7 +159,7 @@ export function FormStep3() {
             {/* Terms Agreement */}
             <div className="flex items-start space-x-3">
               <ValidatedFormField
-                name="step3.agreeToTerms"
+                name="agreeToTerms"
                 control={control}
                 label=""
                 type="checkbox"
@@ -171,11 +168,11 @@ export function FormStep3() {
               />
               <div className="flex-1">
                 <label className="text-sm text-foreground">
-                  {t('form.step3.agreeToTerms', 'I agree to the terms and conditions')}
+                  {t('form.agreeToTerms', 'I agree to the terms and conditions')}
                   <span className="text-destructive ml-1">*</span>
                 </label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('form.step3.agreeToTerms_help', 'By checking this box, you confirm that all information provided is true and accurate to the best of your knowledge.')}
+                  {t('form.agreeToTerms_help', 'By checking this box, you confirm that all information provided is true and accurate to the best of your knowledge.')}
                 </p>
               </div>
             </div>
@@ -183,7 +180,7 @@ export function FormStep3() {
             {/* Data Processing Consent */}
             <div className="flex items-start space-x-3">
               <ValidatedFormField
-                name="step3.consentToDataProcessing"
+                name="consentToDataProcessing"
                 control={control}
                 label=""
                 type="checkbox"
@@ -192,11 +189,11 @@ export function FormStep3() {
               />
               <div className="flex-1">
                 <label className="text-sm text-foreground">
-                  {t('form.step3.consentToDataProcessing', 'I consent to data processing')}
+                  {t('form.consentToDataProcessing', 'I consent to data processing')}
                   <span className="text-destructive ml-1">*</span>
                 </label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('form.step3.consentToDataProcessing_help', 'You consent to the processing of your personal data for the purpose of evaluating your social support application.')}
+                  {t('form.consentToDataProcessing_help', 'You consent to the processing of your personal data for the purpose of evaluating your social support application.')}
                 </p>
               </div>
             </div>
@@ -204,7 +201,7 @@ export function FormStep3() {
             {/* Contact Permission */}
             <div className="flex items-start space-x-3">
               <ValidatedFormField
-                name="step3.allowContactForClarification"
+                name="allowContactForClarification"
                 control={control}
                 label=""
                 type="checkbox"
@@ -212,10 +209,10 @@ export function FormStep3() {
               />
               <div className="flex-1">
                 <label className="text-sm text-foreground">
-                  {t('form.step3.allowContactForClarification', 'Allow contact for clarification')}
+                  {t('form.allowContactForClarification', 'Allow contact for clarification')}
                 </label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('form.step3.allowContactForClarification_help', 'You give permission to be contacted if additional information or clarification is needed for your application.')}
+                  {t('form.allowContactForClarification_help', 'You give permission to be contacted if additional information or clarification is needed for your application.')}
                 </p>
               </div>
             </div>
@@ -233,10 +230,10 @@ export function FormStep3() {
           </div>
           <div>
             <h4 className="font-medium text-green-900 dark:text-green-100 mb-1">
-              {t('form.step3.final_notice_title', 'Application Review')}
+              {t('form.final_notice_title', 'Application Review')}
             </h4>
             <p className="text-sm text-green-800 dark:text-green-200">
-              {t('form.step3.final_notice_text', 'Your application will be reviewed by our support team. We may contact you if additional information is needed. Processing typically takes 5-10 business days.')}
+              {t('form.final_notice_text', 'Your application will be reviewed by our support team. We may contact you if additional information is needed. Processing typically takes 5-10 business days.')}
             </p>
           </div>
         </div>

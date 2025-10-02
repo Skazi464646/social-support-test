@@ -1,15 +1,13 @@
 {
-  "navigation": {
-    "home": "Home",
-    "about": "About",
-    "contact": "Contact"
-  },
   "language": {
     "english": "English",
     "arabic": "العربية",
-    "switch_to": "Switch to {{language}}"
+    "switch_to": "Switch to {{language}}",
+    "current": "Current language: {{language}}",
+    "select": "Select language",
+    "auto_detected": "Auto-detected"
   },
-  "common": {
+  "actions": {
     "loading": "Loading...",
     "error": "Error",
     "retry": "Retry",
@@ -20,19 +18,72 @@
     "back": "Back",
     "next": "Next",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "accept": "Accept",
+    "discard": "Discard",
+    "regenerate": "Regenerate",
+    "help": "Help",
+    "copy": "Copy",
+    "paste": "Paste",
+    "select_all": "Select All"
+  },
+  "status": {
+    "success": "Success",
+    "failed": "Failed",
+    "pending": "Pending",
+    "complete": "Complete",
+    "in_progress": "In Progress",
+    "cancelled": "Cancelled",
+    "draft": "Draft"
+  },
+  "time": {
+    "just_now": "Just now",
+    "minutes_ago_one": "{{count}} minute ago",
+    "minutes_ago_other": "{{count}} minutes ago",
+    "hours_ago_one": "{{count}} hour ago", 
+    "hours_ago_other": "{{count}} hours ago",
+    "days_ago_one": "{{count}} day ago",
+    "days_ago_other": "{{count}} days ago",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow"
+  },
+  "plurals": {
+    "item_zero": "No items",
+    "item_one": "{{count}} item",
+    "item_other": "{{count}} items",
+    "file_zero": "No files",
+    "file_one": "{{count}} file",
+    "file_other": "{{count}} files",
+    "step_one": "Step {{count}}",
+    "step_other": "Step {{count}}",
+    "character_zero": "No characters",
+    "character_one": "{{count}} character",
+    "character_other": "{{count}} characters",
+    "word_zero": "No words",
+    "word_one": "{{count}} word",
+    "word_other": "{{count}} words"
   },
   "header": {
     "title": "Social Support Portal",
-    "subtitle": "Government Services"
+    "subtitle": "Government Services",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings"
   },
   "welcome": {
     "title": "Welcome to Social Support Portal",
-    "subtitle": "AI-powered assistance for your needs"
+    "subtitle": "AI-powered assistance for your needs",
+    "get_started": "Get Started",
+    "learn_more": "Learn More"
   },
   "countries": {
     "ae": "United Arab Emirates",
-    "sa": "Saudi Arabia", 
+    "sa": "Saudi Arabia",
     "qa": "Qatar",
     "kw": "Kuwait",
     "bh": "Bahrain",
@@ -42,30 +93,14 @@
     "eg": "Egypt",
     "other": "Other"
   },
-  "form": {
-    "title": "Social Support Application",
-    "description": "Apply for financial assistance through our secure portal",
-    "step_completed": "Step Completed",
-    "step_saved_successfully": "Your progress has been saved successfully",
-    "error": "Error",
-    "step_save_error": "Failed to save step. Please try again.",
-    "submission_success": "Application Submitted Successfully",
-    "submission_success_message": "Your application has been submitted with ID: {{applicationId}}",
-    "auto_saved": "Auto-saved",
-    "submitted": "Submitted",
-    "application_id": "Application ID",
-    "confirmation_email_sent": "A confirmation email has been sent to your registered email address.",
-    "step1": {
-      "title": "Personal Information",
-      "description": "Please provide your personal details for verification."
-    },
-    "step2": {
-      "title": "Financial Information", 
-      "description": "Please provide details about your financial situation and housing status."
-    },
-    "step3": {
-      "title": "Detailed Information",
-      "description": "Please provide detailed information about your situation to help us better understand your needs."
-    }
+  "accessibility": {
+    "skip_to_content": "Skip to main content",
+    "skip_to_navigation": "Skip to navigation",
+    "menu_button": "Open menu",
+    "close_dialog": "Close dialog",
+    "required_field": "Required field",
+    "optional_field": "Optional field",
+    "loading_content": "Loading content",
+    "error_occurred": "An error occurred"
   }
 }

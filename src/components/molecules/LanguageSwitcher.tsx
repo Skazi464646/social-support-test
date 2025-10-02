@@ -1,54 +1,106 @@
 import { useTranslation } from 'react-i18next';
-import { Globe } from 'lucide-react';
+import { Globe, Loader2 } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
+import { cn } from '@/lib/utils';
 
 interface LanguageSwitcherProps {
   className?: string;
+  showLabel?: boolean;
+  variant?: 'button' | 'dropdown';
 }
 
-export function LanguageSwitcher({ className = '' }: LanguageSwitcherProps) {
-  const { i18n, t } = useTranslation();
+export function LanguageSwitcher({ 
+  className = '', 
+  showLabel = true, 
+  variant = 'button' 
+}: LanguageSwitcherProps) {
+  const { t } = useTranslation();
+  const { 
+    currentConfig, 
+    getOtherLanguage, 
+    toggleLanguage, 
+    isChanging 
+  } = useLanguage();
 
-  const languages = [
-    { code: 'en', name: 'English', nativeName: t('language.english') },
-    { code: 'ar', name: 'Arabic', nativeName: t('language.arabic') },
-  ];
-
-  const resolvedLanguage = i18n.resolvedLanguage ?? i18n.language ?? 'en';
-  const normalizedLanguage = resolvedLanguage.split('-')[0];
-
-  const currentLanguage =
-    languages.find((lang) => lang.code === normalizedLanguage) ?? languages[0];
-  const otherLanguage =
-    languages.find((lang) => lang.code !== currentLanguage?.code) ??
-    currentLanguage;
+  const otherLanguage = getOtherLanguage();
 
   const handleLanguageChange = async () => {
-    const newLang = otherLanguage?.code;
-    await i18n.changeLanguage(newLang);
-
-    // Update document direction for RTL support
-    document.documentElement.dir = newLang === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = newLang || 'en';
+    if (isChanging) return;
+    await toggleLanguage();
   };
+
+  const buttonContent = (
+    <>
+      {isChanging ? (
+        <Loader2 className="h-4 w-4 animate-spin" />
+      ) : (
+        <Globe className="h-4 w-4" />
+      )}
+      {showLabel && (
+        <span className="hidden sm:inline">
+          {currentConfig.nativeName}
+        </span>
+      )}
+    </>
+  );
+
+  if (variant === 'dropdown') {
+    // Future: Can be enhanced with a proper dropdown
+    return (
+      <div className="relative">
+        <button
+          onClick={handleLanguageChange}
+          disabled={isChanging}
+          className={cn(
+            'inline-flex items-center gap-2 ps-3 pe-3 py-2',
+            'text-sm font-medium text-foreground',
+            'hover:bg-accent hover:text-accent-foreground',
+            'rounded-md transition-colors',
+            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+            'disabled:opacity-50 disabled:cursor-not-allowed',
+            className
+          )}
+          aria-label={t('language.switch_to', {
+            language: otherLanguage.nativeName,
+          })}
+          title={t('language.switch_to', { 
+            language: otherLanguage.nativeName 
+          })}
+        >
+          {buttonContent}
+        </button>
+      </div>
+    );
+  }
 
   return (
     <button
       onClick={handleLanguageChange}
-      className={`
-        inline-flex items-center gap-2 px-3 py-2 
-        text-sm font-medium text-foreground 
-        hover:bg-accent hover:text-accent-foreground 
-        rounded-md transition-colors
-        focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
-        ${className}
-      `}
+      disabled={isChanging}
+      className={cn(
+        'inline-flex items-center gap-2 ps-3 pe-3 py-2',
+        'text-sm font-medium text-foreground',
+        'hover:bg-accent hover:text-accent-foreground',
+        'rounded-md transition-all duration-200',
+        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        'disabled:opacity-50 disabled:cursor-not-allowed',
+        'group relative',
+        className
+      )}
       aria-label={t('language.switch_to', {
-        language: otherLanguage?.nativeName,
+        language: otherLanguage.nativeName,
       })}
-      title={t('language.switch_to', { language: otherLanguage?.nativeName })}
+      title={t('language.switch_to', { 
+        language: otherLanguage.nativeName 
+      })}
+      aria-busy={isChanging}
     >
-      <Globe className="h-4 w-4" />
-      <span>{currentLanguage?.nativeName}</span>
+      {buttonContent}
+      
+      {/* Tooltip for better UX */}
+      <span className="absolute -top-10 start-1/2 transform -translate-x-1/2 bg-popover text-popover-foreground text-xs ps-2 pe-2 py-1 rounded shadow-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap z-50">
+        {t('language.switch_to', { language: otherLanguage.nativeName })}
+      </span>
     </button>
   );
 }

@@ -1,29 +1,127 @@
 {
-  "navigation": {
-    "home": "الرئيسية",
-    "about": "حول",
-    "contact": "اتصل"
-  },
   "language": {
     "english": "English",
     "arabic": "العربية",
-    "switch_to": "التبديل إلى {{language}}"
+    "switch_to": "التبديل إلى {{language}}",
+    "current": "اللغة الحالية: {{language}}",
+    "select": "اختر اللغة",
+    "auto_detected": "تم الكشف تلقائياً"
   },
-  "common": {
+  "actions": {
     "loading": "جاري التحميل...",
     "error": "خطأ",
     "retry": "إعادة المحاولة",
     "cancel": "إلغاء",
     "submit": "إرسال",
     "save": "حفظ",
-    "close": "إغلاق"
+    "close": "إغلاق",
+    "back": "السابق",
+    "next": "التالي",
+    "yes": "نعم",
+    "no": "لا",
+    "edit": "تحرير",
+    "delete": "حذف",
+    "confirm": "تأكيد",
+    "continue": "متابعة",
+    "accept": "قبول",
+    "discard": "تجاهل",
+    "regenerate": "إعادة إنتاج",
+    "help": "مساعدة",
+    "copy": "نسخ",
+    "paste": "لصق",
+    "select_all": "تحديد الكل"
+  },
+  "status": {
+    "success": "نجح",
+    "failed": "فشل",
+    "pending": "في الانتظار",
+    "complete": "مكتمل",
+    "in_progress": "قيد التنفيذ",
+    "cancelled": "ملغي",
+    "draft": "مسودة"
+  },
+  "time": {
+    "just_now": "الآن",
+    "minutes_ago_one": "منذ دقيقة واحدة",
+    "minutes_ago_two": "منذ دقيقتين",
+    "minutes_ago_few": "منذ {{count}} دقائق",
+    "minutes_ago_many": "منذ {{count}} دقيقة",
+    "minutes_ago_other": "منذ {{count}} دقيقة",
+    "hours_ago_one": "منذ ساعة واحدة",
+    "hours_ago_two": "منذ ساعتين",
+    "hours_ago_few": "منذ {{count}} ساعات",
+    "hours_ago_many": "منذ {{count}} ساعة",
+    "hours_ago_other": "منذ {{count}} ساعة",
+    "days_ago_one": "منذ يوم واحد",
+    "days_ago_two": "منذ يومين",
+    "days_ago_few": "منذ {{count}} أيام",
+    "days_ago_many": "منذ {{count}} يوماً",
+    "days_ago_other": "منذ {{count}} يوم",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "tomorrow": "غداً"
+  },
+  "plurals": {
+    "item_zero": "لا توجد عناصر",
+    "item_one": "عنصر واحد",
+    "item_two": "عنصران",
+    "item_few": "{{count}} عناصر",
+    "item_many": "{{count}} عنصراً",
+    "item_other": "{{count}} عنصر",
+    "file_zero": "لا توجد ملفات",
+    "file_one": "ملف واحد",
+    "file_two": "ملفان",
+    "file_few": "{{count}} ملفات",
+    "file_many": "{{count}} ملفاً",
+    "file_other": "{{count}} ملف",
+    "step_one": "الخطوة {{count}}",
+    "step_other": "الخطوة {{count}}",
+    "character_zero": "لا توجد أحرف",
+    "character_one": "حرف واحد",
+    "character_two": "حرفان",
+    "character_few": "{{count}} أحرف",
+    "character_many": "{{count}} حرفاً",
+    "character_other": "{{count}} حرف",
+    "word_zero": "لا توجد كلمات",
+    "word_one": "كلمة واحدة",
+    "word_two": "كلمتان",
+    "word_few": "{{count}} كلمات",
+    "word_many": "{{count}} كلمة",
+    "word_other": "{{count}} كلمة"
   },
   "header": {
     "title": "بوابة الدعم الاجتماعي",
-    "subtitle": "الخدمات الحكومية"
+    "subtitle": "الخدمات الحكومية",
+    "logout": "تسجيل الخروج",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات"
   },
   "welcome": {
     "title": "مرحباً بك في بوابة الدعم الاجتماعي",
-    "subtitle": "مساعدة ذكية مدعومة بالذكاء الاصطناعي لاحتياجاتك"
+    "subtitle": "مساعدة ذكية مدعومة بالذكاء الاصطناعي لاحتياجاتك",
+    "get_started": "ابدأ الآن",
+    "learn_more": "اعرف المزيد"
+  },
+  "countries": {
+    "ae": "دولة الإمارات العربية المتحدة",
+    "sa": "المملكة العربية السعودية",
+    "qa": "دولة قطر",
+    "kw": "دولة الكويت",
+    "bh": "مملكة البحرين",
+    "om": "سلطنة عُمان",
+    "jo": "المملكة الأردنية الهاشمية",
+    "lb": "الجمهورية اللبنانية",
+    "eg": "جمهورية مصر العربية",
+    "other": "أخرى"
+  },
+  "accessibility": {
+    "skip_to_content": "تخطي إلى المحتوى الرئيسي",
+    "skip_to_navigation": "تخطي إلى التنقل",
+    "menu_button": "فتح القائمة",
+    "close_dialog": "إغلاق الحوار",
+    "required_field": "حقل مطلوب",
+    "optional_field": "حقل اختياري",
+    "loading_content": "جاري تحميل المحتوى",
+    "error_occurred": "حدث خطأ"
   }
 }

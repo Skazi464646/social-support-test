@@ -1,0 +1,23 @@
+{
+  "home": "Home",
+  "about": "About",
+  "contact": "Contact",
+  "wizard": "Application Form",
+  "components": "Components",
+  "step1": "Personal Information",
+  "step2": "Financial Information",
+  "step3": "Situation Description",
+  "breadcrumb": {
+    "home": "Home",
+    "application": "Application",
+    "step": "Step {{number}}",
+    "review": "Review",
+    "complete": "Complete"
+  },
+  "menu": {
+    "main_menu": "Main Menu",
+    "user_menu": "User Menu",
+    "language_menu": "Language Settings",
+    "close_menu": "Close Menu"
+  }
+}

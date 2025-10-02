@@ -76,6 +76,14 @@ export function FormWizard() {
   // Handle step submission
   const handleStepSubmit = async (data: Step1FormData | Step2FormData | Step3FormData) => {
     try {
+      console.log('=== STEP SUBMISSION ===');
+      console.log('Current step:', state.currentStep);
+      console.log('Form submission data:', data);
+      console.log('Form errors:', currentForm.formState.errors);
+      console.log('Form isValid:', currentForm.formState.isValid);
+      console.log('Form isDirty:', currentForm.formState.isDirty);
+      console.log('Form values:', currentForm.getValues());
+      
       const stepKey = `step${state.currentStep}` as keyof FormStepData;
       
       // Update form data
@@ -193,7 +201,7 @@ export function FormWizard() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
+    <div className="container mx-auto ps-4 pe-4 py-8 max-w-4xl">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -213,7 +221,7 @@ export function FormWizard() {
       />
 
       {/* Auto-save indicator */}
-      <div className="mb-4 flex justify-end">
+      <div className="mb-4 flex justify-end text-end">
         <AutoSaveIndicator />
       </div>
 
@@ -237,7 +245,7 @@ export function FormWizard() {
                 disabled={state.currentStep === 1}
                 className="min-w-[100px]"
               >
-                {t('common.back')}
+{t('actions.back')}
               </Button>
 
               <div className="flex items-center gap-4">
@@ -261,19 +269,51 @@ export function FormWizard() {
                 <div className="flex gap-2">
                   {submissionState.error && state.currentStep === 3 && (
                     <Button
-                    asChild
                       type="button"
                       variant="outline"
                       onClick={handleRetrySubmission}
                       disabled={submissionState.isSubmitting}
                       className="min-w-[100px]"
                     >
-                      {t('common.retry')}
+                      {t('actions.retry')}
+                    </Button>
+                  )}
+                  
+                  {/* Debug button - DEV only */}
+                  {import.meta.env.DEV && (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => {
+                        console.log('=== DEBUG INFO ===');
+                        console.log('Current step:', state.currentStep);
+                        console.log('Form data:', currentForm.getValues());
+                        console.log('Form errors:', currentForm.formState.errors);
+                        console.log('Form isValid:', currentForm.formState.isValid);
+                        console.log('Form isDirty:', currentForm.formState.isDirty);
+                        console.log('Form touchedFields:', currentForm.formState.touchedFields);
+                        
+                        // Specific debug for Step 2
+                        if (state.currentStep === 2) {
+                          const values = currentForm.getValues() as any;
+                          console.log('--- STEP 2 SPECIFIC DEBUG ---');
+                          console.log('numberOfDependents value:', values.numberOfDependents);
+                          console.log('numberOfDependents type:', typeof values.numberOfDependents);
+                          console.log('monthlyIncome value:', values.monthlyIncome);
+                          console.log('monthlyIncome type:', typeof values.monthlyIncome);
+                          console.log('receivingBenefits value:', values.receivingBenefits);
+                          console.log('receivingBenefits type:', typeof values.receivingBenefits);
+                          console.log('maritalStatus value:', values.maritalStatus);
+                          console.log('employmentStatus value:', values.employmentStatus);
+                        }
+                      }}
+                      className="text-xs"
+                    >
+                      DEBUG
                     </Button>
                   )}
                   
                   <Button
-                  
                     type="submit"
                     disabled={submissionState.isSubmitting || Boolean(submissionState.applicationId && state.currentStep === 3)}
                     isLoading={submissionState.isSubmitting}
@@ -282,8 +322,8 @@ export function FormWizard() {
                     {submissionState.applicationId && state.currentStep === 3
                       ? t('form.submitted')
                       : state.currentStep === 3 
-                        ? t('common.submit') 
-                        : t('common.next')
+                        ? t('actions.submit') 
+                        : t('actions.next')
                     }
                   </Button>
                 </div>

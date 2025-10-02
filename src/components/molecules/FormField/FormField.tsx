@@ -29,7 +29,6 @@ const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
       className,
       hasError,
       children,
-      dangerouslySetInnerHTML, // prevent passing inner HTML to input
       ...inputProps 
     } = props;
 
@@ -57,18 +56,16 @@ const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>(
         return children;
       }
 
-      const safeInputProps = dangerouslySetInnerHTML
-        ? { ...inputProps }
-        : inputProps;
-
       return (
         <FormFieldInput
           fieldId={fieldId}
           ref={ref}
           fieldHasError={fieldHasError}
           required={Boolean(required)}
+          error={error}
+          helperText={helperText}
           className={className}
-          inputProps={safeInputProps}
+          inputProps={inputProps}
           describedBy={describedBy}
         />
       );
@@ -132,6 +129,8 @@ const FormFieldInput = React.forwardRef<HTMLInputElement, {
   fieldId: string;
   fieldHasError: boolean;
   required: boolean;
+  error?: string;
+  helperText?: string;
   className?: string;
   inputProps: Omit<InputProps, 'id' | 'hasError' | 'aria-describedby' | 'aria-invalid' | 'aria-required' | 'className'>;
   describedBy?: string;

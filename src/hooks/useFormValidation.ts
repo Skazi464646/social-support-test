@@ -58,7 +58,8 @@ export function useFormValidation<T extends FieldValues>({
   // Setup form with Zod resolver
   const form = useForm<T>({
     resolver: zodResolver(schema as any),
-    mode: 'onChange',
+    mode: 'onBlur',
+    reValidateMode: 'onChange',
     ...formOptions,
   });
 

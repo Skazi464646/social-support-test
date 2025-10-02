@@ -1,6 +1,6 @@
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { ValidatedFormField, EmailFormField, PhoneFormField, DateFormField } from '@/components/molecules/ValidatedFormField';
+import { ValidatedFormField } from '@/components/molecules/ValidatedFormField';
 import { Card } from '@/components/molecules/Card';
 import type { Step1FormData } from '@/lib/validation/schemas';
 
@@ -10,20 +10,20 @@ import type { Step1FormData } from '@/lib/validation/schemas';
 
 export function FormStep1() {
   const { t } = useTranslation();
-  const { control, watch } = useFormContext<{ step1: Step1FormData }>();
+  const { control, watch } = useFormContext<Step1FormData>();
 
   // Watch for country selection to show conditional fields
-  const selectedCountry = watch('step1.country');
+  const selectedCountry = watch('country');
 
   return (
     <div className="space-y-8">
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t('form.step1.title', 'Personal Information')}
+          {t('form.title', 'Personal Information')}
         </h2>
         <p className="text-muted-foreground">
-          {t('form.step1.description', 'Please provide your personal details for verification.')}
+          {t('form.description', 'Please provide your personal details for verification.')}
         </p>
       </div>
 
@@ -31,10 +31,10 @@ export function FormStep1() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.step1.identity_section', 'Identity Information')}
+            {t('form.identity_section', 'Identity Information')}
           </Card.Title>
           <Card.Description>
-            {t('form.step1.identity_description', 'Basic identification details')}
+            {t('form.identity_description', 'Basic identification details')}
           </Card.Description>
         </Card.Header>
 
@@ -42,50 +42,50 @@ export function FormStep1() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Full Name */}
             <ValidatedFormField
-              name="step1.fullName"
+              name="fullName"
               control={control}
-              label={t('form.step1.fullName', 'Full Name')}
-              placeholder={t('form.step1.fullName_placeholder', 'Enter your full legal name')}
-              helperText={t('form.step1.fullName_help', 'Enter your full name as it appears on your official ID')}
+              label={t('form.fullName', 'Full Name')}
+              placeholder={t('form.fullName_placeholder', 'Enter your full legal name')}
+              helperText={t('form.fullName_help', 'Enter your full name as it appears on your official ID')}
               required
               className="md:col-span-2"
             />
 
             {/* National ID */}
             <ValidatedFormField
-              name="step1.nationalId"
+              name="nationalId"
               control={control}
-              label={t('form.step1.nationalId', 'National ID')}
-              placeholder={t('form.step1.nationalId_placeholder', 'Enter your 10-digit national ID')}
-              helperText={t('form.step1.nationalId_help', 'Your official government-issued ID number')}
+              label={t('form.nationalId', 'National ID')}
+              placeholder={t('form.nationalId_placeholder', 'Enter your 10-digit national ID')}
+              helperText={t('form.nationalId_help', 'Your official government-issued ID number')}
               maxLength={10}
               required
             />
 
             {/* Date of Birth */}
-            <DateFormField
-              name="step1.dateOfBirth"
+            <ValidatedFormField
+              name="dateOfBirth"
               control={control}
-              label={t('form.step1.dateOfBirth', 'Date of Birth')}
-              helperText={t('form.step1.dateOfBirth_help', 'You must be at least 18 years old')}
-              max={new Date().toISOString().split('T')[0]}
+              label={t('form.dateOfBirth', 'Date of Birth')}
+              helperText={t('form.dateOfBirth_help', 'You must be at least 18 years old')}
+              type="date"
               required
             />
 
             {/* Gender */}
             <ValidatedFormField
-              name="step1.gender"
+              name="gender"
               control={control}
-              label={t('form.step1.gender', 'Gender')}
-              helperText={t('form.step1.gender_help', 'Select your gender')}
+              label={t('form.gender', 'Gender')}
+              helperText={t('form.gender_help', 'Select your gender')}
               type="select"
               required
               options={[
-                { value: '', label: t('form.step1.gender_select', 'Select gender') },
-                { value: 'male', label: t('form.step1.gender_options.male', 'Male') },
-                { value: 'female', label: t('form.step1.gender_options.female', 'Female') },
-                { value: 'other', label: t('form.step1.gender_options.other', 'Other') },
-                { value: 'prefer_not_to_say', label: t('form.step1.gender_options.prefer_not_to_say', 'Prefer not to say') },
+                { value: '', label: t('form.gender_select', 'Select gender') },
+                { value: 'male', label: t('form.gender_options.male', 'Male') },
+                { value: 'female', label: t('form.gender_options.female', 'Female') },
+                { value: 'other', label: t('form.gender_options.other', 'Other') },
+                { value: 'prefer_not_to_say', label: t('form.gender_options.prefer_not_to_say', 'Prefer not to say') },
               ]}
             />
           </div>
@@ -96,33 +96,35 @@ export function FormStep1() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.step1.contact_section', 'Contact Information')}
+            {t('form.contact_section', 'Contact Information')}
           </Card.Title>
           <Card.Description>
-            {t('form.step1.contact_description', 'How we can reach you')}
+            {t('form.contact_description', 'How we can reach you')}
           </Card.Description>
         </Card.Header>
 
         <Card.Content>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {/* Email */}
-            <EmailFormField
-              name="step1.email"
+            <ValidatedFormField
+              name="email"
               control={control}
-              label={t('form.step1.email', 'Email Address')}
-              placeholder={t('form.step1.email_placeholder', 'your.email@example.com')}
-              helperText={t('form.step1.email_help', 'We will send important updates to this email')}
+              label={t('form.email', 'Email Address')}
+              placeholder={t('form.email_placeholder', 'your.email@example.com')}
+              helperText={t('form.email_help', 'We will send important updates to this email')}
+              type="email"
               required
               className="md:col-span-2"
             />
 
             {/* Phone */}
-            <PhoneFormField
-              name="step1.phone"
+            <ValidatedFormField
+              name="phone"
               control={control}
-              label={t('form.step1.phone', 'Phone Number')}
-              placeholder={t('form.step1.phone_placeholder', '+971 50 123 4567')}
-              helperText={t('form.step1.phone_help', 'Include country code for international numbers')}
+              label={t('form.phone', 'Phone Number')}
+              placeholder={t('form.phone_placeholder', '+971 50 123 4567')}
+              helperText={t('form.phone_help', 'Include country code for international numbers')}
+              type="tel"
               required
             />
           </div>
@@ -133,10 +135,10 @@ export function FormStep1() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('form.step1.address_section', 'Address Information')}
+            {t('form.address_section', 'Address Information')}
           </Card.Title>
           <Card.Description>
-            {t('form.step1.address_description', 'Your current residential address')}
+            {t('form.address_description', 'Your current residential address')}
           </Card.Description>
         </Card.Header>
 
@@ -144,43 +146,43 @@ export function FormStep1() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Street Address */}
             <ValidatedFormField
-              name="step1.address"
+              name="address"
               control={control}
-              label={t('form.step1.address', 'Street Address')}
-              placeholder={t('form.step1.address_placeholder', 'Building name, street number, street name')}
-              helperText={t('form.step1.address_help', 'Your complete street address')}
+              label={t('form.address', 'Street Address')}
+              placeholder={t('form.address_placeholder', 'Building name, street number, street name')}
+              helperText={t('form.address_help', 'Your complete street address')}
               required
               className="md:col-span-2 lg:col-span-3"
             />
 
             {/* City */}
             <ValidatedFormField
-              name="step1.city"
+              name="city"
               control={control}
-              label={t('form.step1.city', 'City')}
-              placeholder={t('form.step1.city_placeholder', 'Enter your city')}
+              label={t('form.city', 'City')}
+              placeholder={t('form.city_placeholder', 'Enter your city')}
               required
             />
 
             {/* State/Emirate */}
             <ValidatedFormField
-              name="step1.state"
+              name="state"
               control={control}
-              label={t('form.step1.state', 'State/Emirate')}
-              placeholder={t('form.step1.state_placeholder', 'Enter your state or emirate')}
+              label={t('form.state', 'State/Emirate')}
+              placeholder={t('form.state_placeholder', 'Enter your state or emirate')}
               required
             />
 
             {/* Country */}
             <ValidatedFormField
-              name="step1.country"
+              name="country"
               control={control}
-              label={t('form.step1.country', 'Country')}
-              helperText={t('form.step1.country_help', 'Select your country of residence')}
+              label={t('form.country', 'Country')}
+              helperText={t('form.country_help', 'Select your country of residence')}
               type="select"
               required
               options={[
-                { value: '', label: t('form.step1.country_select', 'Select country') },
+                { value: '', label: t('form.country_select', 'Select country') },
                 { value: 'AE', label: t('countries.ae', 'United Arab Emirates') },
                 { value: 'SA', label: t('countries.sa', 'Saudi Arabia') },
                 { value: 'QA', label: t('countries.qa', 'Qatar') },
@@ -197,11 +199,11 @@ export function FormStep1() {
             {/* Postal Code - Show conditionally based on country */}
             {selectedCountry && selectedCountry !== 'AE' && (
               <ValidatedFormField
-                name="step1.postalCode"
+                name="postalCode"
                 control={control}
-                label={t('form.step1.postalCode', 'Postal Code')}
-                placeholder={t('form.step1.postalCode_placeholder', 'Enter postal code')}
-                helperText={t('form.step1.postalCode_help', 'Optional for some countries')}
+                label={t('form.postalCode', 'Postal Code')}
+                placeholder={t('form.postalCode_placeholder', 'Enter postal code')}
+                helperText={t('form.postalCode_help', 'Optional for some countries')}
                 className="lg:col-start-1"
               />
             )}
@@ -219,10 +221,10 @@ export function FormStep1() {
           </div>
           <div>
             <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-1">
-              {t('form.step1.notice_title', 'Important Information')}
+              {t('form.notice_title', 'Important Information')}
             </h4>
             <p className="text-sm text-blue-800 dark:text-blue-200">
-              {t('form.step1.notice_text', 'Please ensure all information is accurate and matches your official documents. This information will be used for verification purposes.')}
+              {t('form.notice_text', 'Please ensure all information is accurate and matches your official documents. This information will be used for verification purposes.')}
             </p>
           </div>
         </div>

@@ -82,6 +82,32 @@ export function ValidatedFormField<
     shouldUnregister,
   });
 
+  const wrappedOnChange = (val: any) => {
+    // Convert string numbers to actual numbers for number inputs
+    if (type === 'number') {
+      if (typeof val === 'string') {
+        if (val === '') {
+          // For number fields, let the schema handle empty values
+          onChange(val);
+        } else {
+          const numericValue = parseFloat(val);
+          if (isNaN(numericValue)) {
+            // Keep invalid values as strings so validation can catch them
+            onChange(val);
+          } else {
+            // Convert to integer for fields that should be integers (like numberOfDependents)
+            const isInteger = val.indexOf('.') === -1;
+            onChange(isInteger ? parseInt(val, 10) : numericValue);
+          }
+        }
+      } else {
+        onChange(val);
+      }
+    } else {
+      onChange(val);
+    }
+  };
+
   const hasError = !!error;
   const errorMessage = error?.message;
 
@@ -93,7 +119,7 @@ export function ValidatedFormField<
           ref={ref}
           type="checkbox"
           checked={!!value}
-          onChange={(e) => onChange(e.target.checked)}
+          onChange={(e) => wrappedOnChange(e.target.checked)}
           onBlur={onBlur}
           aria-invalid={hasError}
           data-dirty={isDirty}
@@ -118,7 +144,7 @@ export function ValidatedFormField<
         <select
           ref={ref}
           value={value || ''}
-          onChange={onChange}
+          onChange={(e) => wrappedOnChange(e.target.value)}
           onBlur={onBlur}
           aria-invalid={hasError}
           data-dirty={isDirty}
@@ -162,7 +188,7 @@ export function ValidatedFormField<
         <textarea
           ref={ref}
           value={value || ''}
-          onChange={(e) => onChange(e.target.value)}
+          onChange={(e) => wrappedOnChange(e.target.value)}
           onBlur={onBlur}
           rows={rows}
           maxLength={maxLength}
@@ -186,7 +212,7 @@ export function ValidatedFormField<
       helperText={!hasError ? helperText : undefined}
       hasError={hasError}
       value={value}
-      onChange={onChange}
+      onChange={wrappedOnChange}
       onBlur={onBlur}
       type={type}
       aria-invalid={hasError}
