@@ -94,12 +94,13 @@ export function ProgressBar({
     >
       <div className="relative">
         <div
-          className="pointer-events-none absolute inset-x-[20px] top-5 h-[2px] bg-border"
+          className="pointer-events-none absolute inset-x-[20px] top-5 h-[2px] rounded-full"
+          style={{ backgroundColor: 'hsl(var(--muted-foreground))', opacity: 0.35 }}
           aria-hidden="true"
         />
         <div
           className={cn(
-            'pointer-events-none absolute top-5 h-[2px] bg-[var(--color-green-500)] origin-left transition-transform duration-300',
+            'pointer-events-none absolute top-5 h-[2px] rounded-full bg-[var(--color-green-500)] origin-left transition-transform duration-300',
             isRTL && 'left-auto right-[20px] origin-right',
             !isRTL && 'left-[20px]'
           )}
