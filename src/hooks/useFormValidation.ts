@@ -177,12 +177,16 @@ export function useStep1Form(options?: Omit<FormValidationOptions<Step1FormData>
  */
 export function useStep2Form(options?: Omit<FormValidationOptions<Step2FormData>, 'schema'>) {
   const { defaultValues, ...restOptions } = options ?? {};
+  
+  // Merge defaults with provided values, ensuring proper typing
+  const mergedDefaults = {
+    ...getStepDefaults(2).step2,
+    ...(defaultValues ?? {}),
+  };
+  
   return useFormValidation({
     schema: step2Schema,
-    defaultValues: {
-      ...getStepDefaults(2).step2,
-      ...(defaultValues ?? {}),
-    },
+    defaultValues: mergedDefaults,
     ...restOptions,
   });
 }

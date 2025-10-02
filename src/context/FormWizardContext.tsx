@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import type { FormWizardState, FormWizardAction, FormStepData } from '@/types/form.types';
+import { transformForStorage, transformFromStorage, safeParseStorageData } from '@/lib/utils/form-data-transform';
 
 // =============================================================================
 // CONTEXT
@@ -91,8 +92,15 @@ export function FormWizardProvider({ children }: { children: ReactNode }) {
     const saved = localStorage.getItem('formWizardData');
     if (saved) {
       try {
-        const data = JSON.parse(saved);
-        dispatch({ type: 'LOAD_FROM_STORAGE', payload: data });
+        const parsedData = JSON.parse(saved);
+        const transformedFormData = transformFromStorage(parsedData.formData || {});
+        dispatch({ 
+          type: 'LOAD_FROM_STORAGE', 
+          payload: {
+            ...parsedData,
+            formData: transformedFormData,
+          }
+        });
       } catch (error) {
         console.error('Failed to parse saved form data:', error);
         localStorage.removeItem('formWizardData');
@@ -103,8 +111,9 @@ export function FormWizardProvider({ children }: { children: ReactNode }) {
   // Auto-save to localStorage on data change
   useEffect(() => {
     if (Object.keys(state.formData).length > 0) {
+      const transformedFormData = transformForStorage(state.formData);
       const dataToSave = {
-        formData: state.formData,
+        formData: transformedFormData,
         completedSteps: Array.from(state.completedSteps),
         lastSaved: state.lastSaved,
       };

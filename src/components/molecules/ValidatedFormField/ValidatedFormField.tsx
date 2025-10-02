@@ -87,17 +87,17 @@ export function ValidatedFormField<
     if (type === 'number') {
       if (typeof val === 'string') {
         if (val === '') {
-          // For number fields, let the schema handle empty values
-          onChange(val);
+          // For number fields, send empty string to let schema handle it
+          onChange('');
         } else {
           const numericValue = parseFloat(val);
           if (isNaN(numericValue)) {
             // Keep invalid values as strings so validation can catch them
             onChange(val);
           } else {
-            // Convert to integer for fields that should be integers (like numberOfDependents)
-            const isInteger = val.indexOf('.') === -1;
-            onChange(isInteger ? parseInt(val, 10) : numericValue);
+            // Always send the string value - let the schema handle the conversion
+            // This ensures the schema's transform function gets the raw input
+            onChange(val);
           }
         }
       } else {

@@ -59,6 +59,27 @@ export function FormWizard() {
     updateFormData({ [stepKey]: data });
   }, [state.currentStep, updateFormData]);
 
+  // Reset form values when step data changes (e.g., from localStorage)
+  // Only reset when localStorage data is first loaded, not on every form change
+  useEffect(() => {
+    const stepKey = `step${state.currentStep}` as keyof FormStepData;
+    const stepData = state.formData[stepKey];
+    
+    // Only reset if we have saved data AND the form is currently empty/default
+    if (stepData && Object.keys(stepData).length > 0) {
+      const currentValues = currentForm.getValues();
+      const hasCurrentData = currentValues && Object.keys(currentValues).some(key => {
+        const value = currentValues[key as keyof typeof currentValues];
+        return value !== '' && value !== 0 && value !== false && value !== null && value !== undefined;
+      });
+      
+      // Only reset if form is empty (initial load) to prevent infinite loops
+      if (!hasCurrentData) {
+        currentForm.reset(stepData);
+      }
+    }
+  }, [state.currentStep]); // Only depend on step change, not formData
+
   // Watch form changes for auto-save
   useEffect(() => {
     const subscription = currentForm.watch((data) => {

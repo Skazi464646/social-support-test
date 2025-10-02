@@ -146,33 +146,61 @@ export const step2Schema = z.object({
   
   // Financial information
   monthlyIncome: z
-    .number({
-      message: 'Please enter your monthly income'
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === 'string') {
+        if (val === '') return 0; // Default empty to 0
+        const num = parseFloat(val);
+        return isNaN(num) ? 0 : num; // Default invalid to 0
+      }
+      return val;
     })
-    .min(0, 'Monthly income cannot be negative')
-    .max(1000000, 'Monthly income cannot exceed 1,000,000'),
+    .refine((val) => typeof val === 'number', 'Please enter your monthly income')
+    .refine((val) => val >= 0, 'Monthly income cannot be negative')
+    .refine((val) => val <= 1000000, 'Monthly income cannot exceed 1,000,000'),
   
   monthlyExpenses: z
-    .number({
-      message: 'Please enter your monthly expenses'
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === 'string') {
+        if (val === '') return 0; // Default empty to 0
+        const num = parseFloat(val);
+        return isNaN(num) ? 0 : num; // Default invalid to 0
+      }
+      return val;
     })
-    .min(0, 'Monthly expenses cannot be negative')
-    .max(1000000, 'Monthly expenses cannot exceed 1,000,000'),
+    .refine((val) => typeof val === 'number', 'Please enter your monthly expenses')
+    .refine((val) => val >= 0, 'Monthly expenses cannot be negative')
+    .refine((val) => val <= 1000000, 'Monthly expenses cannot exceed 1,000,000'),
   
   totalSavings: z
-    .number({
-      message: 'Please enter a valid savings amount'
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === 'string') {
+        if (val === '') return 0; // Default empty to 0
+        const num = parseFloat(val);
+        return isNaN(num) ? 0 : num; // Default invalid to 0
+      }
+      return val;
     })
-    .min(0, 'Total savings cannot be negative')
-    .max(10000000, 'Total savings cannot exceed 10,000,000')
+    .refine((val) => typeof val === 'number', 'Please enter a valid savings amount')
+    .refine((val) => val >= 0, 'Total savings cannot be negative')
+    .refine((val) => val <= 10000000, 'Total savings cannot exceed 10,000,000')
     .optional(),
   
   totalDebt: z
-    .number({
-      message: 'Please enter a valid debt amount'
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === 'string') {
+        if (val === '') return 0; // Default empty to 0
+        const num = parseFloat(val);
+        return isNaN(num) ? 0 : num; // Default invalid to 0
+      }
+      return val;
     })
-    .min(0, 'Total debt cannot be negative')
-    .max(10000000, 'Total debt cannot exceed 10,000,000')
+    .refine((val) => typeof val === 'number', 'Please enter a valid debt amount')
+    .refine((val) => val >= 0, 'Total debt cannot be negative')
+    .refine((val) => val <= 10000000, 'Total debt cannot exceed 10,000,000')
     .optional(),
   
   // Housing information
@@ -181,11 +209,18 @@ export const step2Schema = z.object({
   }),
   
   monthlyRent: z
-    .number({
-      message: 'Please enter a valid rent amount'
+    .union([z.number(), z.string()])
+    .transform((val) => {
+      if (typeof val === 'string') {
+        if (val === '') return 0; // Default empty to 0
+        const num = parseFloat(val);
+        return isNaN(num) ? 0 : num; // Default invalid to 0
+      }
+      return val;
     })
-    .min(0, 'Monthly rent cannot be negative')
-    .max(100000, 'Monthly rent cannot exceed 100,000')
+    .refine((val) => typeof val === 'number', 'Please enter a valid rent amount')
+    .refine((val) => val >= 0, 'Monthly rent cannot be negative')
+    .refine((val) => val <= 100000, 'Monthly rent cannot exceed 100,000')
     .optional(),
   
   // Benefits information
