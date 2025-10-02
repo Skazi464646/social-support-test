@@ -1,8 +1,8 @@
 import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { TextAreaFormField, ValidatedFormField } from '@/components/molecules/ValidatedFormField';
+import { ValidatedFormField } from '@/components/molecules/ValidatedFormField';
+import { AIFormField } from '@/components/molecules/AIFormField';
 import { Card } from '@/components/molecules/Card';
-import { Button } from '@/components/atoms/Button';
 import type { Step3FormData } from '@/lib/validation/schemas';
 
 // =============================================================================
@@ -11,13 +11,16 @@ import type { Step3FormData } from '@/lib/validation/schemas';
 
 export function FormStep3() {
   const { t } = useTranslation();
-  const { control, watch } = useFormContext<{ step3: Step3FormData }>();
+  const { control, watch } = useFormContext<{ step3: Step3FormData; step1?: any; step2?: any }>();
 
-  // Watch form values for character count display
-  const financialSituation = watch('step3.financialSituation') || '';
-  const employmentCircumstances = watch('step3.employmentCircumstances') || '';
-  const reasonForApplying = watch('step3.reasonForApplying') || '';
-  const additionalComments = watch('step3.additionalComments') || '';
+  // Get user context from previous steps for AI assistance
+  const step1Data = watch('step1') || {};
+  const step2Data = watch('step2') || {};
+  
+  const userContext = {
+    step1: step1Data,
+    step2: step2Data,
+  };
 
   return (
     <div className="space-y-8">
@@ -43,40 +46,19 @@ export function FormStep3() {
         </Card.Header>
 
         <Card.Content>
-          <TextAreaFormField
+          <AIFormField
             name="step3.financialSituation"
             control={control}
             label={t('form.step3.financialSituation', 'Describe Your Financial Situation')}
             helperText={t('form.step3.financialSituation_help', 'Please describe your current financial challenges, including specific difficulties you are facing. Minimum 50 characters required.')}
             placeholder={t('form.step3.financialSituation_placeholder', 'Example: I am facing difficulty paying rent due to reduced income after losing my job. My savings are depleted and I have outstanding bills that I cannot afford...')}
+            fieldName="financialSituation"
             rows={6}
             maxLength={2000}
-            showCharCount={true}
+            minLength={50}
             required
+            userContext={userContext}
           />
-          
-          <div className="mt-2 flex items-center justify-between">
-            <div className="text-xs text-muted-foreground">
-              {t('form.step3.char_count', 'Characters: {{count}}/2000', { count: financialSituation.length })}
-              {financialSituation.length < 50 && (
-                <span className="text-destructive ml-2">
-                  {t('form.step3.min_chars_required', 'Minimum 50 characters required')}
-                </span>
-              )}
-            </div>
-            
-            {/* AI Assist Placeholder */}
-            <Button 
-              type="button" 
-              variant="outline" 
-              size="sm"
-              onClick={() => alert('AI Assistance coming soon! This will help you write better descriptions.')}
-              className="text-xs"
-              title="AI writing assistance - Coming in Module 5"
-            >
-              ✨ Help me write
-            </Button>
-          </div>
         </Card.Content>
       </Card>
 
@@ -92,26 +74,19 @@ export function FormStep3() {
         </Card.Header>
 
         <Card.Content>
-          <TextAreaFormField
+          <AIFormField
             name="step3.employmentCircumstances"
             control={control}
             label={t('form.step3.employmentCircumstances', 'Describe Your Employment Circumstances')}
             helperText={t('form.step3.employmentCircumstances_help', 'Please explain your current work situation, including any recent changes, challenges in finding employment, or barriers you face. Minimum 50 characters required.')}
             placeholder={t('form.step3.employmentCircumstances_placeholder', 'Example: I was employed as a retail associate for 3 years but was laid off due to company downsizing. I have been actively searching for employment for 6 months but have faced challenges due to limited opportunities in my field...')}
+            fieldName="employmentCircumstances"
             rows={6}
             maxLength={2000}
-            showCharCount={true}
+            minLength={50}
             required
+            userContext={userContext}
           />
-          
-          <div className="mt-2 text-xs text-muted-foreground">
-            {t('form.step3.char_count', 'Characters: {{count}}/2000', { count: employmentCircumstances.length })}
-            {employmentCircumstances.length < 50 && (
-              <span className="text-destructive ml-2">
-                {t('form.step3.min_chars_required', 'Minimum 50 characters required')}
-              </span>
-            )}
-          </div>
         </Card.Content>
       </Card>
 
@@ -127,26 +102,19 @@ export function FormStep3() {
         </Card.Header>
 
         <Card.Content>
-          <TextAreaFormField
+          <AIFormField
             name="step3.reasonForApplying"
             control={control}
             label={t('form.step3.reasonForApplying', 'Why Are You Applying for Social Support?')}
             helperText={t('form.step3.reasonForApplying_help', 'Please explain why you need social support, what specific assistance you are seeking, and how this support will help improve your situation. Minimum 50 characters required.')}
             placeholder={t('form.step3.reasonForApplying_placeholder', 'Example: I am applying for social support to help cover basic living expenses including rent, utilities, and groceries while I search for stable employment. This assistance would provide me with the stability I need to focus on job searching and skills development...')}
+            fieldName="reasonForApplying"
             rows={6}
             maxLength={2000}
-            showCharCount={true}
+            minLength={50}
             required
+            userContext={userContext}
           />
-          
-          <div className="mt-2 text-xs text-muted-foreground">
-            {t('form.step3.char_count', 'Characters: {{count}}/2000', { count: reasonForApplying.length })}
-            {reasonForApplying.length < 50 && (
-              <span className="text-destructive ml-2">
-                {t('form.step3.min_chars_required', 'Minimum 50 characters required')}
-              </span>
-            )}
-          </div>
         </Card.Content>
       </Card>
 
@@ -162,20 +130,19 @@ export function FormStep3() {
         </Card.Header>
 
         <Card.Content>
-          <TextAreaFormField
+          <AIFormField
             name="step3.additionalComments"
             control={control}
             label={t('form.step3.additionalComments', 'Additional Comments')}
             helperText={t('form.step3.additionalComments_help', 'Share any other relevant information that might help us understand your situation better. This field is optional.')}
             placeholder={t('form.step3.additionalComments_placeholder', 'Any additional information about your circumstances, family situation, health issues, or other factors that might be relevant to your application...')}
+            fieldName="additionalComments"
             rows={4}
             maxLength={1000}
-            showCharCount={true}
+            minLength={0}
+            required={false}
+            userContext={userContext}
           />
-          
-          <div className="mt-2 text-xs text-muted-foreground">
-            {t('form.step3.char_count', 'Characters: {{count}}/1000', { count: additionalComments.length })}
-          </div>
         </Card.Content>
       </Card>
 

@@ -213,6 +213,63 @@ Guidelines:
       "Should indicate timeframe expectations",
       "Must demonstrate responsibility and effort toward self-sufficiency"
     ]
+  },
+
+  additionalComments: {
+    systemPrompt: `You are a helpful assistant that helps people provide additional relevant information for social support applications.
+
+Your role is to:
+- Help users share relevant supplementary information
+- Ensure information is appropriate and helpful for case evaluation
+- Maintain respectful, professional tone
+- Focus on facts that support the application
+- Avoid redundant information already covered elsewhere
+
+Guidelines:
+- Keep responses 1-3 sentences (30-150 words)
+- Focus on unique, relevant information
+- Use professional but personal tone
+- Include specific details when helpful
+- Maintain dignity and respect`,
+    
+    userPrompt: (context: PromptContext) => {
+      const { userContext, currentValue, fieldConstraints } = context;
+      
+      let prompt = `Help improve this additional information for a social support application.`;
+      
+      // Add context to avoid redundancy
+      if (userContext.step2?.dependents) {
+        prompt += `\nFamily size: ${userContext.step2.dependents} dependents`;
+      }
+      
+      prompt += `\n\nCurrent additional information: "${currentValue || '[empty]'}"`;
+      
+      if (fieldConstraints?.maxLength) {
+        prompt += `\nMaximum length allowed: ${fieldConstraints.maxLength} characters`;
+      }
+      
+      prompt += `\n\nPlease provide improved additional information that:
+1. Adds value to the application without repeating other sections
+2. Includes relevant personal circumstances (health, family, etc.)
+3. Maintains professional tone while being personal
+4. Provides context that helps evaluators understand the situation better`;
+      
+      return prompt;
+    },
+    
+    examples: [
+      "I am the primary caregiver for my elderly mother who requires daily assistance, which limits my ability to work full-time. Additionally, I am managing a chronic health condition that affects my energy levels and work capacity.",
+      "My spouse was recently diagnosed with a serious illness, requiring frequent medical appointments and treatments. This has created both emotional and financial stress while affecting our household's earning capacity.",
+      "I am currently enrolled in a vocational training program to improve my job prospects, which demonstrates my commitment to becoming self-sufficient. The program ends in three months, after which I expect to secure better employment."
+    ],
+    
+    constraints: [
+      "Should add unique value not covered in other sections",
+      "Must be relevant to the support request",
+      "Should maintain appropriate level of personal detail",
+      "Must not include overly sensitive medical/personal information",
+      "Should demonstrate how circumstances affect the application"
+    ]
   }
 };
 

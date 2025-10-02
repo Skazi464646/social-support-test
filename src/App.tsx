@@ -1,9 +1,30 @@
 import { useState } from 'react';
 import { AIEnhancedTextarea } from '@/components/molecules/AIEnhancedTextarea';
+import { AIEnhancedInput } from '@/components/molecules/AIEnhancedInput';
 
 function App() {
   const [step, setStep] = useState(1);
+  
+  // Form state
   const [financialSituation, setFinancialSituation] = useState('');
+  const [employmentCircumstances, setEmploymentCircumstances] = useState('');
+  const [reasonForApplying, setReasonForApplying] = useState('');
+  const [additionalComments, setAdditionalComments] = useState('');
+  
+  // Sample user context for AI assistance
+  const userContext = {
+    step1: {
+      fullName: 'Sample User',
+      email: 'user@example.com',
+    },
+    step2: {
+      employmentStatus: 'unemployed',
+      monthlyIncome: 0,
+      housingStatus: 'rent',
+      dependents: 2,
+      maritalStatus: 'married',
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -118,8 +139,9 @@ function App() {
 
             {step === 3 && (
               <div>
-                <h2 className="text-xl font-semibold mb-4">Detailed Information</h2>
-                <div className="space-y-4">
+                <h2 className="text-xl font-semibold mb-4">Detailed Information with AI Assistance</h2>
+                <div className="space-y-6">
+                  {/* Financial Situation */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                       Describe Your Financial Situation *
@@ -133,15 +155,75 @@ function App() {
                       minLength={50}
                       maxLength={1000}
                       required={true}
-                      userContext={{
-                        step2: {
-                          employmentStatus: 'unemployed',
-                          monthlyIncome: 0,
-                          housingStatus: 'rent',
-                          dependents: 2,
-                        }
-                      }}
+                      userContext={userContext}
                     />
+                  </div>
+
+                  {/* Employment Circumstances */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Describe Your Employment Circumstances *
+                    </label>
+                    <AIEnhancedTextarea
+                      fieldName="employmentCircumstances"
+                      fieldLabel="Employment Circumstances"
+                      value={employmentCircumstances}
+                      onChange={setEmploymentCircumstances}
+                      placeholder="Please explain your current employment situation..."
+                      minLength={50}
+                      maxLength={1000}
+                      required={true}
+                      userContext={userContext}
+                    />
+                  </div>
+
+                  {/* Reason for Applying */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Why Are You Applying for Social Support? *
+                    </label>
+                    <AIEnhancedTextarea
+                      fieldName="reasonForApplying"
+                      fieldLabel="Reason for Applying"
+                      value={reasonForApplying}
+                      onChange={setReasonForApplying}
+                      placeholder="Please explain why you need assistance and how it will help..."
+                      minLength={50}
+                      maxLength={1000}
+                      required={true}
+                      userContext={userContext}
+                    />
+                  </div>
+
+                  {/* Additional Comments */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Additional Comments (Optional)
+                    </label>
+                    <AIEnhancedTextarea
+                      fieldName="additionalComments"
+                      fieldLabel="Additional Comments"
+                      value={additionalComments}
+                      onChange={setAdditionalComments}
+                      placeholder="Any additional information that might be relevant..."
+                      minLength={0}
+                      maxLength={500}
+                      required={false}
+                      userContext={userContext}
+                      rows={3}
+                    />
+                  </div>
+
+                  {/* Demo Notice */}
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mt-6">
+                    <h3 className="font-semibold text-blue-900 mb-2">🎉 AI Assistance Demo Ready!</h3>
+                    <p className="text-sm text-blue-700">
+                      All fields now include AI assistance with:
+                      • Field-specific prompts and examples
+                      • Context-aware suggestions based on your previous answers
+                      • Real-time editing and refinement capabilities
+                      • Rate limiting and security features
+                    </p>
                   </div>
                 </div>
               </div>
