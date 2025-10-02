@@ -52,6 +52,8 @@ function transformStep2ForStorage(data: Partial<Step2FormData>): Partial<Step2Fo
     totalSavings: data.totalSavings,
     totalDebt: data.totalDebt,
     monthlyRent: data.monthlyRent,
+    // Ensure benefitTypes array is preserved
+    benefitTypes: Array.isArray(data.benefitTypes) ? data.benefitTypes : [],
   };
 }
 
@@ -85,6 +87,11 @@ function transformStep2FromStorage(data: Partial<Step2FormData>): Partial<Step2F
   }
   if (typeof transformed.previouslyApplied === 'string') {
     transformed.previouslyApplied = transformed.previouslyApplied === 'true';
+  }
+  
+  // Ensure benefitTypes is always an array
+  if (!Array.isArray(transformed.benefitTypes)) {
+    transformed.benefitTypes = [];
   }
   
   return transformed;

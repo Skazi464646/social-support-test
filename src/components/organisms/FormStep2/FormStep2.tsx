@@ -257,33 +257,24 @@ export function FormStep2() {
 
             {/* Benefit Types - Show if receiving benefits */}
             {isTruthy(receivingBenefits) && (
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-3">
-                  {t('form.benefitTypes', 'Types of Benefits Received')}
-                  <span className="text-destructive ml-1">*</span>
-                </label>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {[
-                    { value: 'unemployment', label: t('form.benefitTypes_options.unemployment', 'Unemployment Benefits') },
-                    { value: 'disability', label: t('form.benefitTypes_options.disability', 'Disability Benefits') },
-                    { value: 'housing', label: t('form.benefitTypes_options.housing', 'Housing Assistance') },
-                    { value: 'food', label: t('form.benefitTypes_options.food', 'Food Assistance') },
-                    { value: 'medical', label: t('form.benefitTypes_options.medical', 'Medical Assistance') },
-                    { value: 'elderly', label: t('form.benefitTypes_options.elderly', 'Elderly Support') },
-                    { value: 'family', label: t('form.benefitTypes_options.family', 'Family Support') },
-                    { value: 'other', label: t('form.benefitTypes_options.other', 'Other') },
-                  ].map((benefit) => (
-                    <label key={benefit.value} className="flex items-center space-x-3">
-                      <input
-                        type="checkbox"
-                        value={benefit.value}
-                        className="rounded border-input text-primary focus:ring-ring focus:ring-2"
-                      />
-                      <span className="text-sm text-foreground">{benefit.label}</span>
-                    </label>
-                  ))}
-                </div>
-              </div>
+              <ValidatedFormField
+                name="benefitTypes"
+                control={control}
+                label={t('form.benefitTypes', 'Types of Benefits Received')}
+                helperText={t('form.benefitTypes_help', 'Select all types of government benefits you currently receive')}
+                type="checkbox-group"
+                required
+                options={[
+                  { value: 'unemployment', label: t('form.benefitTypes_options.unemployment', 'Unemployment Benefits') },
+                  { value: 'disability', label: t('form.benefitTypes_options.disability', 'Disability Benefits') },
+                  { value: 'housing', label: t('form.benefitTypes_options.housing', 'Housing Assistance') },
+                  { value: 'food', label: t('form.benefitTypes_options.food', 'Food Assistance') },
+                  { value: 'medical', label: t('form.benefitTypes_options.medical', 'Medical Assistance') },
+                  { value: 'elderly', label: t('form.benefitTypes_options.elderly', 'Elderly Support') },
+                  { value: 'family', label: t('form.benefitTypes_options.family', 'Family Support') },
+                  { value: 'other', label: t('form.benefitTypes_options.other', 'Other') },
+                ]}
+              />
             )}
 
             {/* Previously Applied */}

@@ -24,7 +24,7 @@ export interface ValidatedFormFieldProps<
   label: string;
   required?: boolean;
   helperText?: string;
-  type?: 'text' | 'email' | 'tel' | 'password' | 'number' | 'date' | 'select' | 'checkbox' | 'textarea';
+  type?: 'text' | 'email' | 'tel' | 'password' | 'number' | 'date' | 'select' | 'checkbox' | 'checkbox-group' | 'textarea';
   options?: SelectOption[];
   rows?: number;
   maxLength?: number;
@@ -137,6 +137,69 @@ export function ValidatedFormField<
           className="rounded border-input text-primary focus:ring-ring focus:ring-2"
         />
       </div>
+    );
+  }
+
+  // Render checkbox group field
+  if (type === 'checkbox-group' && options) {
+    const currentValue: string[] = Array.isArray(value) ? value : [];
+    
+    const handleCheckboxChange = (optionValue: string, isChecked: boolean) => {
+      let newValue: string[];
+      
+      if (isChecked) {
+        // Add the value if it's not already in the array
+        newValue = currentValue.includes(optionValue) 
+          ? currentValue 
+          : [...currentValue, optionValue];
+      } else {
+        // Remove the value from the array
+        newValue = currentValue.filter((v: string) => v !== optionValue);
+      }
+      
+      wrappedOnChange(newValue);
+    };
+
+    return (
+      <FormField
+        {...fieldProps}
+        label={label}
+        required={required}
+        error={errorMessage}
+        helperText={!hasError ? helperText : undefined}
+        hasError={hasError}
+      >
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          {options.map((option) => {
+            const isChecked = currentValue.includes(option.value);
+            const checkboxId = `${name}-${option.value}`;
+            
+            return (
+              <label 
+                key={option.value} 
+                htmlFor={checkboxId}
+                className="flex items-center space-x-3 cursor-pointer"
+              >
+                <input
+                  id={checkboxId}
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={(e) => handleCheckboxChange(option.value, e.target.checked)}
+                  onBlur={wrappedOnBlur}
+                  disabled={option.disabled}
+                  aria-invalid={hasError}
+                  data-dirty={isDirty}
+                  data-touched={isTouched}
+                  className="rounded border-input text-primary focus:ring-ring focus:ring-2 disabled:opacity-50 disabled:pointer-events-none"
+                />
+                <span className="text-sm text-foreground select-none">
+                  {option.label}
+                </span>
+              </label>
+            );
+          })}
+        </div>
+      </FormField>
     );
   }
 
