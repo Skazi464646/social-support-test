@@ -50,30 +50,3 @@ export function ThemeToggle() {
   );
 }
 
-export function DirectionToggle() {
-  const { direction, toggleDirection } = useTheme();
-
-  return (
-    <button
-      onClick={toggleDirection}
-      className="btn-outline flex items-center gap-2"
-      aria-label={`Switch to ${direction === 'ltr' ? 'RTL' : 'LTR'} layout`}
-    >
-      <svg
-        className="h-4 w-4"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-        aria-hidden="true"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M7 16l4-4m0 0l4-4m-4 4H3m18 0a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-      {direction === 'ltr' ? 'RTL' : 'LTR'}
-    </button>
-  );
-}

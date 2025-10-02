@@ -7,12 +7,12 @@ import { useStep1Form, useStep2Form, useStep3Form } from '@/hooks/useFormValidat
 import { Button } from '@/components/atoms/Button';
 import { ProgressBar } from '@/components/molecules/ProgressBar';
 import { Card } from '@/components/molecules/Card';
+import { FormNavigation } from '@/components/molecules/FormNavigation';
 import { useToast } from '@/context/ToastContext';
 import { formSubmissionService, formatSubmissionError, FormSubmissionError } from '@/lib/api/form-submission';
 import { FormStep1 } from '@/components/organisms/FormStep1';
 import { FormStep2 } from '@/components/organisms/FormStep2';
 import { FormStep3 } from '@/components/organisms/FormStep3';
-import { cn } from '@/lib/utils';
 import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, FormStepData } from '@/lib/validation/schemas';
 
 // =============================================================================
@@ -232,7 +232,7 @@ export function FormWizard() {
   };
 
   return (
-    <div className="container mx-auto ps-4 pe-4 py-8 max-w-4xl">
+    <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-foreground mb-2">
@@ -269,98 +269,34 @@ export function FormWizard() {
               </div>
 
             {/* Navigation */}
-            <div className="flex justify-between items-center mt-8 pt-6 border-t">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handlePrevious}
-                disabled={state.currentStep === 1}
-                className="min-w-[100px]"
-              >
-{t('actions.back')}
-              </Button>
-
-              <div className="flex items-center gap-4">
-                {/* Step indicators */}
-                <div className="flex gap-2">
-                  {[1, 2, 3].map((step) => (
-                    <div
-                      key={step}
-                      className={cn(
-                        'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium',
-                        step === state.currentStep && 'bg-primary text-primary-foreground',
-                        step < state.currentStep && 'bg-green-500 text-white',
-                        step > state.currentStep && 'bg-muted text-muted-foreground'
-                      )}
-                    >
-                      {state.completedSteps.has(step) ? '✓' : step}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="flex gap-2">
-                  {submissionState.error && state.currentStep === 3 && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={handleRetrySubmission}
-                      disabled={submissionState.isSubmitting}
-                      className="min-w-[100px]"
-                    >
-                      {t('actions.retry')}
-                    </Button>
-                  )}
-                  
-                  {/* Debug button - DEV only */}
-                  {import.meta.env.DEV && (
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      onClick={() => {
-                        console.log('=== DEBUG INFO ===');
-                        console.log('Current step:', state.currentStep);
-                        console.log('Form data:', currentForm.getValues());
-                        console.log('Form errors:', currentForm.formState.errors);
-                        console.log('Form isValid:', currentForm.formState.isValid);
-                        console.log('Form isDirty:', currentForm.formState.isDirty);
-                        console.log('Form touchedFields:', currentForm.formState.touchedFields);
-                        
-                        // Specific debug for Step 2
-                        if (state.currentStep === 2) {
-                          const values = currentForm.getValues() as any;
-                          console.log('--- STEP 2 SPECIFIC DEBUG ---');
-                          console.log('numberOfDependents value:', values.numberOfDependents);
-                          console.log('numberOfDependents type:', typeof values.numberOfDependents);
-                          console.log('monthlyIncome value:', values.monthlyIncome);
-                          console.log('monthlyIncome type:', typeof values.monthlyIncome);
-                          console.log('receivingBenefits value:', values.receivingBenefits);
-                          console.log('receivingBenefits type:', typeof values.receivingBenefits);
-                          console.log('maritalStatus value:', values.maritalStatus);
-                          console.log('employmentStatus value:', values.employmentStatus);
-                        }
-                      }}
-                      className="text-xs"
-                    >
-                      DEBUG
-                    </Button>
-                  )}
-                  
-                  <Button
-                    type="submit"
-                    disabled={submissionState.isSubmitting || Boolean(submissionState.applicationId && state.currentStep === 3)}
-                    isLoading={submissionState.isSubmitting}
-                    className="min-w-[100px]"
-                  >
-                    {submissionState.applicationId && state.currentStep === 3
-                      ? t('form.submitted')
-                      : state.currentStep === 3 
-                        ? t('actions.submit') 
-                        : t('actions.next')
-                    }
-                  </Button>
-                </div>
-              </div>
-            </div>
+            <FormNavigation
+              currentStep={state.currentStep}
+              completedSteps={state.completedSteps}
+              isSubmitting={submissionState.isSubmitting}
+              isSubmitted={Boolean(submissionState.applicationId && state.currentStep === 3)}
+              hasError={Boolean(submissionState.error && state.currentStep === 3)}
+              onPrevious={handlePrevious}
+              onRetry={handleRetrySubmission}
+              onDebug={import.meta.env.DEV ? () => {
+                console.log('=== DEBUG INFO ===');
+                console.log('Current step:', state.currentStep);
+                console.log('Form data:', currentForm.getValues());
+                console.log('Form errors:', currentForm.formState.errors);
+                console.log('Form isValid:', currentForm.formState.isValid);
+                console.log('Form isDirty:', currentForm.formState.isDirty);
+                console.log('Form touchedFields:', currentForm.formState.touchedFields);
+                
+                if (state.currentStep === 2) {
+                  const values = currentForm.getValues() as any;
+                  console.log('--- STEP 2 SPECIFIC DEBUG ---');
+                  console.log('numberOfDependents:', values.numberOfDependents, typeof values.numberOfDependents);
+                  console.log('monthlyIncome:', values.monthlyIncome, typeof values.monthlyIncome);
+                  console.log('receivingBenefits:', values.receivingBenefits, typeof values.receivingBenefits);
+                  console.log('maritalStatus:', values.maritalStatus);
+                  console.log('employmentStatus:', values.employmentStatus);
+                }
+              } : undefined}
+            />
           </form>
           </FormBlurProvider>
         </FormProvider>

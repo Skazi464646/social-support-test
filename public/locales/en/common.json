@@ -102,5 +102,12 @@
     "optional_field": "Optional field",
     "loading_content": "Loading content",
     "error_occurred": "An error occurred"
+  },
+  "progress": {
+    "step_label": "Step {{step}}",
+    "step_indicator": "Step {{step}} of {{total}}",
+    "completed": "Completed",
+    "current": "Current step",
+    "pending": "Pending"
   }
 }

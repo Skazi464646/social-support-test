@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '@/components/molecules';
-import { ThemeToggle, DirectionToggle } from '@/components/ui';
+import { ThemeToggle } from '@/components/ui';
 import type { BaseComponentProps } from '@/types';
 
 interface HeaderProps extends BaseComponentProps {}
@@ -23,7 +23,6 @@ export function Header({ className = '' }: HeaderProps) {
           <div className="flex items-center space-x-4-rtl">
             <LanguageSwitcher />
             <ThemeToggle />
-            <DirectionToggle />
           </div>
         </div>
       </div>

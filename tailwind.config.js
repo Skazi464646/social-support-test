@@ -17,38 +17,103 @@ export default {
     },
     extend: {
       colors: {
+        // Core colors
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
+        surface: 'hsl(var(--surface))',
+        
+        // Primary colors
         primary: {
           DEFAULT: 'hsl(var(--primary))',
           foreground: 'hsl(var(--primary-foreground))',
+          hover: 'hsl(var(--primary-hover))',
+          active: 'hsl(var(--primary-active))',
+          light: 'hsl(var(--primary-light))',
+          'light-foreground': 'hsl(var(--primary-light-foreground))',
         },
+        
+        // Secondary colors
         secondary: {
           DEFAULT: 'hsl(var(--secondary))',
           foreground: 'hsl(var(--secondary-foreground))',
+          hover: 'hsl(var(--secondary-hover))',
+          border: 'hsl(var(--secondary-border))',
         },
+        
+        // Semantic colors
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+          light: 'hsl(var(--success-light))',
+          'light-foreground': 'hsl(var(--success-light-foreground))',
+          border: 'hsl(var(--success-border))',
+        },
+        
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+          light: 'hsl(var(--warning-light))',
+          'light-foreground': 'hsl(var(--warning-light-foreground))',
+          border: 'hsl(var(--warning-border))',
+        },
+        
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
+          light: 'hsl(var(--destructive-light))',
+          'light-foreground': 'hsl(var(--destructive-light-foreground))',
+          border: 'hsl(var(--destructive-border))',
         },
+        
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
+          light: 'hsl(var(--info-light))',
+          'light-foreground': 'hsl(var(--info-light-foreground))',
+          border: 'hsl(var(--info-border))',
+        },
+        
+        // Supporting colors
         muted: {
           DEFAULT: 'hsl(var(--muted))',
           foreground: 'hsl(var(--muted-foreground))',
+          border: 'hsl(var(--muted-border))',
         },
+        
         accent: {
           DEFAULT: 'hsl(var(--accent))',
           foreground: 'hsl(var(--accent-foreground))',
+          hover: 'hsl(var(--accent-hover))',
         },
+        
         popover: {
           DEFAULT: 'hsl(var(--popover))',
           foreground: 'hsl(var(--popover-foreground))',
+          border: 'hsl(var(--popover-border))',
         },
+        
         card: {
           DEFAULT: 'hsl(var(--card))',
           foreground: 'hsl(var(--card-foreground))',
+          border: 'hsl(var(--card-border))',
+        },
+        
+        // Text hierarchy
+        text: {
+          primary: 'hsl(var(--text-primary))',
+          secondary: 'hsl(var(--text-secondary))',
+          tertiary: 'hsl(var(--text-tertiary))',
+          disabled: 'hsl(var(--text-disabled))',
+        },
+        
+        // Interactive elements
+        'input-focus': 'hsl(var(--input-focus))',
+        tooltip: {
+          DEFAULT: 'hsl(var(--tooltip))',
+          foreground: 'hsl(var(--tooltip-foreground))',
         },
       },
       borderRadius: {

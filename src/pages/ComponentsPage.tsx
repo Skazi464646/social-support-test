@@ -6,7 +6,7 @@ import { Label } from '@/components/atoms/Label';
 import { Card } from '@/components/molecules/Card';
 import { ProgressBar } from '@/components/molecules/ProgressBar';
 import { LanguageSwitcher } from '@/components/molecules/LanguageSwitcher';
-import { ThemeToggle, DirectionToggle } from '@/components/ui/ThemeToggle';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { useToast } from '@/context/ToastContext';
 import { AIEnhancedTextarea } from '@/components/molecules/AIEnhancedTextarea';
 import { AIEnhancedInput } from '@/components/molecules/AIEnhancedInput';
@@ -117,7 +117,6 @@ export function ComponentsPage() {
           <div className="flex flex-wrap gap-4">
             <LanguageSwitcher />
             <ThemeToggle />
-            <DirectionToggle />
           </div>
         </Card>
 

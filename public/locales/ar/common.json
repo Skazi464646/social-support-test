@@ -123,5 +123,12 @@
     "optional_field": "حقل اختياري",
     "loading_content": "جاري تحميل المحتوى",
     "error_occurred": "حدث خطأ"
+  },
+  "progress": {
+    "step_label": "الخطوة {{step}}",
+    "step_indicator": "الخطوة {{step}} من {{total}}",
+    "completed": "مكتملة",
+    "current": "الخطوة الحالية",
+    "pending": "في الانتظار"
   }
 }
