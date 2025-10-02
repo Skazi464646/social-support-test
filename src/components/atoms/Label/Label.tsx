@@ -4,18 +4,23 @@ import { cn } from '@/lib/utils';
 import { useDirection } from '@/hooks/useDirection';
 
 const labelVariants = cva(
-  'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+  'font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 transition-colors duration-200',
   {
     variants: {
       variant: {
-        default: 'text-foreground',
-        muted: 'text-muted-foreground',
+        default: 'text-text-primary',
+        muted: 'text-text-secondary',
         error: 'text-destructive',
+        success: 'text-success',
+        warning: 'text-warning',
+        info: 'text-info',
       },
       size: {
-        sm: 'text-xs',
-        md: 'text-sm',
-        lg: 'text-base',
+        xs: 'text-xs font-normal',
+        sm: 'text-xs font-medium',
+        md: 'text-sm font-medium',
+        lg: 'text-base font-semibold',
+        xl: 'text-lg font-semibold',
       },
     },
     defaultVariants: {
@@ -51,10 +56,11 @@ const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
     const defaultRequiredIndicator = (
       <span 
         className={cn(
-          'text-destructive',
-          isRTL ? 'mr-1' : 'ml-1'
+          'text-destructive font-semibold',
+          isRTL ? 'me-1' : 'ms-1'
         )}
         aria-label="required"
+        role="img"
       >
         *
       </span>
