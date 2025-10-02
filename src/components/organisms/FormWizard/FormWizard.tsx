@@ -135,8 +135,8 @@ export function FormWizard() {
       } else {
         // Show success message and navigate to next step
         showSuccess({
-          title: t('step_completed'),
-          description: t('step_saved_successfully'),
+          title: t('common.toast.step_completed','Step Completed'),
+          description: t('common.toast.step_saved_successfully',"Step saved successfully"),
         });
         nextStep();
       }

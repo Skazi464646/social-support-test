@@ -675,6 +675,10 @@ const loadCoreResources = async (): Promise<any> => {
             lb: 'الجمهورية اللبنانية',
             eg: 'جمهورية مصر العربية',
             other: 'أخرى'
+          },
+          toast:{
+           step_completed:"الترجمة: اكتملت الخطوة",
+           step_saved_successfully:"الترجمة: تم حفظ الخطوة بنجاح"
           }
         },
         navigation: {
