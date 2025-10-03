@@ -12,6 +12,9 @@ export const createZodI18nErrorMap = (t: (key: string, options?: any) => string)
   const errorMap: z.ZodErrorMap = (issue, ctx) => {
     let message: string;
     
+    // Get the field path to determine which field this error is for
+    const fieldPath = issue.path.length > 0 ? issue.path.join('.') : '';
+    
     switch (issue.code) {
       case z.ZodIssueCode.invalid_type:
         if (issue.expected === 'string') {
@@ -20,15 +23,9 @@ export const createZodI18nErrorMap = (t: (key: string, options?: any) => string)
           message = t('validation.invalid_type_expected_number', { received: issue.received });
         } else if (issue.expected === 'boolean') {
           message = t('validation.invalid_type_expected_boolean', { received: issue.received });
-        } else if (issue.expected === 'date') {
-          message = t('validation.invalid_type_expected_date', { received: issue.received });
         } else {
           message = t('validation.invalid_type', { expected: issue.expected, received: issue.received });
         }
-        break;
-        
-      case z.ZodIssueCode.invalid_literal:
-        message = t('validation.invalid_literal', { expected: issue.expected });
         break;
         
       case z.ZodIssueCode.unrecognized_keys:
@@ -39,36 +36,46 @@ export const createZodI18nErrorMap = (t: (key: string, options?: any) => string)
         message = t('validation.invalid_union');
         break;
         
-      case z.ZodIssueCode.invalid_union_discriminator:
-        message = t('validation.invalid_union_discriminator', { options: issue.options.join(', ') });
+      case 'invalid_enum_value' as any:
+        // Use field-specific error messages for enum validation
+        if (fieldPath === 'gender') {
+          message = t('validation.gender.required');
+        } else if (fieldPath === 'maritalStatus') {
+          message = t('validation.maritalStatus.required');
+        } else if (fieldPath === 'employmentStatus') {
+          message = t('validation.employmentStatus.required');
+        } else if (fieldPath === 'housingStatus') {
+          message = t('validation.housingStatus.required');
+        } else if (fieldPath === 'country') {
+          message = t('validation.country.required');
+        } else {
+          message = t('validation.invalid_enum_value', { 
+            options: (issue as any).options?.join(', ') || '', 
+            received: (issue as any).received 
+          });
+        }
         break;
         
-      case z.ZodIssueCode.invalid_enum_value:
-        message = t('validation.invalid_enum_value', { 
-          options: issue.options.join(', '), 
-          received: issue.received 
-        });
-        break;
-        
-      case z.ZodIssueCode.invalid_arguments:
-        message = t('validation.invalid_arguments');
-        break;
-        
-      case z.ZodIssueCode.invalid_return_type:
-        message = t('validation.invalid_return_type');
-        break;
-        
-      case z.ZodIssueCode.invalid_date:
-        message = t('validation.invalid_date');
-        break;
-        
-      case z.ZodIssueCode.invalid_string:
+      case 'invalid_string' as any:
         if (issue.validation === 'email') {
-          message = t('validation.invalid_string_email');
-        } else if (issue.validation === 'url') {
-          message = t('validation.invalid_string_url');
+          message = t('validation.email.invalid');
         } else if (issue.validation === 'regex') {
-          message = t('validation.invalid_string_regex');
+          // Use field-specific error messages for regex validation
+          if (fieldPath === 'fullName') {
+            message = t('validation.name.invalid_format');
+          } else if (fieldPath === 'nationalId') {
+            message = t('validation.nationalId.invalid_format');
+          } else if (fieldPath === 'phone') {
+            message = t('validation.phone.invalid');
+          } else if (fieldPath === 'city') {
+            message = t('validation.city.invalid_format');
+          } else if (fieldPath === 'state') {
+            message = t('validation.state.invalid_format');
+          } else if (fieldPath === 'postalCode') {
+            message = t('validation.postalCode.invalid_format');
+          } else {
+            message = t('validation.invalid_string_regex');
+          }
         } else {
           message = t('validation.invalid_string');
         }
@@ -78,11 +85,32 @@ export const createZodI18nErrorMap = (t: (key: string, options?: any) => string)
         if (issue.type === 'array') {
           message = t('validation.too_small', { minimum: issue.minimum });
         } else if (issue.type === 'string') {
-          message = t('validation.invalid_string_min', { minimum: issue.minimum });
+          // Use field-specific error messages when available
+          if (fieldPath === 'fullName') {
+            message = t('validation.name.too_short');
+          } else if (fieldPath === 'nationalId') {
+            message = t('validation.nationalId.invalid_format');
+          } else if (fieldPath === 'email') {
+            message = t('validation.email.too_short');
+          } else if (fieldPath === 'phone') {
+            message = t('validation.phone.too_short');
+          } else if (fieldPath === 'address') {
+            message = t('validation.address.too_short');
+          } else if (fieldPath === 'city') {
+            message = t('validation.city.too_short');
+          } else if (fieldPath === 'state') {
+            message = t('validation.state.too_short');
+          } else if (fieldPath === 'financialSituation') {
+            message = t('validation.financialSituation.too_short');
+          } else if (fieldPath === 'employmentCircumstances') {
+            message = t('validation.employmentCircumstances.too_short');
+          } else if (fieldPath === 'reasonForApplying') {
+            message = t('validation.reasonForApplying.too_short');
+          } else {
+            message = t('validation.invalid_string_min', { minimum: issue.minimum });
+          }
         } else if (issue.type === 'number') {
           message = t('validation.invalid_number_min', { minimum: issue.minimum });
-        } else if (issue.type === 'date') {
-          message = t('validation.invalid_date_min', { minimum: issue.minimum });
         } else {
           message = t('validation.too_small', { minimum: issue.minimum });
         }
@@ -95,27 +123,44 @@ export const createZodI18nErrorMap = (t: (key: string, options?: any) => string)
           message = t('validation.invalid_string_max', { maximum: issue.maximum });
         } else if (issue.type === 'number') {
           message = t('validation.invalid_number_max', { maximum: issue.maximum });
-        } else if (issue.type === 'date') {
-          message = t('validation.invalid_date_max', { maximum: issue.maximum });
         } else {
           message = t('validation.too_big', { maximum: issue.maximum });
         }
-        break;
-        
-      case z.ZodIssueCode.invalid_intersection_types:
-        message = t('validation.invalid_intersection_types');
         break;
         
       case z.ZodIssueCode.not_multiple_of:
         message = t('validation.not_multiple_of', { multipleOf: issue.multipleOf });
         break;
         
-      case z.ZodIssueCode.not_finite:
-        message = t('validation.not_finite');
-        break;
-        
       case z.ZodIssueCode.custom:
-        message = issue.message || t('validation.custom');
+        // Handle custom refinement errors with field-specific messages
+        if (fieldPath === 'dateOfBirth') {
+          message = t('validation.dateOfBirth.too_young');
+        } else if (fieldPath === 'nationalId') {
+          message = t('validation.nationalId.invalid_checksum');
+        } else if (fieldPath === 'numberOfDependents') {
+          message = t('validation.numberOfDependents.required');
+        } else if (fieldPath === 'monthlyIncome') {
+          message = t('validation.monthlyIncome.required');
+        } else if (fieldPath === 'monthlyExpenses') {
+          message = t('validation.monthlyExpenses.required');
+        } else if (fieldPath === 'receivingBenefits') {
+          message = t('validation.receivingBenefits.required');
+        } else if (fieldPath === 'previouslyApplied') {
+          message = t('validation.previouslyApplied.required');
+        } else if (fieldPath === 'financialSituation') {
+          message = t('validation.financialSituation.too_few_words');
+        } else if (fieldPath === 'employmentCircumstances') {
+          message = t('validation.employmentCircumstances.too_few_words');
+        } else if (fieldPath === 'reasonForApplying') {
+          message = t('validation.reasonForApplying.too_few_words');
+        } else if (fieldPath === 'agreeToTerms') {
+          message = t('validation.agreeToTerms.required');
+        } else if (fieldPath === 'consentToDataProcessing') {
+          message = t('validation.consentToDataProcessing.required');
+        } else {
+          message = issue.message || t('validation.custom');
+        }
         break;
         
       default:
@@ -132,7 +177,11 @@ export const createZodI18nErrorMap = (t: (key: string, options?: any) => string)
  * Get the current error map based on current language
  */
 export const getCurrentErrorMap = () => {
-  const t = (key: string, options?: any) => i18n.t(key, options);
+  const t = (key: string, options?: any): string => {
+    // Ensure we're using the current language from i18n and return as string
+    const result = i18n.t(key, options);
+    return typeof result === 'string' ? result : String(result);
+  };
   return createZodI18nErrorMap(t);
 };
 

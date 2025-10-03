@@ -8,24 +8,24 @@ export const step1Schema = z.object({
   // Personal identification
   fullName: z
     .string()
-    .min(2, 'Name must be at least 2 characters')
-    .max(100, 'Name must not exceed 100 characters')
+    .min(2, 'validation.name.too_short')
+    .max(100, 'validation.name.too_long')
     .regex(
       /^[a-zA-Z\u0600-\u06FF\s'-]+$/,
-      'Name can only contain letters, spaces, hyphens, and apostrophes'
+      'validation.name.invalid_format'
     ),
   
   nationalId: z
     .string()
-    .regex(/^[0-9]{10}$/, 'National ID must be exactly 10 digits')
+    .regex(/^[0-9]{10}$/, 'validation.nationalId.invalid_format')
     .refine((val: string) => {
       // Basic checksum validation for national ID (simplified for demo)
       return val.length === 10 && /^[0-9]+$/.test(val);
-    }, 'Please enter a valid National ID'),
+    }, 'validation.nationalId.invalid_checksum'),
   
   dateOfBirth: z
     .string()
-    .min(1, 'Date of birth is required')
+    .min(1, 'validation.dateOfBirth.required')
     .refine((date: string) => {
       const birthDate = new Date(date);
       const today = new Date();
@@ -36,23 +36,23 @@ export const step1Schema = z.object({
         return age - 1 >= 18;
       }
       return age >= 18;
-    }, 'You must be at least 18 years old')
+    }, 'validation.dateOfBirth.too_young')
     .refine((date: string) => {
       const birthDate = new Date(date);
       const today = new Date();
       return birthDate <= today;
-    }, 'Date of birth cannot be in the future'),
+    }, 'validation.dateOfBirth.future_date'),
   
   gender: z.enum(['male', 'female', 'other', 'prefer_not_to_say'], {
-    message: 'Please select your gender'
+    message: 'validation.gender.required'
   }),
   
   // Contact information
   email: z
     .string()
-    .email('Please enter a valid email address')
-    .min(5, 'Email must be at least 5 characters')
-    .max(100, 'Email must not exceed 100 characters'),
+    .email('validation.email.invalid')
+    .min(5, 'validation.email.too_short')
+    .max(100, 'validation.email.too_long'),
   
   phone: z
     .string()

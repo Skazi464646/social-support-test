@@ -1,7 +1,10 @@
 import { z } from 'zod';
-import { useTranslation } from 'react-i18next';
 import { useMemo } from 'react';
-import { createI18nValidators, getCurrentErrorMap } from './zod-i18n';
+import { 
+  step1Schema as baseStep1Schema,
+  step2Schema as baseStep2Schema,
+  step3Schema as baseStep3Schema
+} from './schemas';
 
 // =============================================================================
 // I18N-AWARE SCHEMA HOOKS
@@ -9,76 +12,23 @@ import { createI18nValidators, getCurrentErrorMap } from './zod-i18n';
 
 /**
  * Hook that returns language-aware validation schemas
+ * For now, we'll use the base schemas and rely on error message translation
+ * in the ValidatedFormField component
  */
 export function useValidationSchemas() {
-  const { t } = useTranslation(['form', 'validation']);
-  
-  // Create validators with current language
-  const validators = useMemo(() => createI18nValidators(t), [t]);
-  
-  // Create schemas using the validators
   const schemas = useMemo(() => {
-    // Set the error map for zod to use i18n
-    z.setErrorMap(getCurrentErrorMap());
-    
-    // Step 1 Schema
-    const step1Schema = z.object({
-      fullName: validators.name(),
-      nationalId: validators.nationalId(),
-      dateOfBirth: validators.dateOfBirth(),
-      gender: validators.gender(),
-      email: validators.email(),
-      phone: validators.phone(),
-      address: validators.address(),
-      city: validators.city(),
-      state: validators.state(),
-      country: validators.country(),
-      postalCode: validators.postalCode(),
-    });
-
-    // Step 2 Schema
-    const step2Schema = z.object({
-      maritalStatus: validators.maritalStatus(),
-      numberOfDependents: validators.numberOfDependents(),
-      employmentStatus: validators.employmentStatus(),
-      occupation: validators.occupation(),
-      employer: validators.employer(),
-      monthlyIncome: validators.monthlyIncome(),
-      monthlyExpenses: validators.monthlyExpenses(),
-      totalSavings: validators.totalSavings(),
-      totalDebt: validators.totalDebt(),
-      housingStatus: validators.housingStatus(),
-      monthlyRent: validators.monthlyRent(),
-      receivingBenefits: validators.receivingBenefits(),
-      benefitTypes: validators.benefitTypes(),
-      previouslyApplied: validators.previouslyApplied(),
-    });
-
-    // Step 3 Schema
-    const step3Schema = z.object({
-      financialSituation: validators.financialSituation(),
-      employmentCircumstances: validators.employmentCircumstances(),
-      reasonForApplying: validators.reasonForApplying(),
-      additionalComments: validators.additionalComments(),
-      agreeToTerms: validators.agreeToTerms(),
-      consentToDataProcessing: validators.consentToDataProcessing(),
-      allowContactForClarification: validators.allowContactForClarification(),
-    });
-
-    // Complete form schema
-    const completeFormSchema = z.object({
-      step1: step1Schema,
-      step2: step2Schema,
-      step3: step3Schema,
-    });
-
+    // Use the base schemas directly - translation happens in ValidatedFormField
     return {
-      step1Schema,
-      step2Schema,
-      step3Schema,
-      completeFormSchema,
+      step1Schema: baseStep1Schema,
+      step2Schema: baseStep2Schema,
+      step3Schema: baseStep3Schema,
+      completeFormSchema: z.object({
+        step1: baseStep1Schema,
+        step2: baseStep2Schema,
+        step3: baseStep3Schema,
+      }),
     };
-  }, [validators]);
+  }, []);
 
   return schemas;
 }
@@ -126,58 +76,12 @@ export type FormStepData = {
 /**
  * Validate a specific form step with current language
  */
-export const validateFormStep = (step: number, data: unknown, t: (key: string, options?: any) => string) => {
-  const validators = createI18nValidators(t);
-  z.setErrorMap(getCurrentErrorMap());
+export const validateFormStep = (step: number, data: unknown) => {
+  const schemas = [baseStep1Schema, baseStep2Schema, baseStep3Schema];
+  const schema = schemas[step - 1];
   
-  let schema;
-  switch (step) {
-    case 1:
-      schema = z.object({
-        fullName: validators.name(),
-        nationalId: validators.nationalId(),
-        dateOfBirth: validators.dateOfBirth(),
-        gender: validators.gender(),
-        email: validators.email(),
-        phone: validators.phone(),
-        address: validators.address(),
-        city: validators.city(),
-        state: validators.state(),
-        country: validators.country(),
-        postalCode: validators.postalCode(),
-      });
-      break;
-    case 2:
-      schema = z.object({
-        maritalStatus: validators.maritalStatus(),
-        numberOfDependents: validators.numberOfDependents(),
-        employmentStatus: validators.employmentStatus(),
-        occupation: validators.occupation(),
-        employer: validators.employer(),
-        monthlyIncome: validators.monthlyIncome(),
-        monthlyExpenses: validators.monthlyExpenses(),
-        totalSavings: validators.totalSavings(),
-        totalDebt: validators.totalDebt(),
-        housingStatus: validators.housingStatus(),
-        monthlyRent: validators.monthlyRent(),
-        receivingBenefits: validators.receivingBenefits(),
-        benefitTypes: validators.benefitTypes(),
-        previouslyApplied: validators.previouslyApplied(),
-      });
-      break;
-    case 3:
-      schema = z.object({
-        financialSituation: validators.financialSituation(),
-        employmentCircumstances: validators.employmentCircumstances(),
-        reasonForApplying: validators.reasonForApplying(),
-        additionalComments: validators.additionalComments(),
-        agreeToTerms: validators.agreeToTerms(),
-        consentToDataProcessing: validators.consentToDataProcessing(),
-        allowContactForClarification: validators.allowContactForClarification(),
-      });
-      break;
-    default:
-      throw new Error(`Invalid step number: ${step}`);
+  if (!schema) {
+    throw new Error(`Invalid step number: ${step}`);
   }
   
   return schema.safeParse(data);

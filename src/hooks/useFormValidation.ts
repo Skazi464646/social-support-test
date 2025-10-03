@@ -94,16 +94,13 @@ export function useFormValidation<T extends FieldValues>({
     const error = errors[field];
     if (!error) return undefined;
     
-    // If it's a message string, try to translate it
+    // Return the error message directly - it should already be translated
+    // by the i18n-aware Zod schemas
     if (typeof error.message === 'string') {
-      // Check if it's a translation key
-      if (error.message.startsWith('validation.')) {
-        return t(error.message);
-      }
       return error.message;
     }
     
-    return t('validation.generic.invalid');
+    return t('validation.invalid_type');
   }, [errors, t]);
 
   const hasFieldError = useCallback((field: Path<T>): boolean => {

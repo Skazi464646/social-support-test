@@ -1,8 +1,10 @@
+import React from 'react';
 import { FieldPath, FieldValues, Control, RegisterOptions } from 'react-hook-form';
 import { FormField, type FormFieldProps } from '@/components/molecules/FormField';
 import { useController } from 'react-hook-form';
 import { useFormBlur } from '@/context/FormBlurContext';
 import { useDirection } from '@/hooks/useLanguage';
+import { useTranslation } from 'react-i18next';
 
 // =============================================================================
 // TYPES
@@ -76,6 +78,7 @@ export function ValidatedFormField<
   
   const { onFieldBlur } = useFormBlur();
   const { isRTL: _ } = useDirection(); // RTL support available but not used in this component
+  const { t } = useTranslation(['validation']);
   
   const {
     field: { onChange, onBlur, value, ref },
@@ -121,7 +124,28 @@ export function ValidatedFormField<
   };
 
   const hasError = !!error;
-  const errorMessage = error?.message;
+  
+  // Translate error messages if they are translation keys
+  const errorMessage = React.useMemo(() => {
+    if (!error?.message) return undefined;
+    
+    const message = error.message;
+    
+    // Debug: Log the current error message
+    console.log('[ValidatedFormField] Error message:', message);
+    
+    // If the message starts with 'validation.', try to translate it
+    if (typeof message === 'string' && message.startsWith('validation.')) {
+      // Remove the 'validation.' prefix and translate with explicit namespace
+      const keyWithoutPrefix = message.replace('validation.', '');
+      const translated = t(keyWithoutPrefix, { ns: 'validation' });
+      console.log('[ValidatedFormField] Translating:', message, '→ keyWithoutPrefix:', keyWithoutPrefix, '→ result:', translated);
+      
+      return translated;
+    }
+    
+    return message;
+  }, [error?.message, t]);
   
   // Determine field direction based on type
   const getFieldDir = () => {

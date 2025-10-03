@@ -36,11 +36,13 @@
   "unrecognized_keys": "Unrecognized key(s) in object: {{keys}}",
   
   "name": {
+    "required": "Name is required",
     "too_short": "Name must be at least 2 characters",
     "too_long": "Name must not exceed 100 characters",
     "invalid_format": "Name can only contain letters, spaces, hyphens, and apostrophes"
   },
   "nationalId": {
+    "required": "National ID is required",
     "invalid_format": "National ID must be exactly 10 digits",
     "invalid_checksum": "Please enter a valid National ID"
   },
@@ -53,25 +55,30 @@
     "required": "Please select your gender"
   },
   "email": {
+    "required": "Email address is required",
     "invalid": "Please enter a valid email address",
     "too_short": "Email must be at least 5 characters",
     "too_long": "Email must not exceed 100 characters"
   },
   "phone": {
+    "required": "Phone number is required",
     "invalid": "Please enter a valid phone number",
     "too_short": "Phone number must be at least 8 digits",
     "too_long": "Phone number must not exceed 15 digits"
   },
   "address": {
+    "required": "Address is required",
     "too_short": "Address must be at least 10 characters",
     "too_long": "Address must not exceed 200 characters"
   },
   "city": {
+    "required": "City is required",
     "too_short": "City name must be at least 2 characters",
     "too_long": "City name must not exceed 50 characters",
     "invalid_format": "City name can only contain letters"
   },
   "state": {
+    "required": "State/Emirate is required",
     "too_short": "State/Emirate name must be at least 2 characters",
     "too_long": "State/Emirate name must not exceed 50 characters",
     "invalid_format": "State/Emirate name can only contain letters"
