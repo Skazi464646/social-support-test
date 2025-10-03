@@ -75,7 +75,7 @@ export function ValidatedFormField<
 }: ValidatedFormFieldProps<TFieldValues, TName>) {
   
   const { onFieldBlur } = useFormBlur();
-  const { isRTL } = useDirection();
+  const { isRTL: _ } = useDirection(); // RTL support available but not used in this component
   
   const {
     field: { onChange, onBlur, value, ref },

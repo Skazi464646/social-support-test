@@ -1,6 +1,7 @@
-import { useCallback, useEffect, useState, useRef } from 'react';
+import { useCallback, useEffect, useState, useRef, Suspense, lazy } from 'react';
 import { FormProvider } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
+import { ErrorBoundary, type FallbackProps } from 'react-error-boundary';
 import { useFormWizard } from '@/context/FormWizardContext';
 import { FormBlurProvider } from '@/context/FormBlurContext';
 import { useStep1Form, useStep2Form, useStep3Form } from '@/hooks/useFormValidation';
@@ -10,13 +11,114 @@ import { Card } from '@/components/molecules/Card';
 import { FormNavigation } from '@/components/molecules/FormNavigation';
 import { useToast } from '@/context/ToastContext';
 import { formSubmissionService, formatSubmissionError, FormSubmissionError } from '@/lib/api/form-submission';
-import { FormStep1 } from '@/components/organisms/FormStep1';
-import { FormStep2 } from '@/components/organisms/FormStep2';
-import { FormStep3 } from '@/components/organisms/FormStep3';
 import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, FormStepData } from '@/lib/validation/schemas';
 
 // =============================================================================
-// COMPONENT
+// LAZY IMPORTS - Code Splitting for Form Steps
+// =============================================================================
+
+// Lazy load form steps for better performance
+const FormStep1 = lazy(() => 
+  import('@/components/organisms/FormStep1').then(module => ({ default: module.FormStep1 }))
+);
+
+const FormStep2 = lazy(() => 
+  import('@/components/organisms/FormStep2').then(module => ({ default: module.FormStep2 }))
+);
+
+const FormStep3 = lazy(() => 
+  import('@/components/organisms/FormStep3').then(module => ({ default: module.FormStep3 }))
+);
+
+// =============================================================================
+// LOADING AND ERROR COMPONENTS
+// =============================================================================
+
+const FormStepSkeleton = () => (
+  <div className="space-y-6 animate-pulse">
+    <div className="space-y-2">
+      <div className="h-8 bg-muted rounded w-1/3"></div>
+      <div className="h-4 bg-muted rounded w-2/3"></div>
+    </div>
+    
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <div key={i} className="space-y-2">
+          <div className="h-4 bg-muted rounded w-1/4"></div>
+          <div className="h-10 bg-muted rounded"></div>
+        </div>
+      ))}
+    </div>
+    
+    <div className="space-y-4">
+      {Array.from({ length: 2 }).map((_, i) => (
+        <div key={i} className="space-y-2">
+          <div className="h-4 bg-muted rounded w-1/3"></div>
+          <div className="h-32 bg-muted rounded"></div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const FormStepErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
+  const { t } = useTranslation(['form', 'common']);
+  
+  return (
+    <div className="text-center py-12 space-y-4">
+      <div className="text-destructive text-4xl">⚠️</div>
+      <h3 className="text-lg font-semibold text-foreground">
+        {t('common.error_loading_step', 'Error Loading Form Step')}
+      </h3>
+      <p className="text-muted-foreground max-w-md mx-auto">
+        {t('common.error_loading_step_description', 'There was an error loading this form step. Please try again.')}
+      </p>
+      <div className="space-x-2">
+        <Button variant="outline" onClick={resetErrorBoundary}>
+          {t('common.retry', 'Try Again')}
+        </Button>
+        <Button variant="ghost" onClick={() => window.location.reload()}>
+          {t('common.reload_page', 'Reload Page')}
+        </Button>
+      </div>
+      {import.meta.env.DEV && (
+        <details className="mt-4 text-left">
+          <summary className="cursor-pointer text-sm text-muted-foreground">
+            Debug Info (Development)
+          </summary>
+          <pre className="mt-2 p-4 bg-muted rounded text-xs overflow-auto">
+            {error.message}
+            {error.stack}
+          </pre>
+        </details>
+      )}
+    </div>
+  );
+};
+
+// =============================================================================
+// PREFETCHING LOGIC
+// =============================================================================
+
+const usePrefetchNextStep = (currentStep: number) => {
+  useEffect(() => {
+    // Prefetch next step component with a small delay to avoid blocking current step
+    const prefetchTimer = setTimeout(() => {
+      if (currentStep === 1) {
+        // Prefetch FormStep2 when on step 1
+        import('@/components/organisms/FormStep2');
+      } else if (currentStep === 2) {
+        // Prefetch FormStep3 when on step 2
+        import('@/components/organisms/FormStep3');
+      }
+    }, 1000); // 1 second delay
+
+    return () => clearTimeout(prefetchTimer);
+  }, [currentStep]);
+};
+
+// =============================================================================
+// MAIN COMPONENT
 // =============================================================================
 
 export function FormWizard() {
@@ -32,6 +134,9 @@ export function FormWizard() {
   // Track if we've loaded data from localStorage
   const hasLoadedFromStorageRef = useRef<boolean>(false);
   const [formsInitialized, setFormsInitialized] = useState(false);
+
+  // Prefetch next form step for better UX
+  usePrefetchNextStep(state.currentStep);
 
   // Step-specific form hooks - initialize with empty defaults first
   const step1Form = useStep1Form();
@@ -237,6 +342,32 @@ export function FormWizard() {
     );
   };
 
+  // Render current step with error boundaries and suspense
+  const renderCurrentStep = () => {
+    const stepKey = `step${state.currentStep}-${i18n.language}`;
+    
+    return (
+      <ErrorBoundary
+        FallbackComponent={FormStepErrorFallback}
+        resetKeys={[state.currentStep, i18n.language]}
+        onError={(error) => {
+          console.error(`Error in FormStep${state.currentStep}:`, error);
+          // Track error in production for monitoring
+          if (!import.meta.env.DEV) {
+            // Add your error tracking service here
+            // trackError(error, { step: state.currentStep, language: i18n.language });
+          }
+        }}
+      >
+        <Suspense fallback={<FormStepSkeleton />}>
+          {state.currentStep === 1 && <FormStep1 key={stepKey} />}
+          {state.currentStep === 2 && <FormStep2 key={stepKey} />}
+          {state.currentStep === 3 && <FormStep3 key={stepKey} />}
+        </Suspense>
+      </ErrorBoundary>
+    );
+  };
+
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
       {/* Header */}
@@ -267,11 +398,9 @@ export function FormWizard() {
         <FormProvider key={`form-${i18n.language}-${state.currentStep}`} {...(currentForm as any)}>
           <FormBlurProvider onFieldBlur={handleFieldBlur}>
             <form onSubmit={currentForm.handleSubmit(handleStepSubmit)}>
-              {/* Step Content */}
+              {/* Step Content with Lazy Loading */}
               <div className="space-y-6">
-                {state.currentStep === 1 && <FormStep1 key={`step1-${i18n.language}`} />}
-                {state.currentStep === 2 && <FormStep2 key={`step2-${i18n.language}`} />}
-                {state.currentStep === 3 && <FormStep3 key={`step3-${i18n.language}`} />}
+                {renderCurrentStep()}
               </div>
 
             {/* Navigation */}

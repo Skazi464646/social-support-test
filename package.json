@@ -6,12 +6,18 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "build:analyze": "tsc && vite build && npx vite-bundle-analyzer dist/stats.json",
+    "analyze": "npx vite-bundle-analyzer",
+    "analyze:server": "npx vite-bundle-analyzer --mode server",
+    "analyze:json": "npx vite-bundle-analyzer --mode json",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --fix",
     "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
     "format:check": "prettier --check \"src/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
     "type-check": "tsc --noEmit",
     "preview": "vite preview",
+    "performance:dev": "vite --mode development --host",
+    "performance:build": "npm run build && npm run analyze:server",
     "prepare": "husky"
   },
   "dependencies": {

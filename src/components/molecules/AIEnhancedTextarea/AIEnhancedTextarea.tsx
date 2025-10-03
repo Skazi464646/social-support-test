@@ -3,10 +3,16 @@
  * Module 5 - Step 4: Build Inline AI Assistance Component
  */
 
-import { forwardRef } from 'react';
-import { AIAssistModal } from '@/components/organisms/AIAssistModal';
+import { forwardRef, Suspense, lazy } from 'react';
 import { useAIAssist } from '@/hooks/useAIAssist';
 import { cn } from '@/lib/utils';
+
+// Lazy load AI components for better performance
+const AIAssistModal = lazy(() => 
+  import('@/components/organisms/AIAssistModal').then(module => ({ 
+    default: module.AIAssistModal 
+  }))
+);
 
 interface AIEnhancedTextareaProps {
   fieldName: string;
@@ -119,8 +125,10 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
           </div>
         )}
 
-        {/* AI Assist Modal */}
-        <AIAssistModal {...modalProps} />
+        {/* AI Assist Modal - Lazy Loaded */}
+        <Suspense fallback={null}>
+          <AIAssistModal {...modalProps} />
+        </Suspense>
       </div>
     );
   }

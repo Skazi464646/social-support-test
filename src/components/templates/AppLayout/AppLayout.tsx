@@ -125,20 +125,6 @@ export function AppLayout({ children }: AppLayoutProps) {
 
       {/* Footer */}
       <footer className="border-t bg-background">
-        <div className="w-full px-4 sm:px-6 lg:px-8">
-          <div className="max-w-screen-2xl mx-auto flex flex-col items-center justify-between gap-4 py-6 md:h-20 md:flex-row md:py-0">
-            <div className="flex flex-col items-center gap-2 md:flex-row md:gap-4">
-              <p className="text-center text-xs sm:text-sm leading-loose text-muted-foreground md:text-left">
-                {t('footer.copyright', 'Built with Claude Code. A production-ready social support application.')}
-              </p>
-            </div>
-            <div className="flex items-center">
-              <p className="text-xs text-muted-foreground text-center">
-                {t('footer.ai_powered', 'AI-Powered Form Assistance')}
-              </p>
-            </div>
-          </div>
-        </div>
       </footer>
     </div>
   );
