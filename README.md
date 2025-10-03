@@ -571,7 +571,6 @@ social-support-portal/
 ├── package.json              # Project dependencies
 ├── package-lock.json         # Dependency lock file
 ├── README.md                 # This file
-├── claude.md                 # AI assistant instructions
 └── LICENSE                   # MIT License
 ```
 
