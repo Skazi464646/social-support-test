@@ -5,5 +5,4 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-// Re-export focus management utilities
-export * from './utils/focus-management';
+// Utils file - main utility functions

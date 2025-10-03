@@ -2,7 +2,6 @@
 // These are simple combinations of atoms functioning together as a unit
 
 export { LanguageSwitcher } from './LanguageSwitcher';
-export { FeatureCard } from './FeatureCard';
 export { FormField } from './FormField';
 export type { FormFieldProps } from './FormField';
 

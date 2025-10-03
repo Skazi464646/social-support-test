@@ -1,4 +1,4 @@
-import axiosClient from './axios-client';
+import axios from 'axios';
 import type { CompleteFormData } from '@/lib/validation/schemas';
 import { z } from 'zod';
 
@@ -71,7 +71,7 @@ export class FormSubmissionService {
       const validatedData = validateCompleteForm(formData);
 
       // Submit to API
-      const response = await axiosClient.post<SubmissionResponse>(
+      const response = await axios.post<SubmissionResponse>(
         `${this.baseURL}/submit`,
         {
           formData: validatedData,
@@ -176,7 +176,7 @@ export class FormSubmissionService {
     updatedAt: string;
   }> {
     try {
-      const response = await axiosClient.get(`${this.baseURL}/${applicationId}/status`);
+      const response = await axios.get(`${this.baseURL}/${applicationId}/status`);
       return response.data;
     } catch (error) {
       throw new FormSubmissionError(

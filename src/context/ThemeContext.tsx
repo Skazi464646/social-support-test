@@ -1,10 +1,19 @@
-import { useEffect, useState, ReactNode } from 'react';
-import {
-  ThemeContext,
-  Theme,
-  Direction,
-  ThemeContextType,
-} from './theme-context';
+import { useEffect, useState, ReactNode, createContext } from 'react';
+
+// Theme types
+export type Theme = 'light' | 'dark';
+export type Direction = 'ltr' | 'rtl';
+
+export interface ThemeContextType {
+  theme: Theme;
+  direction: Direction;
+  toggleTheme: () => void;
+  toggleDirection: () => void;
+  setTheme: (theme: Theme) => void;
+  setDirection: (direction: Direction) => void;
+}
+
+export const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 interface ThemeProviderProps {
   children: ReactNode;

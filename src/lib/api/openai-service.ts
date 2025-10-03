@@ -6,16 +6,16 @@
  * Will be moved to serverless endpoint in future step.
  */
 
-import { aiRateLimiter } from '@/lib/utils/rate-limiter';
-import { requestDeduplicator } from '@/lib/utils/request-deduplicator';
-import { retryOpenAICall } from '@/lib/utils/retry-logic';
 import { 
+  aiRateLimiter,
+  requestDeduplicator,
+  retryOpenAICall,
   redactPII, 
   sanitizeForLogging, 
   generateRequestId, 
   generateSessionId,
   validateInputSafety 
-} from '@/lib/utils/privacy-utils';
+} from '@/lib/utils/simple-utils';
 import { 
   getSystemPrompt, 
   buildUserPrompt, 
@@ -109,7 +109,7 @@ class OpenAIService {
       request.fieldName,
       request.currentValue,
       { language: request.language },
-      async (abortSignal) => {
+      async (abortSignal: AbortSignal) => {
         return retryOpenAICall(async () => {
           const startTime = Date.now();
           
@@ -257,7 +257,7 @@ class OpenAIService {
     
     try {
       while (true) {
-        if (signal.aborted) {
+        if (signal?.aborted) {
           throw new Error('Request aborted');
         }
 
