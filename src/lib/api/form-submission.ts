@@ -1,6 +1,6 @@
-import axios from 'axios';
 import type { CompleteFormData } from '@/lib/validation/schemas';
 import { z } from 'zod';
+import { apiClient, retryRequest } from './axios-config';
 
 // =============================================================================
 // TYPES
@@ -11,6 +11,7 @@ export interface SubmissionResponse {
   applicationId: string;
   message: string;
   submittedAt: string;
+  processingTime?: string;
 }
 
 export interface SubmissionError {
@@ -60,8 +61,6 @@ async function validateCompleteForm(data: unknown): Promise<CompleteFormData> {
 // =============================================================================
 
 export class FormSubmissionService {
-  private readonly baseURL = '/api/applications';
-
   /**
    * Submit complete form application
    */
@@ -70,21 +69,20 @@ export class FormSubmissionService {
       // Validate complete form data
       const validatedData = await validateCompleteForm(formData);
 
-      // Submit to API
-      const response = await axios.post<SubmissionResponse>(
-        `${this.baseURL}/submit`,
-        {
-          formData: validatedData,
-          submittedAt: new Date().toISOString(),
-          metadata: {
-            userAgent: navigator.userAgent,
-            timestamp: Date.now(),
-            version: '1.0.0',
-          },
-        },
-        {
-          timeout: 30000, // 30 second timeout for submission
-        }
+      // Submit to API with retry logic
+      const response = await retryRequest(() =>
+        apiClient.post<SubmissionResponse>(
+          '/applications/submit',
+          {
+            formData: validatedData,
+            submittedAt: new Date().toISOString(),
+            metadata: {
+              userAgent: navigator.userAgent,
+              timestamp: Date.now(),
+              version: '1.0.0',
+            },
+          }
+        )
       );
 
       if (!response.data.success) {
@@ -168,6 +166,41 @@ export class FormSubmissionService {
   }
 
   /**
+   * Submit application with custom URL (for testing scenarios)
+   */
+  async submitApplicationWithUrl(formData: CompleteFormData, url: string): Promise<SubmissionResponse> {
+    try {
+      // Validate form data
+      const validatedData = await validateCompleteForm(formData);
+
+      // Submit using custom URL
+      const response = await retryRequest(() =>
+        apiClient.post<SubmissionResponse>(url, {
+          formData: validatedData,
+          submittedAt: new Date().toISOString(),
+          metadata: {
+            userAgent: navigator.userAgent,
+            timestamp: Date.now(),
+            version: '1.0.0',
+            testMode: true,
+          },
+        })
+      );
+
+      return response.data;
+    } catch (error) {
+      throw error instanceof FormSubmissionError
+        ? error
+        : new FormSubmissionError(
+            'SUBMISSION_ERROR',
+            'Failed to submit application',
+            undefined,
+            { originalError: error }
+          );
+    }
+  }
+
+  /**
    * Check submission status
    */
   async checkSubmissionStatus(applicationId: string): Promise<{
@@ -175,15 +208,8 @@ export class FormSubmissionService {
     message: string;
     updatedAt: string;
   }> {
-    try {
-      const response = await axios.get(`${this.baseURL}/${applicationId}/status`);
-      return response.data;
-    } catch (error) {
-      throw new FormSubmissionError(
-        'STATUS_CHECK_FAILED',
-        'Failed to check application status'
-      );
-    }
+    const response = await apiClient.get(`/applications/${applicationId}/status`);
+    return response.data;
   }
 }
 

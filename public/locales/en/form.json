@@ -181,7 +181,12 @@
   "allowContactForClarification_help": "Can we contact you if we need clarification on your application?",
   
   "auto_saved": "Auto-saved",
-          "submission_success": "Application Submitted Successfully",
-          "submission_success_message": "Your application has been submitted with ID: {{applicationId}}"
-
+  "submission_success": "Application Submitted Successfully",
+  "submission_success_message": "Your application has been submitted with ID: {{applicationId}}",
+  "start_new_application": "Start New Application",
+  "processing_time": "Processing time",
+  "next_steps": "Next Steps",
+  "application_reference_note": "Please save your application ID for future reference",
+  "application_id": "Application ID:",
+  "confirmation_email_sent": "A confirmation email has been sent to your registered email address."
 }

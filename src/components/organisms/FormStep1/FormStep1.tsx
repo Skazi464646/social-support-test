@@ -52,7 +52,7 @@ export function FormStep1() {
               control={control}
               label={t('fullName', 'Full Name')}
               placeholder={t('fullName_placeholder', 'Enter your full legal name')}
-              helperText={t('fullName_help', 'Enter your full name as it appears on your official ID')}
+              // helperText={t('fullName_help', 'Enter your full name as it appears on your official ID')}
               required
               className="md:col-span-2"
             />

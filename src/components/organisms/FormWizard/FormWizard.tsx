@@ -9,7 +9,8 @@ import { Button } from '@/components/atoms/Button';
 import { ProgressBar } from '@/components/molecules/ProgressBar';
 import { Card } from '@/components/molecules/Card';
 import { FormNavigation } from '@/components/molecules/FormNavigation';
-import { useToast } from '@/context/ToastContext';
+import { SubmissionSuccessModal } from '@/components/molecules/SubmissionSuccessModal';
+import type { SubmissionDetails } from '@/components/molecules/SubmissionSuccessModal';
 import { formSubmissionService, formatSubmissionError, FormSubmissionError } from '@/lib/api/form-submission';
 import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, FormStepData } from '@/lib/validation/schemas';
 
@@ -122,8 +123,10 @@ const usePrefetchNextStep = (currentStep: number) => {
 
 export function FormWizard() {
   const { t, i18n } = useTranslation(['form', 'common']);
-  const { state, nextStep, previousStep, updateFormData, markStepComplete, dispatch } = useFormWizard();
-  const { success: showSuccess, error: showError } = useToast();
+  const { state, nextStep, previousStep, updateFormData, markStepComplete, resetForm, dispatch } = useFormWizard();
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [submissionDetails, setSubmissionDetails] = useState<SubmissionDetails | null>(null);
+  const [testMode, setTestMode] = useState<string | null>(null);
   const [submissionState, setSubmissionState] = useState<{
     isSubmitting: boolean;
     applicationId?: string;
@@ -229,25 +232,17 @@ export function FormWizard() {
       if (state.currentStep === 3) {
         await handleFinalSubmission({ [stepKey]: data });
       } else {
-        // Show success message and navigate to next step
-        showSuccess({
-          title: t('common.toast.step_completed','Step Completed'),
-          description: t('common.toast.step_saved_successfully',"Step saved successfully"),
-        });
+        // Navigate to next step (remove toast for step completion)
         nextStep();
       }
     } catch (error) {
       console.error('Step submission error:', error);
-      showError({
-        title: t('error'),
-        description: t('step_save_error'),
-      });
+      // Handle step submission errors (could add specific error handling here)
     }
   };
 
   // Handle final form submission
   const handleFinalSubmission = async (finalStepData: Partial<FormStepData>) => {
-    debugger
     setSubmissionState({ isSubmitting: true });
     dispatch({ type: 'SET_SUBMITTING', payload: true });
 
@@ -259,21 +254,38 @@ export function FormWizard() {
       } as CompleteFormData;
 
       // Submit to service (using mock in development)
-      const response = import.meta.env.DEV 
-        ? await formSubmissionService.submitApplicationMock(completeFormData)
-        : await formSubmissionService.submitApplication(completeFormData);
+      let response;
+      if (import.meta.env.DEV) {
+        // In development, check if test mode is enabled
+        if (testMode) {
+          const testUrl = `/api/submit?test=${testMode}`;
+          response = await formSubmissionService.submitApplicationWithUrl(completeFormData, testUrl);
+        } else {
+          response = await formSubmissionService.submitApplicationMock(completeFormData);
+        }
+      } else {
+        response = await formSubmissionService.submitApplication(completeFormData);
+      }
 
-      // Success handling
+      // Success handling - prepare modal data
+      const submissionDetails: SubmissionDetails = {
+        applicationId: response.applicationId,
+        submittedAt: new Date().toISOString(),
+        estimatedProcessingTime: response.processingTime || '5-7 business days',
+        nextSteps: [
+          'We will review your application within 2 business days',
+          'You will receive email updates on your application status',
+          'Keep your application ID for future reference'
+        ],
+        message: t('submission_success_message', { applicationId: response.applicationId })
+      };
+
+      setSubmissionDetails(submissionDetails);
       setSubmissionState({
         isSubmitting: false,
         applicationId: response.applicationId,
       });
-
-      showSuccess({
-        title: t('submission_success'),
-        description: t('submission_success_message', { applicationId: response.applicationId }),
-        duration: 10000,
-      });
+      setShowSuccessModal(true);
 
       // Clear form data from localStorage after successful submission
       localStorage.removeItem('formWizardData');
@@ -288,15 +300,8 @@ export function FormWizard() {
         error: submissionError,
       });
 
-      const errorInfo = formatSubmissionError(submissionError);
-      
-      showError({
-        title: errorInfo.title,
-        description: errorInfo.message,
-        duration: 8000,
-      });
-
       console.error('Form submission error:', submissionError);
+      // Error handling - keep existing error cards for now
     } finally {
       dispatch({ type: 'SET_SUBMITTING', payload: false });
     }
@@ -314,6 +319,58 @@ export function FormWizard() {
     if (state.currentStep > 1) {
       previousStep();
     }
+  };
+
+  // Handle starting a new application
+  const handleStartNewApplication = () => {
+    setShowSuccessModal(false);
+    setSubmissionDetails(null);
+    setSubmissionState({ isSubmitting: false });
+    
+    // Reset all form state and localStorage
+    resetForm();
+    
+    // Reset all individual form states with empty default values
+    step1Form.reset({
+      fullName: '',
+      nationalId: '',
+      dateOfBirth: '',
+      gender: undefined,
+      address: '',
+      city: '',
+      state: '',
+      country: '',
+      phone: '',
+      email: ''
+    });
+    step2Form.reset({
+      maritalStatus: undefined,
+      numberOfDependents: 0,
+      employmentStatus: undefined,
+      monthlyIncome: 0,
+      housingStatus: undefined
+    });
+    
+    step3Form.reset({
+      financialSituation: '',
+      employmentCircumstances: '',
+      reasonForApplying: ''
+    });
+    
+    // Navigate back to step 1
+    dispatch({ type: 'SET_STEP', payload: 1 });
+    
+    // Smooth scroll to top for better UX
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  };
+
+  // Handle continue action (close modal and stay on current page)
+  const handleContinue = () => {
+    setShowSuccessModal(false);
+    // Keep current state - user can view their submission details
   };
 
   // Auto-save indicator
@@ -429,22 +486,16 @@ export function FormWizard() {
         </FormProvider>
       </Card>
 
-      {/* Submission Success */}
-      {submissionState.applicationId && (
-        <Card className="p-6 bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800">
-          <div className="text-center">
-            <div className="text-green-600 dark:text-green-400 text-2xl mb-2">✓</div>
-            <h3 className="text-lg font-semibold text-green-800 dark:text-green-200 mb-2">
-              {t('submission_success')}
-            </h3>
-            <p className="text-green-700 dark:text-green-300 mb-4">
-              {t('application_id')}: <strong>{submissionState.applicationId}</strong>
-            </p>
-            <p className="text-sm text-green-600 dark:text-green-400">
-              {t('confirmation_email_sent')}
-            </p>
-          </div>
-        </Card>
+      {/* Submission Success Modal */}
+      {submissionDetails && (
+        <SubmissionSuccessModal
+          open={showSuccessModal}
+          onOpenChange={setShowSuccessModal}
+          submissionDetails={submissionDetails}
+          onStartNewApplication={handleStartNewApplication}
+          onContinue={handleContinue}
+          isLoading={false}
+        />
       )}
 
       {/* Submission Error */}
@@ -472,26 +523,157 @@ export function FormWizard() {
         </Card>
       )}
 
-      {/* Debug Info (Development only) */}
+      {/* Test Mode Panel (Development only) */}
       {import.meta.env.DEV && (
-        <details className="mt-8">
-          <summary className="text-sm text-muted-foreground cursor-pointer">
-            Debug Info (Development Only)
-          </summary>
-          <pre className="mt-2 p-4 bg-muted rounded text-xs overflow-auto">
-            {JSON.stringify({
-              currentStep: state.currentStep,
-              completedSteps: Array.from(state.completedSteps),
-              formDataKeys: Object.keys(state.formData),
-              lastSaved: state.lastSaved,
-              submissionState: {
-                isSubmitting: submissionState.isSubmitting,
-                applicationId: submissionState.applicationId,
-                errorCode: submissionState.error?.code,
-              },
-            }, null, 2)}
-          </pre>
-        </details>
+        <div className="mt-8 space-y-4">
+          <details>
+            <summary className="text-sm text-muted-foreground cursor-pointer">
+              🧪 Test Mode Panel (Development Only)
+            </summary>
+            <div className="mt-4 p-4 bg-muted/30 rounded-lg border border-dashed space-y-4">
+              <div>
+                <h4 className="text-sm font-medium mb-2">Test Submission Scenarios:</h4>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {[
+                    { key: 'success', label: '✅ Success', desc: 'Normal success' },
+                    { key: 'validation', label: '⚠️ Validation', desc: 'Validation error' },
+                    { key: 'server', label: '❌ Server Error', desc: '500 error' },
+                    { key: 'network', label: '🌐 Network', desc: 'Network failure' },
+                    { key: 'unauthorized', label: '🔒 Unauthorized', desc: '401 error' },
+                    { key: 'ratelimit', label: '⏱️ Rate Limit', desc: '429 error' },
+                    { key: 'conflict', label: '⚡ Conflict', desc: '409 error' },
+                    { key: 'slow', label: '🐌 Slow (5s)', desc: 'Slow response' },
+                  ].map(({ key, label, desc }) => (
+                    <Button
+                      key={key}
+                      variant={testMode === key ? 'default' : 'outline'}
+                      size="sm"
+                      onClick={() => setTestMode(testMode === key ? null : key)}
+                      title={desc}
+                      className="text-xs h-auto py-2 px-3"
+                    >
+                      {label}
+                    </Button>
+                  ))}
+                </div>
+                {testMode && (
+                  <div className="mt-2 p-2 bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded text-sm">
+                    <strong>Active Test Mode:</strong> {testMode} - The next form submission will use this test scenario
+                  </div>
+                )}
+              </div>
+              
+              <div>
+                <h4 className="text-sm font-medium mb-2">Quick Actions:</h4>
+                <div className="flex gap-2 flex-wrap">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      // Fill form with test data
+                      const testData = {
+                        fullName: 'John Doe Test',
+                        nationalId: '1234567890',
+                        email: 'test@example.com',
+                        phone: '+971501234567',
+                        address: '123 Test Street',
+                        city: 'Dubai',
+                        state: 'Dubai',
+                        country: 'AE',
+                        dateOfBirth: '1990-01-01',
+                        gender: 'male' as const,
+                      };
+                      step1Form.reset(testData);
+                      updateFormData({ step1: testData });
+                      markStepComplete(1);
+                    }}
+                  >
+                    Fill Step 1
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const testData = {
+                        maritalStatus: 'single' as const,
+                        numberOfDependents: 0,
+                        employmentStatus: 'employed_full_time' as const,
+                        occupation: 'Software Engineer',
+                        employer: 'Tech Company',
+                        monthlyIncome: 15000,
+                        monthlyExpenses: 8000,
+                        totalSavings: 50000,
+                        totalDebt: 0,
+                        housingStatus: 'rent' as const,
+                        monthlyRent: 4000,
+                        receivingBenefits: false,
+                        previouslyApplied: false,
+                      };
+                      step2Form.reset(testData);
+                      updateFormData({ step2: testData });
+                      markStepComplete(2);
+                    }}
+                  >
+                    Fill Step 2
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      const testData = {
+                        financialSituation: 'I am experiencing temporary financial difficulty due to unexpected medical expenses that have depleted my savings.',
+                        employmentCircumstances: 'I am currently employed full-time as a software engineer, but recent medical bills have created financial strain.',
+                        reasonForApplying: 'I am applying for social support to help cover basic living expenses while I recover from recent medical issues and rebuild my savings.',
+                        additionalComments: 'I have documentation for medical expenses if needed.',
+                        agreeToTerms: true,
+                        consentToDataProcessing: true,
+                        allowContactForClarification: true,
+                      };
+                      step3Form.reset(testData);
+                      updateFormData({ step3: testData });
+                      markStepComplete(3);
+                    }}
+                  >
+                    Fill Step 3
+                  </Button>
+                  <Button
+                    variant="destructive"
+                    size="sm"
+                    onClick={() => {
+                      setTestMode(null);
+                      resetForm();
+                      step1Form.reset();
+                      step2Form.reset();
+                      step3Form.reset();
+                    }}
+                  >
+                    Reset All
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <details>
+            <summary className="text-sm text-muted-foreground cursor-pointer">
+              Debug Info (Development Only)
+            </summary>
+            <pre className="mt-2 p-4 bg-muted rounded text-xs overflow-auto">
+              {JSON.stringify({
+                currentStep: state.currentStep,
+                completedSteps: Array.from(state.completedSteps),
+                formDataKeys: Object.keys(state.formData),
+                lastSaved: state.lastSaved,
+                testMode,
+                submissionState: {
+                  isSubmitting: submissionState.isSubmitting,
+                  applicationId: submissionState.applicationId,
+                  errorCode: submissionState.error?.code,
+                },
+              }, null, 2)}
+            </pre>
+          </details>
+        </div>
       )}
     </div>
   );

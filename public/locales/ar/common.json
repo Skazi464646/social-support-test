@@ -28,8 +28,10 @@
     "regenerate": "إعادة إنتاج",
     "help": "مساعدة",
     "copy": "نسخ",
+    "copied": "تم النسخ",
     "paste": "لصق",
-    "select_all": "تحديد الكل"
+    "select_all": "تحديد الكل",
+    "submitted_at": "تم الإرسال في"
   },
   "status": {
     "success": "نجح",

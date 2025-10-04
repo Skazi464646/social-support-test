@@ -149,5 +149,11 @@
   "allowContactForClarification_help": "هل يمكننا التواصل معك إذا احتجنا لتوضيح بشأن طلبك؟",
   "auto_saved": "حفظ تلقائي",
   "submission_success": "تم إرسال الطلب بنجاح",
-  "submission_success_message": "تم إرسال طلبك برقم: {{applicationId}}"
+  "submission_success_message": "تم إرسال طلبك برقم: {{applicationId}}",
+  "start_new_application": "بدء طلب جديد",
+  "processing_time": "وقت المعالجة",
+  "next_steps": "الخطوات التالية",
+  "application_reference_note": "يرجى حفظ رقم طلبك للرجوع إليه في المستقبل",
+  "application_id": "رقم الطلب:",
+  "confirmation_email_sent": "تم إرسال رسالة تأكيد إلى عنوان بريدك الإلكتروني المسجل."
 }

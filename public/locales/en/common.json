@@ -28,8 +28,10 @@
     "regenerate": "Regenerate",
     "help": "Help",
     "copy": "Copy",
+    "copied": "Copied",
     "paste": "Paste",
-    "select_all": "Select All"
+    "select_all": "Select All",
+    "submitted_at": "Submitted at"
   },
   "status": {
     "success": "Success",
