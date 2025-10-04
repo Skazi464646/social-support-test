@@ -102,7 +102,6 @@ const FormStepErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => 
 
 const usePrefetchNextStep = (currentStep: number) => {
   useEffect(() => {
-    // Prefetch next step component with a small delay to avoid blocking current step
     const prefetchTimer = setTimeout(() => {
       if (currentStep === 1) {
         // Prefetch FormStep2 when on step 1
@@ -131,11 +130,9 @@ export function FormWizard() {
     error?: FormSubmissionError;
   }>({ isSubmitting: false });
 
-  // Track if we've loaded data from localStorage
   const hasLoadedFromStorageRef = useRef<boolean>(false);
   const [formsInitialized, setFormsInitialized] = useState(false);
 
-  // Prefetch next form step for better UX
   usePrefetchNextStep(state.currentStep);
 
   // Step-specific form hooks - initialize with empty defaults first
@@ -154,12 +151,6 @@ export function FormWizard() {
   };
 
   const currentForm = getCurrentForm();
-
-  // Debug form context
-  if (import.meta.env.DEV) {
-    console.log('[FormWizard] Current step:', state.currentStep);
-    console.log('[FormWizard] Current form methods:', currentForm ? Object.keys(currentForm) : 'No form');
-  }
 
   // Initialize forms with localStorage data once it's loaded
   useEffect(() => {
@@ -329,7 +320,7 @@ export function FormWizard() {
     if (!state.lastSaved) return null;
     
     const lastSavedDate = new Date(state.lastSaved);
-    const timeAgo = new Intl.RelativeTimeFormat('en', { numeric: 'auto' }).format(
+    const timeAgo = new Intl.RelativeTimeFormat(i18n.language, { numeric: 'auto' }).format(
       Math.round((lastSavedDate.getTime() - Date.now()) / 60000),
       'minute'
     );

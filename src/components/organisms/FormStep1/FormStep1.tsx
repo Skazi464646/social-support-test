@@ -11,7 +11,7 @@ import type { Step1FormData } from '@/lib/validation/schemas';
 export function FormStep1() {
   const { t, i18n } = useTranslation(['form', 'common', 'validation']);
   const { control, watch } = useFormContext<Step1FormData>();
-  
+
   // Debug logging
   console.log('[FormStep1] Current language:', i18n.language);
   console.log('[FormStep1] Available resources:', i18n.hasResourceBundle(i18n.language, 'form'));
@@ -20,7 +20,7 @@ export function FormStep1() {
 
   // Watch for country selection to show conditional fields
   const selectedCountry = watch('country');
-
+  // throw new Error();
   return (
     <div className="space-y-8">
       {/* Header */}

@@ -178,5 +178,7 @@
   "consentToDataProcessing_help": "يجب الموافقة على معالجة البيانات لمراجعة طلبك",
   
   "allowContactForClarification": "السماح بالتواصل للتوضيح",
-  "allowContactForClarification_help": "هل يمكننا التواصل معك إذا احتجنا لتوضيح بشأن طلبك؟"
+  "allowContactForClarification_help": "هل يمكننا التواصل معك إذا احتجنا لتوضيح بشأن طلبك؟",
+  
+  "auto_saved": "حفظ تلقائي"
 }

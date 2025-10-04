@@ -324,7 +324,7 @@ const loadCoreResources = async (): Promise<any> => {
           submission_success_message: "Your application has been submitted with ID: {{applicationId}}",
           application_id: "Application ID",
           confirmation_email_sent: "A confirmation email has been sent to your registered email address",
-          auto_saved: "Auto-saved"
+          auto_saved: "Auto-saved",
         },
         validation: {
           required: "This field is required",

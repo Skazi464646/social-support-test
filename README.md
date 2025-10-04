@@ -40,7 +40,6 @@
 - ♿ **Accessible**: Screen reader friendly with ARIA support
 - 🌍 **i18n Ready**: react-i18next for internationalization
 - 🧪 **Well Tested**: Comprehensive test coverage with Vitest
-- 📱 **PWA Ready**: Offline-capable with service workers (optional)
 
 ## 🎯 Demo
 
@@ -75,7 +74,6 @@
 
 ### State Management
 - **Context API** - Built-in React state management
-- **React Query (TanStack Query)** - Server state management (optional)
 
 ### API & Data
 - **Axios 1.6+** - HTTP client with interceptors
@@ -89,7 +87,6 @@
 ### Testing
 - **Vitest** - Vite-native unit testing
 - **React Testing Library** - Component testing
-- **MSW (Mock Service Worker)** - API mocking
 
 ### Code Quality
 - **ESLint** - Linting with TypeScript support
@@ -97,7 +94,7 @@
 - **Husky** - Git hooks
 - **lint-staged** - Pre-commit linting
 
-## 🏗 Architecture
+## 🏗 Architecture // move 
 
 ### Application Flow
 

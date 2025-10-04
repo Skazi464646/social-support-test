@@ -178,5 +178,7 @@
   "consentToDataProcessing_help": "You must consent to data processing for your application to be reviewed",
   
   "allowContactForClarification": "Allow contact for clarification",
-  "allowContactForClarification_help": "Can we contact you if we need clarification on your application?"
+  "allowContactForClarification_help": "Can we contact you if we need clarification on your application?",
+  
+  "auto_saved": "Auto-saved"
 }
