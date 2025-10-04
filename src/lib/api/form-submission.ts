@@ -36,10 +36,10 @@ export class FormSubmissionError extends Error {
 // VALIDATION
 // =============================================================================
 
-function validateCompleteForm(data: unknown): CompleteFormData {
+async function validateCompleteForm(data: unknown): Promise<CompleteFormData> {
   try {
     // Import schemas dynamically to avoid circular imports
-    const { completeFormSchema } = require('@/lib/validation/schemas');
+    const { completeFormSchema } = await import('@/lib/validation/schemas');
     return completeFormSchema.parse(data);
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -68,7 +68,7 @@ export class FormSubmissionService {
   async submitApplication(formData: CompleteFormData): Promise<SubmissionResponse> {
     try {
       // Validate complete form data
-      const validatedData = validateCompleteForm(formData);
+      const validatedData = await validateCompleteForm(formData);
 
       // Submit to API
       const response = await axios.post<SubmissionResponse>(

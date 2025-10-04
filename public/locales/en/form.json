@@ -180,5 +180,8 @@
   "allowContactForClarification": "Allow contact for clarification",
   "allowContactForClarification_help": "Can we contact you if we need clarification on your application?",
   
-  "auto_saved": "Auto-saved"
+  "auto_saved": "Auto-saved",
+          "submission_success": "Application Submitted Successfully",
+          "submission_success_message": "Your application has been submitted with ID: {{applicationId}}"
+
 }

@@ -247,6 +247,7 @@ export function FormWizard() {
 
   // Handle final form submission
   const handleFinalSubmission = async (finalStepData: Partial<FormStepData>) => {
+    debugger
     setSubmissionState({ isSubmitting: true });
     dispatch({ type: 'SET_SUBMITTING', payload: true });
 
