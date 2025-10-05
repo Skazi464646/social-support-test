@@ -10,7 +10,7 @@ import type { Step3FormData } from '@/lib/validation/schemas';
 // =============================================================================
 
 export function FormStep3() {
-  const { t } = useTranslation(['form', 'common', 'validation']);
+  const { t } = useTranslation(['form', 'common']);
   const { control } = useFormContext<Step3FormData>();
 
   // For now, we'll simplify the AI context - this can be improved later
@@ -46,14 +46,11 @@ export function FormStep3() {
           <AIFormField
             name="financialSituation"
             control={control}
-            label={t('financialSituation', 'Describe Your Financial Situation')}
-            helperText={t('financialSituation_help', 'Please describe your current financial challenges, including specific difficulties you are facing. Minimum 50 characters required.')}
             placeholder={t('financialSituation_placeholder', 'Example: I am facing difficulty paying rent due to reduced income after losing my job. My savings are depleted and I have outstanding bills that I cannot afford...')}
             fieldName="financialSituation"
             rows={6}
             maxLength={2000}
             minLength={50}
-            required
             userContext={userContext}
           />
         </Card.Content>

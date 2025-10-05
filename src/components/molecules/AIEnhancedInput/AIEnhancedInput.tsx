@@ -61,51 +61,60 @@ export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps
 
     return (
       <div className="relative">
-        <div className="relative">
-          <input
-            ref={ref}
-            type={type}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            placeholder={placeholder}
-            maxLength={maxLength}
-            disabled={disabled}
-            className={`
-              w-full px-3 py-2 border rounded-md
-              focus:outline-none focus:ring-2 focus:ring-blue-500
-              ${error ? 'border-red-300' : 'border-gray-300'}
-              ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
-              ${showAIAssist && ['text', 'email'].includes(type) ? 'pr-20' : ''}
-              ${className}
-            `}
-          />
-          
-          {/* AI Assist Button - Only show for text and email fields */}
-          {showAIAssist && ['text', 'email'].includes(type) && !disabled && (
-            <button
-              type="button"
-              onClick={() => setShowModal(true)}
-              className="absolute top-1/2 right-2 transform -translate-y-1/2 px-2 py-1 text-xs bg-blue-50 text-blue-600 rounded border border-blue-200 hover:bg-blue-100 transition-colors"
-              title="Get AI writing assistance"
-            >
-              ✨ AI
-            </button>
-          )}
-        </div>
+        <input
+          ref={ref}
+          type={type}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder={placeholder}
+          maxLength={maxLength}
+          disabled={disabled}
+          className={`
+            w-full px-3 py-2 border rounded-md
+            focus:outline-none focus:ring-2 focus:ring-blue-500
+            ${error ? 'border-red-300' : 'border-gray-300'}
+            ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
+            ${className}
+          `}
+        />
 
-        {/* Character Count */}
-        {showCharacterCount && (
-          <div className="flex justify-between items-center mt-1 text-xs">
-            <div>
+        {/* Bottom row with AI button and character count */}
+        {(showAIAssist && ['text', 'email'].includes(type) && !disabled) || showCharacterCount ? (
+          <div className="mt-1 flex flex-col gap-2 text-xs leading-snug sm:flex-row sm:items-center sm:justify-between">
+            {/* Left side - AI Assist Button and Error */}
+            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
+              {showAIAssist && ['text', 'email'].includes(type) && !disabled && (
+                <button
+                  type="button"
+                  onClick={() => setShowModal(true)}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-sm hover:shadow-md hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200 w-fit"
+                  title="Get AI writing assistance"
+                >
+                  <span className="text-sm">✨</span>
+                  <span>AI Assist</span>
+                </button>
+              )}
               {error && (
-                <span className="text-red-500">{error}</span>
+                <span className="font-medium text-destructive" role="alert">
+                  {error}
+                </span>
               )}
             </div>
-            <div className="text-gray-500">
-              {characterCount}/{maxLength}
-            </div>
+
+            {/* Right side - Character Count */}
+            {showCharacterCount && (
+              <div className="text-gray-500 sm:text-right font-medium">
+                {characterCount}/{maxLength}
+              </div>
+            )}
           </div>
-        )}
+        ) : error ? (
+          <div className="mt-1">
+            <span className="font-medium text-destructive text-xs" role="alert">
+              {error}
+            </span>
+          </div>
+        ) : null}
 
         {/* AI Assist Modal */}
         {showModal && (

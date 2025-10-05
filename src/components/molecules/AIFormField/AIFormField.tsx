@@ -10,10 +10,10 @@ import { AIEnhancedTextarea } from '@/components/molecules/AIEnhancedTextarea';
 interface AIFormFieldProps {
   name: string;
   control: Control<any>;
-  label: string;
+  label?: string;
   helperText?: string;
   placeholder?: string;
-  fieldName: string;
+  fieldName?: string;
   rows?: number;
   maxLength?: number;
   minLength?: number;
@@ -59,8 +59,8 @@ export const AIFormField = forwardRef<HTMLTextAreaElement, AIFormFieldProps>(
         
         <AIEnhancedTextarea
           ref={ref}
-          fieldName={fieldName}
-          fieldLabel={label}
+          fieldName={fieldName|| ''}
+          fieldLabel={label || ''}
           value={value || ''}
           onChange={onChange}
           placeholder={placeholder}
