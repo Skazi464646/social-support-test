@@ -42,7 +42,7 @@ export function AIAssistModal({
 }: AIAssistModalProps) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [activeSuggestionId, setActiveSuggestionId] = useState<string | null>(null);
-  const [editedText, setEditedText] = useState('');
+  const [editedText, setEditedText] = useState(currentValue || '');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -64,12 +64,30 @@ export function AIAssistModal({
     }
   }, [editedText]);
 
+  // Pre-fill textarea with current value when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setEditedText(currentValue || '');
+      setIsEditing(true); // Enable editing mode by default
+      setSuggestions([]); // Clear previous suggestions
+      setActiveSuggestionId(null); // Clear active suggestion
+      setError(null); // Clear any previous errors
+    }
+  }, [isOpen, currentValue]);
+
   // Focus management for accessibility
   useEffect(() => {
-    if (isOpen && modalRef.current) {
-      modalRef.current.focus();
+    if (isOpen) {
+      if (isEditing && textareaRef.current) {
+        // Focus textarea when in editing mode
+        setTimeout(() => {
+          textareaRef.current?.focus();
+        }, 100);
+      } else if (modalRef.current) {
+        modalRef.current.focus();
+      }
     }
-  }, [isOpen]);
+  }, [isOpen, isEditing]);
 
   // Handle escape key
   useEffect(() => {
@@ -212,7 +230,7 @@ export function AIAssistModal({
                 ✨ AI Writing Assistant
               </h2>
               <p id="ai-modal-description" className="text-sm text-gray-600 mt-1">
-                Get help writing your {fieldLabel.toLowerCase()}
+                {currentValue ? `Edit and improve your ${fieldLabel.toLowerCase()} with AI assistance` : `Get help writing your ${fieldLabel.toLowerCase()}`}
               </p>
             </div>
             <button
@@ -382,7 +400,13 @@ export function AIAssistModal({
                   value={editedText}
                   onChange={(e) => setEditedText(e.target.value)}
                   readOnly={!isEditing}
-                  placeholder={activeSuggestionId ? "Select a suggestion to edit it here..." : "Generate a suggestion or use an example to get started..."}
+                  placeholder={
+                    editedText 
+                      ? "Edit your text here or generate AI suggestions for improvements..." 
+                      : activeSuggestionId 
+                        ? "Select a suggestion to edit it here..." 
+                        : "Type your content here or generate AI suggestions..."
+                  }
                   className={`w-full flex-1 p-3 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     isEditing ? 'bg-white' : 'bg-gray-50'
                   }`}

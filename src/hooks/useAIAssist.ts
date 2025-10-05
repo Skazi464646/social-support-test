@@ -3,7 +3,7 @@
  * Module 5 - Step 4: Build Inline AI Assistance Component
  */
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 
 interface UseAIAssistProps {
   fieldName: string;
@@ -28,6 +28,11 @@ export function useAIAssist({
 }: UseAIAssistProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentValue, setCurrentValue] = useState(initialValue);
+
+  // Sync currentValue with initialValue changes
+  useEffect(() => {
+    setCurrentValue(initialValue);
+  }, [initialValue]);
 
   const openModal = useCallback(() => {
     setIsModalOpen(true);
