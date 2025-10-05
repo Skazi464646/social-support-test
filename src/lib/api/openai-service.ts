@@ -18,9 +18,12 @@ import {
 } from '@/lib/utils/simple-utils';
 import { 
   getSystemPrompt, 
-  buildUserPrompt, 
-  type PromptContext 
+  buildUserPrompt,
+  buildSmartUserPrompt, 
+  type PromptContext,
+  type EnhancedPromptContext 
 } from '@/lib/ai/prompt-templates';
+import type { AIFormContext } from '@/hooks/useAIFormContext';
 import { 
   optimizePromptLength, 
   validatePromptContext, 
@@ -53,6 +56,7 @@ export interface AIAssistRequest {
   fieldName: string;
   currentValue: string;
   userContext: any;
+  intelligentContext?: AIFormContext;
   language: 'en' | 'ar';
 }
 
@@ -131,9 +135,22 @@ class OpenAIService {
               console.warn('[OpenAI] Prompt validation warnings:', validation.warnings);
             }
 
-            // Build optimized prompts
+            // Build optimized prompts with intelligent context when available
             const systemPrompt = getSystemPrompt(request.fieldName, request.language);
-            const userPrompt = buildUserPrompt(request.fieldName, promptContext);
+            
+            let userPrompt: string;
+            if (request.intelligentContext) {
+              // Use smart prompt builder with intelligent context
+              const enhancedPromptContext: EnhancedPromptContext = {
+                ...promptContext,
+                intelligentContext: request.intelligentContext,
+              };
+              userPrompt = buildSmartUserPrompt(request.fieldName, enhancedPromptContext, request.intelligentContext);
+            } else {
+              // Fallback to basic prompt builder
+              userPrompt = buildUserPrompt(request.fieldName, promptContext);
+            }
+            
             const optimizedPrompt = optimizePromptLength(userPrompt, 400);
 
             // Calculate efficiency metrics

@@ -16,6 +16,7 @@ interface AIAssistModalProps {
   currentValue: string;
   onAccept: (value: string) => void;
   userContext?: any;
+  intelligentContext?: any;
   fieldConstraints?: {
     minLength?: number;
     maxLength?: number;
@@ -38,6 +39,7 @@ export function AIAssistModal({
   currentValue,
   onAccept,
   userContext = {},
+  intelligentContext,
   fieldConstraints,
 }: AIAssistModalProps) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
@@ -124,6 +126,7 @@ export function AIAssistModal({
         fieldName,
         currentValue,
         userContext,
+        intelligentContext,
         language: 'en',
       };
 

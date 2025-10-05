@@ -1,7 +1,15 @@
 /**
  * Field-Specific Prompt Templates
  * Module 5 - Step 3: Create Field-Specific Prompt Templates
+ * Enhanced for Context-Aware AI (Phase 3)
  */
+
+import type { AIFormContext } from '@/hooks/useAIFormContext';
+import { 
+  analyzeFieldIntelligence, 
+  detectFieldContext,
+  type FieldIntelligence 
+} from './field-intelligence';
 
 export interface PromptContext {
   userContext: {
@@ -16,6 +24,11 @@ export interface PromptContext {
     maxLength?: number;
     required?: boolean;
   };
+}
+
+export interface EnhancedPromptContext extends PromptContext {
+  fieldIntelligence?: FieldIntelligence;
+  intelligentContext?: AIFormContext;
 }
 
 export interface PromptTemplate {
@@ -292,6 +305,7 @@ export function getSystemPrompt(fieldName: string, language: 'en' | 'ar'): strin
 
 /**
  * Build user prompt for a specific field with context
+ * Legacy function for backward compatibility
  */
 export function buildUserPrompt(fieldName: string, context: PromptContext): string {
   const template = FIELD_PROMPT_TEMPLATES[fieldName];
@@ -303,11 +317,215 @@ export function buildUserPrompt(fieldName: string, context: PromptContext): stri
 }
 
 /**
+ * Enhanced context-aware prompt builder with field intelligence
+ * This is the new smart prompt builder that leverages field intelligence
+ */
+export function buildSmartUserPrompt(
+  fieldName: string, 
+  context: PromptContext,
+  intelligentContext?: AIFormContext
+): string {
+  // Analyze field intelligence if intelligent context is provided
+  const fieldIntelligence = intelligentContext 
+    ? analyzeFieldIntelligence(fieldName, context.currentValue, intelligentContext)
+    : null;
+
+  // Build enhanced context
+  const enhancedContext: EnhancedPromptContext = {
+    ...context,
+    fieldIntelligence: fieldIntelligence || undefined,
+    intelligentContext,
+  };
+
+  // Use intelligent template if available, otherwise fall back to standard template
+  if (fieldIntelligence && intelligentContext) {
+    return buildIntelligentPrompt(fieldName, enhancedContext);
+  }
+
+  // Fallback to standard template
+  const template = FIELD_PROMPT_TEMPLATES[fieldName];
+  if (!template) {
+    return buildDefaultPrompt(fieldName, context);
+  }
+  
+  return template.userPrompt(context);
+}
+
+/**
  * Get examples for a specific field
+ * Legacy function for backward compatibility
  */
 export function getFieldExamples(fieldName: string): string[] {
   const template = FIELD_PROMPT_TEMPLATES[fieldName];
   return template?.examples || [];
+}
+
+/**
+ * Get dynamic, context-aware examples based on user's situation
+ */
+export function getDynamicFieldExamples(
+  fieldName: string, 
+  intelligentContext?: AIFormContext,
+  fieldIntelligence?: FieldIntelligence
+): string[] {
+  // Get base examples
+  const baseExamples = getFieldExamples(fieldName);
+  
+  // If no intelligent context, return base examples
+  if (!intelligentContext || !fieldIntelligence) {
+    return baseExamples;
+  }
+  
+  // Generate situation-specific examples
+  const situationExamples = generateSituationSpecificExamples(fieldName, fieldIntelligence, intelligentContext);
+  
+  // Combine and prioritize situation-specific examples
+  if (situationExamples.length > 0) {
+    // Return situation-specific examples first, then base examples
+    return [...situationExamples, ...baseExamples].slice(0, 3); // Limit to 3 total examples
+  }
+  
+  return baseExamples;
+}
+
+/**
+ * Generate examples based on detected situation and form context
+ */
+function generateSituationSpecificExamples(
+  fieldName: string,
+  fieldIntelligence: FieldIntelligence,
+  intelligentContext: AIFormContext
+): string[] {
+  const examples: string[] = [];
+  const contentAnalysis = fieldIntelligence.contentAnalysis;
+  
+  if (!contentAnalysis) {
+    return examples;
+  }
+  
+  const situationType = contentAnalysis.situationType;
+  const urgencyLevel = contentAnalysis.urgencyLevel;
+  
+  // Get form context for personalization
+  const employmentStatus = intelligentContext.step2?.employmentStatus;
+  const housingStatus = intelligentContext.step2?.housingStatus;
+  const maritalStatus = intelligentContext.step2?.maritalStatus;
+  const numberOfDependents = intelligentContext.step2?.numberOfDependents;
+  
+  // Generate field-specific situational examples
+  if (fieldName === 'financialSituation') {
+    examples.push(...generateFinancialSituationExamples(situationType, urgencyLevel, {
+      employmentStatus,
+      housingStatus,
+      numberOfDependents
+    }));
+  } else if (fieldName === 'employmentCircumstances') {
+    examples.push(...generateEmploymentCircumstancesExamples(situationType, urgencyLevel, {
+      employmentStatus,
+      maritalStatus,
+      numberOfDependents
+    }));
+  } else if (fieldName === 'reasonForApplying') {
+    examples.push(...generateReasonForApplyingExamples(situationType, urgencyLevel, {
+      employmentStatus,
+      housingStatus,
+      numberOfDependents
+    }));
+  }
+  
+  return examples;
+}
+
+/**
+ * Generate financial situation examples based on context
+ */
+function generateFinancialSituationExamples(
+  situationType: string,
+  urgencyLevel: string,
+  context: { employmentStatus?: string; housingStatus?: string; numberOfDependents?: number }
+): string[] {
+  const examples: string[] = [];
+  const { employmentStatus, housingStatus, numberOfDependents } = context;
+  
+  if (situationType === 'unemployment') {
+    if (urgencyLevel === 'critical' || urgencyLevel === 'high') {
+      examples.push(
+        `I lost my job three months ago and my unemployment benefits have ended. My savings are completely depleted, and I'm facing immediate risk of ${housingStatus === 'rent' ? 'eviction' : 'foreclosure'}. ${numberOfDependents ? `With ${numberOfDependents} family members depending on me, ` : ''}I desperately need assistance to cover basic living expenses while I continue my intensive job search.`
+      );
+    } else {
+      examples.push(
+        `Due to company downsizing, I became unemployed six months ago. While I have some savings remaining, they are quickly diminishing as I cover ${housingStatus === 'rent' ? 'rent' : 'mortgage payments'} and daily expenses. ${numberOfDependents ? `Supporting ${numberOfDependents} dependents makes ` : ''}The financial strain is increasing each month as I actively search for new employment opportunities.`
+      );
+    }
+  } else if (situationType === 'medical_emergency') {
+    examples.push(
+      `Unexpected medical expenses from a recent ${urgencyLevel === 'critical' ? 'emergency surgery' : 'serious illness'} have completely overwhelmed my budget. The medical bills exceeded my insurance coverage by thousands of dollars, forcing me to drain my emergency savings. ${employmentStatus === 'unemployed' ? 'Being unemployed compounds the crisis as' : 'Even while employed,'} I cannot keep up with both medical debt payments and basic living expenses.`
+    );
+  } else if (situationType === 'housing_crisis') {
+    examples.push(
+      `${urgencyLevel === 'critical' ? 'I received an eviction notice and have less than 30 days to' : 'I am struggling to'} maintain stable housing due to financial hardship. ${employmentStatus === 'unemployed' ? 'Since losing my job, I' : 'Despite being employed, I'} cannot afford the ${housingStatus === 'rent' ? 'monthly rent' : 'mortgage payments'} while covering other essential expenses. ${numberOfDependents ? `With ${numberOfDependents} family members, finding alternative housing is extremely challenging.` : 'Finding affordable alternative housing has proven extremely difficult.'}`
+    );
+  }
+  
+  return examples;
+}
+
+/**
+ * Generate employment circumstances examples based on context
+ */
+function generateEmploymentCircumstancesExamples(
+  situationType: string,
+  urgencyLevel: string,
+  context: { employmentStatus?: string; maritalStatus?: string; numberOfDependents?: number }
+): string[] {
+  const examples: string[] = [];
+  const { employmentStatus, maritalStatus, numberOfDependents } = context;
+  
+  if (situationType === 'unemployment') {
+    if (employmentStatus === 'unemployed') {
+      examples.push(
+        `I was laid off from my position as a ${urgencyLevel === 'critical' ? 'manufacturing worker when the plant closed suddenly' : 'retail manager due to company restructuring'}. For the past ${urgencyLevel === 'critical' ? 'eight' : 'four'} months, I have been actively searching for employment, submitting applications daily and attending job fairs. ${numberOfDependents ? `As a ${maritalStatus === 'single' ? 'single parent' : 'parent'} of ${numberOfDependents}, the pressure to find stable work is immense.` : 'Despite my efforts and experience, suitable opportunities in my field have been limited.'}`
+      );
+    } else if (employmentStatus === 'employed_part_time') {
+      examples.push(
+        `I currently work part-time but my hours were significantly reduced due to business slowdown. My current income only covers about ${urgencyLevel === 'critical' ? '40%' : '60%'} of my monthly expenses. I am actively seeking additional employment or full-time opportunities while maintaining my current position. ${numberOfDependents ? `Supporting ${numberOfDependents} dependents on reduced income has created substantial financial stress.` : 'The income reduction has made it impossible to meet all my financial obligations.'}`
+      );
+    }
+  } else if (situationType === 'medical_emergency') {
+    examples.push(
+      `My employment has been significantly impacted by a recent medical condition that requires ${urgencyLevel === 'critical' ? 'immediate and ongoing treatment' : 'regular medical care and therapy'}. I have had to reduce my work hours and take unpaid medical leave, resulting in substantial income loss. ${employmentStatus === 'unemployed' ? 'I am currently unable to work full-time' : 'While I hope to return to full capacity'}, my current situation makes it difficult to maintain financial stability while focusing on recovery.`
+    );
+  }
+  
+  return examples;
+}
+
+/**
+ * Generate reason for applying examples based on context
+ */
+function generateReasonForApplyingExamples(
+  situationType: string,
+  urgencyLevel: string,
+  context: { employmentStatus?: string; housingStatus?: string; numberOfDependents?: number }
+): string[] {
+  const examples: string[] = [];
+  const { employmentStatus, housingStatus, numberOfDependents } = context;
+  
+  if (situationType === 'unemployment' || situationType === 'financial_instability') {
+    examples.push(
+      `I am applying for social support to help bridge the gap between my current ${employmentStatus === 'unemployed' ? 'unemployment' : 'reduced income'} and my essential living expenses. This assistance would enable me to maintain ${housingStatus === 'rent' ? 'my rental housing' : 'my home'} and provide ${numberOfDependents ? `for my ${numberOfDependents} dependents` : 'for my basic needs'} while I ${employmentStatus === 'unemployed' ? 'secure new employment' : 'work toward financial stability'}. ${urgencyLevel === 'critical' ? 'Without immediate assistance, I face the risk of homelessness and inability to meet basic survival needs.' : 'This temporary support would provide the stability needed to focus on long-term solutions without the stress of immediate financial crisis.'}`
+    );
+  } else if (situationType === 'medical_emergency') {
+    examples.push(
+      `I am seeking assistance to help manage the financial impact of unexpected medical expenses while I ${employmentStatus === 'unemployed' ? 'recover and search for employment' : 'maintain my current work capacity'}. The medical costs have created an overwhelming burden that affects my ability to ${housingStatus === 'rent' ? 'pay rent' : 'maintain my housing'} and cover daily necessities. ${numberOfDependents ? `With ${numberOfDependents} family members depending on me, ` : ''}This support would allow me to focus on recovery and rebuilding financial stability without compromising ${numberOfDependents ? 'my family\'s' : 'my'} basic needs.`
+    );
+  } else if (situationType === 'housing_crisis') {
+    examples.push(
+      `I am applying for assistance to prevent homelessness and maintain stable housing for ${numberOfDependents ? `myself and ${numberOfDependents} dependents` : 'myself'}. ${urgencyLevel === 'critical' ? 'With an immediate eviction threat,' : 'Due to mounting housing costs,'} I need support to ${housingStatus === 'rent' ? 'catch up on rent payments' : 'prevent foreclosure'} while I ${employmentStatus === 'unemployed' ? 'secure employment' : 'stabilize my financial situation'}. Stable housing is essential for ${numberOfDependents ? 'maintaining my family\'s welfare and my children\'s schooling, as well as' : ''} providing the foundation I need to focus on employment and long-term financial recovery.`
+    );
+  }
+  
+  return examples;
 }
 
 /**
@@ -327,6 +545,168 @@ function getDefaultSystemPrompt(language: 'en' | 'ar'): string {
   }
   
   return `You are a helpful assistant that helps people improve their writing for social support applications. Provide clear, professional, and respectful suggestions.`;
+}
+
+/**
+ * Build intelligent prompt using field intelligence and context awareness
+ */
+function buildIntelligentPrompt(fieldName: string, context: EnhancedPromptContext): string {
+  const { currentValue, fieldConstraints, fieldIntelligence, intelligentContext, language } = context;
+  
+  if (!fieldIntelligence || !intelligentContext) {
+    return buildDefaultPrompt(fieldName, context);
+  }
+
+  let prompt = `Help improve this ${fieldName} description for a social support application.`;
+  
+  // Add field category context
+  const category = fieldIntelligence.fieldContext.category;
+  prompt += `\n\nField Type: ${category} information`;
+  
+  // Add situation-specific context if content analysis is available
+  if (fieldIntelligence.contentAnalysis) {
+    const analysis = fieldIntelligence.contentAnalysis;
+    
+    prompt += `\n\nDetected Situation: ${analysis.situationType.replace('_', ' ')}`;
+    prompt += `\nUrgency Level: ${analysis.urgencyLevel}`;
+    
+    if (analysis.keyIndicators.length > 0) {
+      prompt += `\nKey Indicators: ${analysis.keyIndicators.slice(0, 3).join(', ')}`;
+    }
+    
+    prompt += `\n\nSuggested Approach: ${analysis.suggestedApproach}`;
+    
+    if (analysis.contextualInsights.length > 0) {
+      prompt += `\n\nContextual Insights:`;
+      analysis.contextualInsights.forEach(insight => {
+        prompt += `\n- ${insight}`;
+      });
+    }
+  }
+  
+  // Add cross-field relationship insights
+  if (fieldIntelligence.crossFieldRelationships.derivedInsights?.length > 0) {
+    prompt += `\n\nRelated Information Insights:`;
+    fieldIntelligence.crossFieldRelationships.derivedInsights.forEach((insight: string) => {
+      prompt += `\n- ${insight}`;
+    });
+  }
+  
+  // Add relevant form data context (privacy-safe)
+  const relevantContext = buildRelevantFormContext(fieldName, intelligentContext);
+  if (relevantContext) {
+    prompt += `\n\nRelevant Form Context:\n${relevantContext}`;
+  }
+  
+  // Add current content
+  prompt += `\n\nCurrent content: "${currentValue || '[empty]'}"`;
+  
+  // Add field constraints
+  if (fieldConstraints?.minLength) {
+    prompt += `\nMinimum length: ${fieldConstraints.minLength} characters`;
+  }
+  if (fieldConstraints?.maxLength) {
+    prompt += `\nMaximum length: ${fieldConstraints.maxLength} characters`;
+  }
+  
+  // Add completeness score context
+  const completeness = Math.round(fieldIntelligence.completenessScore * 100);
+  prompt += `\nForm completeness: ${completeness}% (${completeness >= 70 ? 'good context available' : 'limited context'})`;
+  
+  // Add intelligent guidance based on field type and situation
+  prompt += `\n\n${getIntelligentGuidance(fieldName, fieldIntelligence, language)}`;
+  
+  return prompt;
+}
+
+/**
+ * Build relevant form context for the prompt (privacy-safe)
+ */
+function buildRelevantFormContext(fieldName: string, intelligentContext: AIFormContext): string {
+  const fieldContext = detectFieldContext(fieldName);
+  const relatedFields = fieldContext.relatedFields;
+  
+  const contextParts: string[] = [];
+  
+  // Check for relevant context from related fields
+  relatedFields.forEach(relatedField => {
+    const step1Value = intelligentContext.step1?.[relatedField as keyof typeof intelligentContext.step1];
+    const step2Value = intelligentContext.step2?.[relatedField as keyof typeof intelligentContext.step2];
+    const step3Value = intelligentContext.step3?.[relatedField as keyof typeof intelligentContext.step3];
+    
+    const value = step1Value || step2Value || step3Value;
+    
+    if (value !== undefined && value !== null && value !== '') {
+      // Format the context appropriately
+      if (relatedField === 'employmentStatus') {
+        contextParts.push(`Employment: ${value}`);
+      } else if (relatedField === 'housingStatus') {
+        contextParts.push(`Housing: ${value}`);
+      } else if (relatedField === 'maritalStatus') {
+        contextParts.push(`Marital status: ${value}`);
+      } else if (relatedField === 'numberOfDependents' && typeof value === 'number' && value > 0) {
+        contextParts.push(`Family: ${value} dependents`);
+      } else if (relatedField === 'incomeLevel') {
+        contextParts.push(`Income level: ${value}`);
+      } else if (relatedField === 'financialBalance') {
+        contextParts.push(`Financial situation: ${value}`);
+      }
+    }
+  });
+  
+  return contextParts.length > 0 ? contextParts.join(', ') : '';
+}
+
+/**
+ * Get intelligent guidance based on field analysis
+ */
+function getIntelligentGuidance(
+  _fieldName: string, 
+  fieldIntelligence: FieldIntelligence, 
+  language: 'en' | 'ar'
+): string {
+  if (language === 'ar') {
+    return 'يرجى تقديم نسخة محسنة واضحة ومهنية ومناسبة لطلب الدعم الاجتماعي، مع مراعاة السياق والظروف المذكورة أعلاه.';
+  }
+  
+  const category = fieldIntelligence.fieldContext.category;
+  const hasContentAnalysis = fieldIntelligence.contentAnalysis !== null;
+  const completeness = fieldIntelligence.completenessScore;
+  
+  let guidance = 'Please provide an improved version that is clear, professional, and appropriate for a social support application';
+  
+  if (hasContentAnalysis && fieldIntelligence.contentAnalysis) {
+    const urgency = fieldIntelligence.contentAnalysis.urgencyLevel;
+    const situation = fieldIntelligence.contentAnalysis.situationType;
+    
+    if (urgency === 'critical' || urgency === 'high') {
+      guidance += ', emphasizing the urgent nature of your situation';
+    }
+    
+    if (situation === 'unemployment') {
+      guidance += ', highlighting your job search efforts and immediate financial needs';
+    } else if (situation === 'medical_emergency') {
+      guidance += ', detailing the medical situation and its impact on your finances';
+    } else if (situation === 'housing_crisis') {
+      guidance += ', focusing on your housing needs and timeline';
+    }
+  }
+  
+  if (category === 'financial') {
+    guidance += '. Include specific amounts when helpful and explain the timeline of difficulties';
+  } else if (category === 'employment') {
+    guidance += '. Include work history, barriers to employment, and any active job search efforts';
+  } else if (category === 'descriptive') {
+    guidance += '. Use the contextual information above to make your description more specific and compelling';
+  }
+  
+  if (completeness < 0.5) {
+    guidance += '. Note: Limited form context available - consider providing more background information';
+  }
+  
+  guidance += '.';
+  
+  return guidance;
 }
 
 /**

@@ -354,6 +354,17 @@ App
 
 ```
 
+```
+  🔄 How It Works 
+
+  1. Form Input → User types in any field
+  2. Context Extraction → useAIFormContext analyzes real form data
+  3. AI Assist → User clicks "AI Assist" button
+  4. Smart Analysis → System detects field type, content, and situation
+  5. Enhanced Prompts → buildSmartUserPrompt creates targeted prompts
+  6. Intelligent Suggestions → AI provides context-aware, relevant suggestions
+```
+
 ## 🚀 Getting Started
 
 ### Prerequisites

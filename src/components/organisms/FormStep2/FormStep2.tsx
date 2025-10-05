@@ -50,7 +50,7 @@ export function FormStep2() {
               name="maritalStatus"
               control={control}
               label={t('maritalStatus', 'Marital Status')}
-              helperText={t('maritalStatus_help', 'Your current marital status')}
+              // helperText={t('maritalStatus_help', 'Your current marital status')}
               type="select"
               required
               options={[
@@ -68,7 +68,7 @@ export function FormStep2() {
               name="numberOfDependents"
               control={control}
               label={t('numberOfDependents', 'Number of Dependents')}
-              helperText={t('numberOfDependents_help', 'Children or family members you financially support')}
+              // helperText={t('numberOfDependents_help', 'Children or family members you financially support')}
               type="number"
               min={0}
               max={20}
@@ -97,7 +97,7 @@ export function FormStep2() {
               name="employmentStatus"
               control={control}
               label={t('employmentStatus', 'Employment Status')}
-              helperText={t('employmentStatus_help', 'Your current work situation')}
+              // helperText={t('employmentStatus_help', 'Your current work situation')}
               type="select"
               required
               className="md:col-span-2"
@@ -120,7 +120,7 @@ export function FormStep2() {
                 control={control}
                 label={t('occupation', 'Occupation')}
                 placeholder={t('occupation_placeholder', 'Enter your job title or profession')}
-                helperText={t('occupation_help', 'Your current job title or type of business')}
+                // helperText={t('occupation_help', 'Your current job title or type of business')}
                 required
               />
             )}
@@ -132,7 +132,7 @@ export function FormStep2() {
                 control={control}
                 label={t('employer', 'Employer Name')}
                 placeholder={t('employer_placeholder', 'Enter your employer name')}
-                helperText={t('employer_help', 'The company or organization you work for')}
+                // helperText={t('employer_help', 'The company or organization you work for')}
                 required
               />
             )}
@@ -142,7 +142,7 @@ export function FormStep2() {
               name="monthlyIncome"
               control={control}
               label={t('monthlyIncome', 'Monthly Income (AED)')}
-              helperText={t('monthlyIncome_help', 'Your total monthly income from all sources')}
+              // helperText={t('monthlyIncome_help', 'Your total monthly income from all sources')}
               type="number"
               required
             />
@@ -152,7 +152,7 @@ export function FormStep2() {
               name="monthlyExpenses"
               control={control}
               label={t('monthlyExpenses', 'Monthly Expenses (AED)')}
-              helperText={t('monthlyExpenses_help', 'Your total monthly living expenses')}
+              // helperText={t('monthlyExpenses_help', 'Your total monthly living expenses')}
               type="number"
               required
             />
@@ -162,7 +162,7 @@ export function FormStep2() {
               name="totalSavings"
               control={control}
               label={t('totalSavings', 'Total Savings (AED)')}
-              helperText={t('totalSavings_help', 'Your current savings and bank deposits')}
+              // helperText={t('totalSavings_help', 'Your current savings and bank deposits')}
               type="number"
               required
             />
@@ -172,7 +172,7 @@ export function FormStep2() {
               name="totalDebt"
               control={control}
               label={t('totalDebt', 'Total Debt (AED)')}
-              helperText={t('totalDebt_help', 'Your current total debt including loans and credit cards')}
+              // helperText={t('totalDebt_help', 'Your current total debt including loans and credit cards')}
               type="number"
               required
             />
@@ -198,7 +198,7 @@ export function FormStep2() {
               name="housingStatus"
               control={control}
               label={t('housingStatus', 'Housing Status')}
-              helperText={t('housingStatus_help', 'Your current housing arrangement')}
+              // helperText={t('housingStatus_help', 'Your current housing arrangement')}
               type="select"
               required
               className="md:col-span-2"
@@ -218,7 +218,7 @@ export function FormStep2() {
                 name="monthlyRent"
                 control={control}
                 label={t('monthlyRent', 'Monthly Rent (AED)')}
-                helperText={t('monthlyRent_help', 'Your monthly rent payment')}
+                // helperText={t('monthlyRent_help', 'Your monthly rent payment')}
                 type="number"
                 required
               />
@@ -245,7 +245,7 @@ export function FormStep2() {
               name="receivingBenefits"
               control={control}
               label={t('receivingBenefits', 'Currently Receiving Government Benefits')}
-              helperText={t('receivingBenefits_help', 'Are you currently receiving any form of government assistance?')}
+              // helperText={t('receivingBenefits_help', 'Are you currently receiving any form of government assistance?')}
               type="select"
               required
               options={[
@@ -261,7 +261,7 @@ export function FormStep2() {
                 name="benefitTypes"
                 control={control}
                 label={t('benefitTypes', 'Types of Benefits Received')}
-                helperText={t('benefitTypes_help', 'Select all types of government benefits you currently receive')}
+                // helperText={t('benefitTypes_help', 'Select all types of government benefits you currently receive')}
                 type="checkbox-group"
                 required
                 options={[
@@ -282,7 +282,7 @@ export function FormStep2() {
               name="previouslyApplied"
               control={control}
               label={t('previouslyApplied', 'Previously Applied for Social Support')}
-              helperText={t('previouslyApplied_help', 'Have you applied for social support from this program before?')}
+              // helperText={t('previouslyApplied_help', 'Have you applied for social support from this program before?')}
               type="select"
               required
               options={[

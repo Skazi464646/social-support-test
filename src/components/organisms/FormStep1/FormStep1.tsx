@@ -63,7 +63,7 @@ export function FormStep1() {
               control={control}
               label={t('nationalId', 'National ID')}
               placeholder={t('nationalId_placeholder', 'Enter your 10-digit national ID')}
-              helperText={t('nationalId_help', 'Your official government-issued ID number')}
+              // helperText={t('nationalId_help', 'Your official government-issued ID number')}
               maxLength={10}
               required
             />
@@ -73,7 +73,7 @@ export function FormStep1() {
               name="dateOfBirth"
               control={control}
               label={t('dateOfBirth', 'Date of Birth')}
-              helperText={t('dateOfBirth_help', 'You must be at least 18 years old')}
+              // helperText={t('dateOfBirth_help', 'You must be at least 18 years old')}
               type="date"
               required
             />
@@ -83,7 +83,7 @@ export function FormStep1() {
               name="gender"
               control={control}
               label={t('gender', 'Gender')}
-              helperText={t('gender_help', 'Select your gender')}
+              // helperText={t('gender_help', 'Select your gender')}
               type="select"
               required
               options={[
@@ -117,7 +117,7 @@ export function FormStep1() {
               control={control}
               label={t('email', 'Email Address')}
               placeholder={t('email_placeholder', 'your.email@example.com')}
-              helperText={t('email_help', 'We will send important updates to this email')}
+              // helperText={t('email_help', 'We will send important updates to this email')}
               type="email"
               required
               className="md:col-span-2"
@@ -129,7 +129,7 @@ export function FormStep1() {
               control={control}
               label={t('phone', 'Phone Number')}
               placeholder={t('phone_placeholder', '+971 50 123 4567')}
-              helperText={t('phone_help', 'Include country code for international numbers')}
+              // helperText={t('phone_help', 'Include country code for international numbers')}
               type="tel"
               required
             />
@@ -156,7 +156,7 @@ export function FormStep1() {
               control={control}
               label={t('address', 'Street Address')}
               placeholder={t('address_placeholder', 'Building name, street number, street name')}
-              helperText={t('address_help', 'Your complete street address')}
+              // helperText={t('address_help', 'Your complete street address')}
               required
               className="md:col-span-2 lg:col-span-3"
             />
@@ -184,7 +184,7 @@ export function FormStep1() {
               name="country"
               control={control}
               label={t('country', 'Country')}
-              helperText={t('country_help', 'Select your country of residence')}
+              // helperText={t('country_help', 'Select your country of residence')}
               type="select"
               required
               options={[
@@ -209,7 +209,7 @@ export function FormStep1() {
                 control={control}
                 label={t('postalCode', 'Postal Code')}
                 placeholder={t('postalCode_placeholder', 'Enter postal code')}
-                helperText={t('postalCode_help', 'Optional for some countries')}
+                // helperText={t('postalCode_help', 'Optional for some countries')}
                 className="lg:col-start-1"
               />
             )}

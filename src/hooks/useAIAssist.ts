@@ -1,9 +1,11 @@
 /**
  * AI Assistance Hook
  * Module 5 - Step 4: Build Inline AI Assistance Component
+ * Enhanced for Context-Aware AI (Phase 4)
  */
 
 import { useState, useCallback, useEffect } from 'react';
+import { useAIFormContext } from './useAIFormContext';
 
 interface UseAIAssistProps {
   fieldName: string;
@@ -28,6 +30,12 @@ export function useAIAssist({
 }: UseAIAssistProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentValue, setCurrentValue] = useState(initialValue);
+
+  // Get intelligent context (with fallback to provided userContext)
+  const { userContext: intelligentContext, isAvailable: hasIntelligentContext } = useAIFormContext();
+
+  // Use intelligent context if available, otherwise fall back to provided userContext
+  const enhancedUserContext = hasIntelligentContext ? intelligentContext : userContext;
 
   // Sync currentValue with initialValue changes
   useEffect(() => {
@@ -64,7 +72,7 @@ export function useAIAssist({
     handleAccept,
     updateValue,
     
-    // Modal props
+    // Modal props with enhanced context
     modalProps: {
       isOpen: isModalOpen,
       onClose: closeModal,
@@ -72,7 +80,8 @@ export function useAIAssist({
       fieldLabel,
       currentValue,
       onAccept: handleAccept,
-      userContext,
+      userContext: enhancedUserContext, // Use enhanced context instead of original
+      intelligentContext: hasIntelligentContext ? intelligentContext : undefined,
       fieldConstraints,
     },
   };
