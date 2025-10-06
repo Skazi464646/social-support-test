@@ -53,7 +53,6 @@ const FormField = React.forwardRef<HTMLInputElement, FormFieldProps>((props, ref
       labelProps={labelProps}
       isRequired={isRequired}
       fieldId={fieldId}
-      fieldHasError={fieldHasError}
       control={
         <FormFieldControl
           ref={ref}
@@ -123,7 +122,6 @@ interface FormFieldContentProps {
   labelProps?: Omit<LabelProps, 'htmlFor' | 'required'>;
   isRequired: boolean;
   fieldId: string;
-  fieldHasError: boolean;
   control: ReactNode;
   error?: string;
   helperText?: string;
@@ -136,7 +134,6 @@ const FormFieldContent = ({
   labelProps,
   isRequired,
   fieldId,
-  fieldHasError,
   control,
   error,
   helperText,
@@ -147,7 +144,6 @@ const FormFieldContent = ({
       label={label}
       fieldId={fieldId}
       required={isRequired}
-      fieldHasError={fieldHasError}
       labelProps={labelProps}
     />
 
@@ -166,13 +162,11 @@ const FormFieldLabel = ({
   label,
   fieldId,
   required,
-  fieldHasError,
   labelProps
 }: {
   label?: string;
   fieldId: string;
   required: boolean;
-  fieldHasError: boolean;
   labelProps?: Omit<LabelProps, 'htmlFor' | 'required'>;
 }) => {
   if (!label) {
@@ -182,7 +176,7 @@ const FormFieldLabel = ({
     <Label
       htmlFor={fieldId}
       required={required}
-      variant={fieldHasError ? 'error' : 'default'}
+      variant={'default'}
       {...labelProps}
     >
       {label}
