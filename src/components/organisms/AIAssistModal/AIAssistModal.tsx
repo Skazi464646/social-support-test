@@ -592,43 +592,34 @@ export function AIAssistModal({
                   }`}
                 />
                 
-                {/* Field-specific guidance */}
-                {!editedText && (
-                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                    <h4 className="text-sm font-medium text-blue-900 mb-2">💡 What to include:</h4>
-                    <ul className="text-xs text-blue-800 space-y-1">
-                      {fieldConfig.guidance.map((tip, index) => (
-                        <li key={index} className="flex items-start">
-                          <span className="text-blue-600 mr-1">•</span>
-                          <span>{tip}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-
-                {/* Character Count */}
-                <div className="mt-3 flex flex-wrap items-end justify-between gap-y-1 text-xs leading-snug text-text-secondary">
-                  {constraints.length > 0 && (
-                    <p className="max-w-full pr-4">
-                      <span className="font-semibold text-text-primary">Technical Guidelines:</span> {constraints.join(', ')}
-                    </p>
-                  )}
+                {/* Character Count - positioned right below input field */}
+                <div className="mt-2 flex justify-end">
                   <div
                     className={cn(
-                      'ms-auto self-end text-right font-medium tracking-tight',
-                      isValidLength ? 'text-text-secondary' : 'text-destructive'
+                      'text-xs font-medium',
+                      isValidLength ? 'text-gray-500' : 'text-red-500'
                     )}
                   >
                     {characterCount}/{maxLength}
-                    <span className="ms-1">characters</span>
                     {minLength > 0 && characterCount < minLength && (
-                      <span className="ms-2 text-destructive">
+                      <span className="ml-2 text-red-500">
                         (min: {minLength})
                       </span>
                     )}
                   </div>
                 </div>
+
+                {/* Field-specific guidance - condensed */}
+                {!editedText && (
+                  <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <h4 className="text-sm font-medium text-blue-900 mb-1">💡 Tips:</h4>
+                    <div className="text-xs text-blue-800">
+                      {fieldConfig.guidance.slice(0, 2).map((tip, index) => (
+                        <div key={index} className="mb-1">• {tip}</div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
