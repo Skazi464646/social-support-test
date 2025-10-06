@@ -85,22 +85,12 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
           `}
         />
 
-        {/* Bottom row with AI button and character count */}
-        <div className="mt-1 flex flex-col gap-2 text-xs leading-snug sm:flex-row sm:items-center sm:justify-between">
-          {/* Left side - AI Assist Button and Error */}
-          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
-            <button
-              type="button"
-              onClick={openModal}
-              disabled={disabled}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-sm hover:shadow-md hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-sm w-fit"
-              title="Get AI writing assistance"
-            >
-              <span className="text-sm">✨</span>
-              <span>AI Assist</span>
-            </button>
+        {/* Error and Character Count Row */}
+        <div className="mt-2 flex items-start justify-between gap-2 text-xs">
+          {/* Left side - Error message */}
+          <div className="flex-1 min-w-0">
             {error && (
-              <span className="font-medium text-destructive" role="alert">
+              <span className="font-medium text-red-500" role="alert">
                 {error}
               </span>
             )}
@@ -110,19 +100,32 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
           {showCharacterCount && (
             <div
               className={cn(
-                'sm:text-right font-medium tracking-tight',
-                isValidLength ? 'text-text-secondary' : 'text-destructive'
+                'text-right font-medium whitespace-nowrap',
+                isValidLength ? 'text-gray-500' : 'text-red-500'
               )}
             >
               {characterCount}/{maxLength}
-              <span className="ms-1">characters</span>
               {minLength > 0 && characterCount < minLength && (
-                <span className="ms-2 text-destructive">
+                <span className="ml-1 text-red-500">
                   (min: {minLength})
                 </span>
               )}
             </div>
           )}
+        </div>
+
+        {/* AI Assist Button */}
+        <div className="mt-3">
+          <button
+            type="button"
+            onClick={openModal}
+            disabled={disabled}
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-sm hover:shadow-md hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Get AI writing assistance"
+          >
+            <span>✨</span>
+            <span>AI Assist</span>
+          </button>
         </div>
 
         {/* AI Assist Modal - Lazy Loaded */}
