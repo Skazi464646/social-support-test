@@ -77,7 +77,7 @@ export function ValidatedFormField<
 }: ValidatedFormFieldProps<TFieldValues, TName>) {
   
   const { onFieldBlur } = useFormBlur();
-  const { isRTL: _ } = useDirection(); // RTL support available but not used in this component
+  const { isRTL } = useDirection(); // RTL support available but not used in this component
   const { t } = useTranslation(['validation']);
   
   const {
@@ -150,12 +150,13 @@ export function ValidatedFormField<
   // Determine field direction based on type
   const getFieldDir = () => {
     // These field types should always be LTR regardless of page direction
-    const ltrFields = ['email', 'tel', 'number', 'date'];
-    if (ltrFields.includes(type)) {
-      return 'ltr';
-    }
-    // For other fields, use auto to let the browser decide based on content
-    return 'auto';
+    // const ltrFields = ['email', 'tel', 'number', 'date'];
+    // if (ltrFields.includes(type)) {
+    //   return 'ltr';
+    // }
+    // // For other fields, use auto to let the browser decide based on content
+    // return 'auto';
+       return isRTL ? 'rtl' : 'ltr';
   };
   
   const fieldDir = getFieldDir();

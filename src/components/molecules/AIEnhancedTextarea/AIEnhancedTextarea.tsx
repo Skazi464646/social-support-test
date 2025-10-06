@@ -6,6 +6,7 @@
 import { forwardRef, Suspense, lazy } from 'react';
 import { useAIAssist } from '@/hooks/useAIAssist';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 // Lazy load AI components for better performance
 const AIAssistModal = lazy(() => 
@@ -46,6 +47,7 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
     userContext = {},
     error,
   }, ref) => {
+    const { t } = useTranslation(['common']);
     const {
       modalProps,
       openModal,
@@ -125,7 +127,8 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
             title="Get AI writing assistance"
           >
             <span>✨</span>
-            <span>AI Assist</span>
+          <span>{t('ai_assist', 'AI Assist')}</span>
+            
           </button>
         </div>
 

@@ -6,6 +6,7 @@
 import { forwardRef, useState } from 'react';
 import { AIAssistModal } from '@/components/organisms/AIAssistModal';
 import { useAIAssist } from '@/hooks/useAIAssist';
+import { useTranslation } from 'react-i18next';
 
 interface AIEnhancedInputProps {
   fieldName: string;
@@ -40,6 +41,7 @@ export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps
     showAIAssist = true,
   }, ref) => {
     const [showModal, setShowModal] = useState(false);
+    const { t } = useTranslation(['common']);
 
     const {
       modalProps,
@@ -92,7 +94,7 @@ export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps
                   title="Get AI writing assistance"
                 >
                   <span className="text-sm">✨</span>
-                  <span>AI Assist</span>
+                 <span>{t('ai_assist', 'AI Assist')}</span>
                 </button>
               )}
               {error && (
