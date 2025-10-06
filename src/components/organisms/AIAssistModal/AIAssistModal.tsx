@@ -139,17 +139,17 @@ export function AIAssistModal({
 
     try {
       // STEP 1: If user has input, validate relevancy first
-      const hasUserInput = currentValue.trim().length >= 10;
+      const hasUserInput = editedText.trim().length >= 10;
       
       if (hasUserInput) {
         const relevancyRequest: AIRelevancyRequest = {
           fieldName,
-          userInput: currentValue,
+          userInput: editedText,
           intelligentContext,
           language: 'en',
         };
 
-        console.log('[AI Suggestion Relevancy] Checking relevancy for:', currentValue.substring(0, 50));
+        console.log('[AI Suggestion Relevancy] Checking relevancy for:', editedText.substring(0, 50));
         const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
         
         console.log('[AI Suggestion Relevancy] Result:', {
@@ -180,7 +180,7 @@ export function AIAssistModal({
       // STEP 2: If relevant (or no user input), generate suggestion
       const request: AIAssistRequest = {
         fieldName,
-        currentValue,
+        currentValue:editedText,
         userContext,
         intelligentContext,
         language: 'en',
@@ -272,7 +272,7 @@ export function AIAssistModal({
     // Only generate dynamic examples if we have either:
     // 1. User input (≥10 characters for meaningful content)
     // 2. OR intelligent context (form data) to work with
-    const hasUserInput = currentValue.trim().length >= 10;
+    const hasUserInput = editedText.trim().length >= 10;
     const hasIntelligentContext = intelligentContext && (intelligentContext.step1 || intelligentContext.step2);
     
     if (!hasUserInput && !hasIntelligentContext) {
@@ -287,12 +287,12 @@ export function AIAssistModal({
       if (hasUserInput) {
         const relevancyRequest: AIRelevancyRequest = {
           fieldName,
-          userInput: currentValue,
+          userInput: editedText,
           intelligentContext,
           language: 'en',
         };
 
-        console.log('[AI Relevancy] Checking relevancy for:', currentValue.substring(0, 50));
+        console.log('[AI Relevancy] Checking relevancy for:', editedText.substring(0, 50));
         const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
         
         console.log('[AI Relevancy] Result:', {
