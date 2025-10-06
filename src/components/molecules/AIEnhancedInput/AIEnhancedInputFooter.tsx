@@ -1,4 +1,5 @@
-import { cn } from '@/lib/utils';
+
+import { useTranslation } from 'react-i18next';
 
 interface InputFooterProps {
   disabled: boolean;
@@ -19,6 +20,7 @@ export function AIEnhancedInputFooter({
   onOpenAssist,
   showAssistButton,
 }: InputFooterProps) {
+  const { t } = useTranslation(['common']);
   return (
     <div className="flex flex-col gap-2 text-xs leading-snug sm:flex-row sm:items-center sm:justify-between">
       <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
@@ -31,7 +33,7 @@ export function AIEnhancedInputFooter({
             title="Get AI writing assistance"
           >
             <span className="text-sm">✨</span>
-            <span>AI Assist</span>
+            <span>{t('ai_assist', 'AI Assist')}</span>
           </button>
         )}
         {error && (

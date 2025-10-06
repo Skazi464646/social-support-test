@@ -112,5 +112,6 @@
     "completed": "Completed",
     "current": "Current step",
     "pending": "Pending"
-  }
+  },
+  "ai_assist": "AI Assist"
 }

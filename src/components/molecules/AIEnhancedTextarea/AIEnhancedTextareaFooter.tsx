@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
 
 interface TextareaFooterProps {
   disabled: boolean;
@@ -21,6 +22,7 @@ export function AIEnhancedTextareaFooter({
   showCharacterCount,
   onOpenAssist,
 }: TextareaFooterProps) {
+  const { t } = useTranslation(['common']);
   return (
     <div className="flex flex-col gap-3">
       {/* Top Row: Error message (left) and Character count (right) */}
@@ -55,7 +57,7 @@ export function AIEnhancedTextareaFooter({
           title="Get AI writing assistance"
         >
           <span>✨</span>
-          <span>AI Assist</span>
+          <span>{t('ai_assist', 'AI Assist')}</span>
         </button>
       </div>
     </div>
