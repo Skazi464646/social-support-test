@@ -10,7 +10,7 @@ interface FormWizardContextType {
   state: FormWizardState;
   dispatch: React.Dispatch<FormWizardAction>;
   goToStep: (step: number) => void;
-  nextStep: () => void;
+  nextStep: (forceNextStep?: boolean) => void;
   previousStep: () => void;
   updateFormData: (data: Partial<FormStepData>) => void;
   markStepComplete: (step: number) => void;
@@ -142,8 +142,8 @@ export function FormWizardProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const nextStep = () => {
-    if (state.currentStep < 3 && canProceedToStep(state.currentStep + 1)) {
+  const nextStep = (forceNextStep?: boolean) => {
+    if (state.currentStep < 3 && (forceNextStep || canProceedToStep(state.currentStep + 1))) {
       dispatch({ type: 'NEXT_STEP' });
     }
   };

@@ -232,8 +232,8 @@ export function FormWizard() {
       if (state.currentStep === 3) {
         await handleFinalSubmission({ [stepKey]: data });
       } else {
-        // Navigate to next step (remove toast for step completion)
-        nextStep();
+        // Navigate to next step with force parameter since we just validated
+        nextStep(true);
       }
     } catch (error) {
       console.error('Step submission error:', error);
