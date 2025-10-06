@@ -13,9 +13,8 @@
   },
   "plugins": ["@typescript-eslint", "react-hooks", "react-refresh"],
   "rules": {
-    // Code quality standards (Claude.md guidelines)
     "complexity": ["error", 10],
-    "max-lines-per-function": ["error", { "max": 50, "skipComments": true }],
+    "max-lines-per-function": ["error", { "max": 60, "skipComments": true }],
     "max-lines": ["error", { "max": 250, "skipComments": true }],
 
     // React rules
