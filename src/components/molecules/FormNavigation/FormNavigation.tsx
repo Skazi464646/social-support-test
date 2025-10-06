@@ -77,7 +77,7 @@ function ActionButtons({
   const buttonSize = isMobile ? 'sm' : undefined;
 
   const getSubmitButtonText = () => {
-    if (isSubmitted) return t('form.submitted');
+    if (isSubmitted) return t('actions.submitted');
     return currentStep === 3 ? t('actions.submit') : t('actions.next');
   };
 
