@@ -54,7 +54,7 @@ function StepIndicators({ currentStep, completedSteps }: Pick<FormNavigationProp
           className={cn(
             'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium',
             step === currentStep && 'bg-primary text-primary-foreground',
-            step < currentStep && 'bg-green-500 text-white',
+            step < currentStep && 'bg-success text-success-foreground',
             step > currentStep && 'bg-muted text-muted-foreground'
           )}
         >

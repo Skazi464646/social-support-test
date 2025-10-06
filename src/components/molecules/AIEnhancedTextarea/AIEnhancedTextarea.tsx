@@ -77,10 +77,10 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
           maxLength={maxLength}
           disabled={disabled}
           className={`
-            w-full px-3 py-2 border rounded-md resize-none
-            focus:outline-none focus:ring-2 focus:ring-blue-500
-            ${error ? 'border-red-300' : 'border-gray-300'}
-            ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
+            w-full px-3 py-2 rounded-md border resize-none
+            focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary
+            ${error ? 'border-destructive-border' : 'border-input'}
+            ${disabled ? 'bg-muted cursor-not-allowed text-text-tertiary' : 'bg-card'}
             ${className}
           `}
         />
@@ -90,7 +90,7 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
           {/* Left side - Error message */}
           <div className="flex-1 min-w-0">
             {error && (
-              <span className="font-medium text-red-500" role="alert">
+              <span className="font-medium text-destructive" role="alert">
                 {error}
               </span>
             )}
@@ -101,12 +101,12 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
             <div
               className={cn(
                 'text-right font-medium whitespace-nowrap',
-                isValidLength ? 'text-gray-500' : 'text-red-500'
+                isValidLength ? 'text-text-secondary' : 'text-destructive'
               )}
             >
               {characterCount}/{maxLength}
               {minLength > 0 && characterCount < minLength && (
-                <span className="ml-1 text-red-500">
+                <span className="ml-1 text-destructive">
                   (min: {minLength})
                 </span>
               )}
@@ -120,7 +120,8 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
             type="button"
             onClick={openModal}
             disabled={disabled}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-sm hover:shadow-md hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
+            bg-primary text-primary-foreground hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
             title="Get AI writing assistance"
           >
             <span>✨</span>

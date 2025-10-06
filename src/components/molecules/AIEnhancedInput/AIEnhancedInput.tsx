@@ -70,10 +70,10 @@ export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps
           maxLength={maxLength}
           disabled={disabled}
           className={`
-            w-full px-3 py-2 border rounded-md
-            focus:outline-none focus:ring-2 focus:ring-blue-500
-            ${error ? 'border-red-300' : 'border-gray-300'}
-            ${disabled ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'}
+            w-full px-3 py-2 rounded-md border
+            focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary
+            ${error ? 'border-destructive-border' : 'border-input'}
+            ${disabled ? 'bg-muted cursor-not-allowed text-text-tertiary' : 'bg-card'}
             ${className}
           `}
         />
@@ -87,7 +87,8 @@ export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps
                 <button
                   type="button"
                   onClick={() => setShowModal(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-lg shadow-sm hover:shadow-md hover:from-blue-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 transition-all duration-200 w-fit"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg shadow-sm transition-all duration-200 w-fit
+                  bg-primary text-primary-foreground hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
                   title="Get AI writing assistance"
                 >
                   <span className="text-sm">✨</span>
@@ -103,7 +104,7 @@ export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps
 
             {/* Right side - Character Count */}
             {showCharacterCount && (
-              <div className="text-gray-500 sm:text-right font-medium">
+              <div className="text-text-secondary sm:text-right font-medium">
                 {characterCount}/{maxLength}
               </div>
             )}

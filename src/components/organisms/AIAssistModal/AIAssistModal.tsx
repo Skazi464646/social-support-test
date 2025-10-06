@@ -60,7 +60,6 @@ export function AIAssistModal({
 
   // Get field-specific data
   const examples = getFieldExamples(fieldName);
-  const constraints = getFieldConstraints(fieldName);
   const fieldConfig = getFieldModalConfig(fieldName);
 
   // Auto-resize textarea
@@ -345,30 +344,30 @@ export function AIAssistModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-foreground/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
       <div 
         ref={modalRef}
-        className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden focus:outline-none"
+        className="bg-card text-card-foreground border border-card-border rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden focus:outline-none"
         tabIndex={-1}
         role="dialog"
         aria-labelledby="ai-modal-title"
         aria-describedby="ai-modal-description"
       >
         {/* Header */}
-        <div className="border-b border-gray-200 px-6 py-4">
+        <div className="border-b border-border px-6 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 id="ai-modal-title" className="text-xl font-semibold text-gray-900">
+              <h2 id="ai-modal-title" className="text-xl font-semibold text-text-primary">
                 {fieldConfig.title}
               </h2>
-              <p id="ai-modal-description" className="text-sm text-gray-600 mt-1">
+              <p id="ai-modal-description" className="text-sm text-text-secondary mt-1">
                 {fieldConfig.description}
               </p>
             </div>
             <button
               type="button"
               onClick={onClose}
-              className="text-gray-400 hover:text-gray-600 transition-colors"
+              className="text-text-tertiary hover:text-text-secondary transition-colors"
               aria-label="Close modal"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -380,14 +379,14 @@ export function AIAssistModal({
 
         <div className="flex flex-col lg:flex-row lg:h-[60vh] max-h-[80vh]">
           {/* Left Panel - Suggestions */}
-          <div className="w-full lg:w-1/3 flex flex-col border-gray-200 border-b lg:border-b-0 lg:border-r">
-            <div className="p-4 border-b border-gray-100">
+          <div className="w-full lg:w-1/3 flex flex-col border-border border-b lg:border-b-0 lg:border-r">
+            <div className="p-4 border-b border-muted-border">
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
                   type="button"
                   onClick={generateSuggestion}
                   disabled={isLoading}
-                  className="flex-1 bg-blue-600 text-white px-3 py-2 rounded text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-3 py-2 text-sm font-medium rounded bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <>
@@ -403,7 +402,7 @@ export function AIAssistModal({
                     type="button"
                     onClick={regenerateSuggestion}
                     disabled={isLoading}
-                    className="px-3 py-2 border border-gray-300 rounded text-sm font-medium hover:bg-gray-50 disabled:opacity-50"
+                    className="px-3 py-2 text-sm font-medium rounded border border-border hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 disabled:opacity-50"
                     title="Generate another suggestion"
                   >
                     🔄
@@ -417,7 +416,7 @@ export function AIAssistModal({
                   type="button"
                   onClick={() => setShowExamples(!showExamples)}
                   disabled={loadingExamples}
-                  className="w-full mt-2 text-sm text-blue-600 hover:text-blue-700 py-1 disabled:opacity-50"
+                  className="w-full mt-2 py-1 text-sm text-primary hover:text-primary/80 transition-colors disabled:opacity-50"
                 >
                   {loadingExamples ? (
                     <>
@@ -440,8 +439,8 @@ export function AIAssistModal({
             <div className="flex-1 overflow-y-auto">
               {/* Error Display */}
               {error && (
-                <div className="p-4 bg-red-50 border-b border-red-100">
-                  <div className="text-red-700 text-sm">
+                <div className="p-4 bg-destructive-light border-b border-destructive-border">
+                  <div className="text-destructive text-sm">
                     <strong>Error:</strong> {error}
                   </div>
                 </div>
@@ -449,11 +448,11 @@ export function AIAssistModal({
 
               {/* Examples - Show dynamic examples if available, otherwise static examples */}
               {showExamples && (
-                <div className="border-b border-gray-100">
-                  <div className="p-3 bg-gray-50">
+                <div className="border-b border-muted-border">
+                  <div className="p-3 bg-muted rounded-b-md lg:rounded-none">
                     {dynamicExamples.length > 0 ? (
                       <>
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">
+                        <h4 className="text-sm font-medium text-text-secondary mb-2">
                           ✨ Examples Similar to Yours
                         </h4>
                         <div className="space-y-2">
@@ -462,10 +461,11 @@ export function AIAssistModal({
                               type="button"
                               key={`dynamic-${index}`}
                               onClick={() => useExample(example)}
-                              className="w-full text-left p-2 text-xs border border-purple-200 bg-purple-50 rounded hover:bg-purple-100 transition-colors"
+                              className="w-full text-left p-2 text-xs border rounded transition-colors
+                              border-primary hover:border-primary-hover bg-primary-light text-primary-light-foreground"
                             >
-                              <div className="font-medium text-purple-700 mb-1">Example {index + 1}:</div>
-                              <div className="text-gray-700">
+                              <div className="font-medium text-primary-light-foreground mb-1">Example {index + 1}:</div>
+                              <div className="text-primary-light-foreground/90">
                                 {example.length > 120 ? `${example.substring(0, 120)}...` : example}
                               </div>
                             </button>
@@ -474,14 +474,14 @@ export function AIAssistModal({
                       </>
                     ) : examples.length > 0 ? (
                       <>
-                        <h4 className="text-sm font-medium text-gray-700 mb-2">Sample Responses</h4>
+                        <h4 className="text-sm font-medium text-text-secondary mb-2">Sample Responses</h4>
                         <div className="space-y-2">
                           {examples.map((example, index) => (
                             <button
                               type="button"
                               key={`static-${index}`}
                               onClick={() => useExample(example)}
-                              className="w-full text-left p-2 text-xs border rounded hover:bg-white transition-colors"
+                              className="w-full text-left p-2 text-xs border rounded transition-colors border-border hover:bg-muted"
                             >
                               {example.substring(0, 100)}...
                             </button>
@@ -489,7 +489,7 @@ export function AIAssistModal({
                         </div>
                       </>
                     ) : examplesError ? (
-                      <div className="text-sm text-red-600 p-2">
+                      <div className="text-sm text-destructive p-2">
                         <div className="font-medium">Failed to load personalized examples</div>
                         <div className="text-xs mt-1">{examplesError}</div>
                       </div>
@@ -501,10 +501,10 @@ export function AIAssistModal({
               {/* Suggestions List */}
               <div className="p-4 space-y-3">
                 {suggestions.length === 0 ? (
-                  <div className="text-center text-gray-500 text-sm py-8">
+                  <div className="text-center text-text-secondary text-sm py-8">
                     <div className="mb-2">💡</div>
                     <p className="font-medium">Click "Generate" for AI suggestions</p>
-                    <p className="text-xs mt-1 text-gray-400">AI will help you write about your {fieldLabel.toLowerCase()}</p>
+                    <p className="text-xs mt-1 text-text-tertiary">AI will help you write about your {fieldLabel.toLowerCase()}</p>
                     {examples.length > 0 && (
                       <p className="text-xs mt-1">or use an example to get started</p>
                     )}
@@ -515,15 +515,15 @@ export function AIAssistModal({
                       key={suggestion.id}
                       className={`p-3 border rounded cursor-pointer transition-colors ${
                         activeSuggestionId === suggestion.id
-                          ? 'border-blue-500 bg-blue-50'
-                          : 'border-gray-200 hover:border-gray-300'
+                          ? 'border-primary bg-primary-light'
+                          : 'border-border hover:border-primary'
                       }`}
                       onClick={() => selectSuggestion(suggestion)}
                     >
-                      <div className="text-sm text-gray-800 line-clamp-3">
+                      <div className="text-sm text-text-primary line-clamp-3">
                         {suggestion.text.substring(0, 100)}...
                       </div>
-                      <div className="flex items-center justify-between mt-2 text-xs text-gray-500">
+                      <div className="flex items-center justify-between mt-2 text-xs text-text-secondary">
                         <span>
                           {suggestion.isEdited ? '✏️ Edited' : suggestion.confidence ? '🤖 AI' : '📝 Example'}
                         </span>
@@ -538,16 +538,16 @@ export function AIAssistModal({
 
           {/* Right Panel - Editor */}
           <div className="flex-1 w-full flex flex-col">
-            <div className="p-4 border-b border-gray-100">
+            <div className="p-4 border-b border-border">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-gray-900">Edit Your Response</h3>
+                <h3 className="font-medium text-text-primary">Edit Your Response</h3>
                 <div className="flex gap-2">
                   {!isEditing ? (
                     <button
                       type="button"
                       onClick={editSuggestion}
                       disabled={!activeSuggestionId}
-                      className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50 disabled:opacity-50"
+                      className="px-3 py-1 text-sm border border-border rounded hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 disabled:opacity-50"
                     >
                       ✏️ Edit
                     </button>
@@ -556,14 +556,14 @@ export function AIAssistModal({
                       <button
                         type="button"
                         onClick={cancelEdit}
-                        className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50"
+                        className="px-3 py-1 text-sm border border-border rounded hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
                       >
                         Cancel
                       </button>
                       <button
                         type="button"
                         onClick={saveEdit}
-                        className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+                        className="px-3 py-1 text-sm rounded bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
                       >
                         Save
                       </button>
@@ -587,8 +587,8 @@ export function AIAssistModal({
                         ? "Select a suggestion to edit it here..." 
                         : fieldConfig.placeholder
                   }
-                  className={`w-full flex-1 p-3 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    isEditing ? 'bg-white' : 'bg-gray-50'
+                  className={`w-full flex-1 p-3 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary ${
+                    isEditing ? 'bg-card' : 'bg-muted'
                   }`}
                 />
                 
@@ -597,12 +597,12 @@ export function AIAssistModal({
                   <div
                     className={cn(
                       'text-xs font-medium',
-                      isValidLength ? 'text-gray-500' : 'text-red-500'
+                      isValidLength ? 'text-text-secondary' : 'text-destructive'
                     )}
                   >
                     {characterCount}/{maxLength}
                     {minLength > 0 && characterCount < minLength && (
-                      <span className="ml-2 text-red-500">
+                      <span className="ml-2 text-destructive">
                         (min: {minLength})
                       </span>
                     )}
@@ -611,9 +611,9 @@ export function AIAssistModal({
 
                 {/* Field-specific guidance - condensed */}
                 {!editedText && (
-                  <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded-md">
-                    <h4 className="text-sm font-medium text-blue-900 mb-1">💡 Tips:</h4>
-                    <div className="text-xs text-blue-800">
+                  <div className="mt-4 p-3 border rounded-md border-info-border bg-info-light">
+                    <h4 className="text-sm font-medium text-info-foreground mb-1">💡 Tips:</h4>
+                    <div className="text-xs text-info-light-foreground">
                       {fieldConfig.guidance.slice(0, 2).map((tip, index) => (
                         <div key={index} className="mb-1">• {tip}</div>
                       ))}
@@ -626,16 +626,16 @@ export function AIAssistModal({
         </div>
 
         {/* Footer */}
-        <div className="border-t border-gray-200 px-6 py-4">
+        <div className="border-t border-border px-6 py-4 bg-surface/30">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-sm text-gray-500 leading-snug">
+            <div className="text-sm text-text-secondary leading-snug">
               Rate limit: {openAIService.getRateLimitStatus().tokensAvailable} requests remaining
             </div>
             <div className="flex flex-col-reverse sm:flex-row gap-3 w-full sm:w-auto">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 font-medium w-full sm:w-auto"
+                className="px-4 py-2 border border-border rounded-md text-text-primary hover:bg-muted transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -643,7 +643,7 @@ export function AIAssistModal({
                 type="button"
                 onClick={acceptSuggestion}
                 disabled={!editedText.trim() || !isValidLength}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed font-medium w-full sm:w-auto"
+                className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed font-medium w-full sm:w-auto"
               >
                 Use This Text
               </button>

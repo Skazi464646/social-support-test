@@ -117,11 +117,11 @@ export function SubmissionSuccessModal({
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 z-50" 
+          className="fixed inset-0 bg-foreground/40 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 z-50" 
         />
         <Dialog.Content
           className={cn(
-            'fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] bg-white border border-gray-200 text-gray-900 shadow-2xl duration-200',
+            'fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] bg-card border border-card-border text-card-foreground shadow-2xl duration-200',
             'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
             'rounded-xl overflow-hidden'
           )}
@@ -130,14 +130,14 @@ export function SubmissionSuccessModal({
           {/* Header with Close Button */}
           <div className="flex items-start justify-between px-6 pt-6 pb-4">
             <div className="flex items-center gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[var(--color-green-500)] text-white shadow-sm">
+              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-success text-success-foreground shadow-sm">
                 <Check className="h-7 w-7" aria-hidden="true" />
               </div>
               <div>
-                <Dialog.Title className="text-xl font-semibold text-gray-900">
+                <Dialog.Title className="text-xl font-semibold text-text-primary">
                   {t('submission_success')}
                 </Dialog.Title>
-                <p className="text-sm text-gray-600 mt-1 max-w-sm">
+                <p className="text-sm text-text-secondary mt-1 max-w-sm">
                   {submissionDetails.message || t('submission_success_message', { 
                     applicationId: submissionDetails.applicationId 
                   })}
@@ -150,7 +150,7 @@ export function SubmissionSuccessModal({
                 ref={closeButtonRef}
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 text-gray-400 hover:text-gray-900"
+                className="h-9 w-9 text-text-tertiary hover:text-text-primary"
                 aria-label={t('common:actions.close')}
               >
                 <X className="h-5 w-5" />
@@ -166,10 +166,10 @@ export function SubmissionSuccessModal({
           {/* Application Details */}
           <div className="px-6 space-y-6">
             {/* Application ID */}
-            <div className="rounded-lg border border-gray-200 bg-gray-50 p-5">
+            <div className="rounded-lg border border-border bg-muted p-5">
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-gray-900">
+                  <p className="text-sm font-medium text-text-primary">
                     {t('application_id')}
                   </p>
                   <Button
@@ -181,8 +181,8 @@ export function SubmissionSuccessModal({
                   >
                     {copied ? (
                       <>
-                        <Check className="h-4 w-4 text-green-600" />
-                        <span className="text-green-600 text-sm">{t('common:actions.copied', 'Copied')}</span>
+                        <Check className="h-4 w-4 text-success" />
+                        <span className="text-success text-sm">{t('common:actions.copied', 'Copied')}</span>
                       </>
                     ) : (
                       <>
@@ -193,7 +193,7 @@ export function SubmissionSuccessModal({
                   </Button>
                 </div>
                 <div className="w-full">
-                  <p className="font-mono text-sm font-semibold text-blue-600 break-all leading-relaxed">
+                  <p className="font-mono text-sm font-semibold text-primary break-all leading-relaxed">
                     {submissionDetails.applicationId}
                   </p>
                 </div>
@@ -202,22 +202,22 @@ export function SubmissionSuccessModal({
 
             {/* Submission Details */}
             <div className="space-y-4">
-              <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                <Clock className="h-5 w-5 text-gray-500" aria-hidden="true" />
+              <div className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border">
+                <Clock className="h-5 w-5 text-text-secondary" aria-hidden="true" />
                 <div>
-                  <span className="font-medium text-gray-900">{t('common:submitted_at', 'Submitted at')}: </span>
-                  <span className="text-gray-600">
+                  <span className="font-medium text-text-primary">{t('common:submitted_at', 'Submitted at')}: </span>
+                  <span className="text-text-secondary">
                     {formatSubmissionDate(submissionDetails.submittedAt)}
                   </span>
                 </div>
               </div>
               
               {submissionDetails.estimatedProcessingTime && (
-                <div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200">
-                  <FileText className="h-5 w-5 text-gray-500" aria-hidden="true" />
+                <div className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border">
+                  <FileText className="h-5 w-5 text-text-secondary" aria-hidden="true" />
                   <div>
-                    <span className="font-medium text-gray-900">{t('processing_time', 'Processing time')}: </span>
-                    <span className="text-gray-600">
+                    <span className="font-medium text-text-primary">{t('processing_time', 'Processing time')}: </span>
+                    <span className="text-text-secondary">
                       {submissionDetails.estimatedProcessingTime}
                     </span>
                   </div>
@@ -228,15 +228,15 @@ export function SubmissionSuccessModal({
             {/* Next Steps */}
             {submissionDetails.nextSteps && submissionDetails.nextSteps.length > 0 && (
               <div className="space-y-3">
-                <p className="text-sm font-medium text-gray-900">
+                <p className="text-sm font-medium text-text-primary">
                   {t('next_steps', 'Next Steps')}:
                 </p>
-                <div className="bg-white rounded-lg border border-gray-200 p-4">
+                <div className="bg-card rounded-lg border border-border p-4">
                   <ul className="space-y-2 text-sm">
                     {submissionDetails.nextSteps.map((step, index) => (
                       <li key={index} className="flex items-start gap-3">
-                        <span className="mt-1.5 h-2 w-2 rounded-full bg-blue-600 flex-shrink-0" />
-                        <span className="text-gray-600">{step}</span>
+                        <span className="mt-1.5 h-2 w-2 rounded-full bg-primary flex-shrink-0" />
+                        <span className="text-text-secondary">{step}</span>
                       </li>
                     ))}
                   </ul>
@@ -245,8 +245,8 @@ export function SubmissionSuccessModal({
             )}
 
             {/* Confirmation Email Notice */}
-            <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
-              <p className="text-sm text-blue-700">
+            <div className="rounded-lg border border-info-border bg-info-light p-4">
+              <p className="text-sm text-info-foreground">
                 <strong>A confirmation email has been sent to your registered email address.</strong>
               </p>
             </div>
@@ -255,9 +255,9 @@ export function SubmissionSuccessModal({
 
           {/* Spacer */}
           <div className="h-6"></div>
-
+          
           {/* Action Buttons */}
-          <div className="flex flex-col-reverse sm:flex-row gap-4 p-6 bg-gray-50 border-t border-gray-200">
+          <div className="flex flex-col-reverse sm:flex-row gap-4 p-6 bg-muted border-t border-border">
             <Button
               variant="outline"
               onClick={handleContinue}
@@ -279,8 +279,8 @@ export function SubmissionSuccessModal({
           </div>
 
           {/* Footer Note */}
-          <div className="text-center px-6 pb-6 bg-gray-50">
-            <p className="text-xs text-gray-500">
+          <div className="text-center px-6 pb-6 bg-muted">
+            <p className="text-xs text-text-secondary">
               {t('application_reference_note', 'Please save your application ID for future reference')}
             </p>
           </div>

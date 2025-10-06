@@ -500,13 +500,13 @@ export function FormWizard() {
 
       {/* Submission Error */}
       {submissionState.error && (
-        <Card className="p-6 bg-red-50 border-red-200 dark:bg-red-950 dark:border-red-800">
+        <Card className="p-6 border border-destructive-border bg-destructive-light text-destructive-light-foreground">
           <div className="text-center">
-            <div className="text-red-600 dark:text-red-400 text-2xl mb-2">✕</div>
-            <h3 className="text-lg font-semibold text-red-800 dark:text-red-200 mb-2">
+            <div className="text-destructive text-2xl mb-2">✕</div>
+            <h3 className="text-lg font-semibold text-destructive mb-2">
               {formatSubmissionError(submissionState.error).title}
             </h3>
-            <p className="text-red-700 dark:text-red-300 mb-4">
+            <p className="text-destructive mb-4 opacity-80">
               {formatSubmissionError(submissionState.error).message}
             </p>
             {formatSubmissionError(submissionState.error).action && (
@@ -514,7 +514,7 @@ export function FormWizard() {
                 variant="outline"
                 onClick={handleRetrySubmission}
                 disabled={submissionState.isSubmitting}
-                className="border-red-300 text-red-700 hover:bg-red-100 dark:border-red-700 dark:text-red-300 dark:hover:bg-red-900"
+                className="border-destructive-border text-destructive hover:bg-destructive-light focus-visible:ring-destructive/30"
               >
                 {formatSubmissionError(submissionState.error).action}
               </Button>
@@ -557,7 +557,7 @@ export function FormWizard() {
                   ))}
                 </div>
                 {testMode && (
-                  <div className="mt-2 p-2 bg-yellow-50 dark:bg-yellow-950/20 border border-yellow-200 dark:border-yellow-800 rounded text-sm">
+                  <div className="mt-2 p-2 border border-warning-border bg-warning-light rounded text-sm text-warning-foreground">
                     <strong>Active Test Mode:</strong> {testMode} - The next form submission will use this test scenario
                   </div>
                 )}

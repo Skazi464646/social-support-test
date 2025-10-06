@@ -20,7 +20,7 @@ export function AIAssistButton({
   currentValue,
   onSuggestionAccept,
   userContext = {},
-  className = "absolute top-2 right-2 px-3 py-1 text-xs bg-blue-50 text-blue-600 rounded border border-blue-200 hover:bg-blue-100 transition-colors"
+  className = "absolute top-2 right-2 px-3 py-1 text-xs rounded border transition-colors bg-primary-light text-primary-light-foreground border-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
 }: AIAssistButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [, setError] = useState<string | null>(null);
@@ -94,7 +94,7 @@ export function AIAssistButton({
       {hasExamples && (
         <button
           type="button"
-          className="absolute -bottom-6 right-0 text-xs text-blue-500 hover:text-blue-700 underline"
+          className="absolute -bottom-6 right-0 text-xs underline text-primary hover:text-primary/80"
           onClick={() => {
             const exampleText = examples[Math.floor(Math.random() * examples.length)];
             if (exampleText) {

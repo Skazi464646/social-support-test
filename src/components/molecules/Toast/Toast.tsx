@@ -9,11 +9,11 @@ const toastVariants = cva(
   {
     variants: {
       variant: {
-        default: 'border bg-background text-foreground',
-        success: 'border-green-200 bg-green-50 text-green-900 dark:border-green-800 dark:bg-green-950 dark:text-green-100',
-        error: 'border-red-200 bg-red-50 text-red-900 dark:border-red-800 dark:bg-red-950 dark:text-red-100',
-        warning: 'border-yellow-200 bg-yellow-50 text-yellow-900 dark:border-yellow-800 dark:bg-yellow-950 dark:text-yellow-100',
-        info: 'border-blue-200 bg-blue-50 text-blue-900 dark:border-blue-800 dark:bg-blue-950 dark:text-blue-100',
+        default: 'border bg-card text-card-foreground',
+        success: 'border-success-border bg-success-light text-success-light-foreground',
+        error: 'border-destructive-border bg-destructive-light text-destructive-light-foreground',
+        warning: 'border-warning-border bg-warning-light text-warning-light-foreground',
+        info: 'border-info-border bg-info-light text-info-light-foreground',
       },
     },
     defaultVariants: {
@@ -26,10 +26,10 @@ const toastIconVariants = cva('h-5 w-5 flex-shrink-0', {
   variants: {
     variant: {
       default: 'text-foreground',
-      success: 'text-green-600 dark:text-green-400',
-      error: 'text-red-600 dark:text-red-400',
-      warning: 'text-yellow-600 dark:text-yellow-400',
-      info: 'text-blue-600 dark:text-blue-400',
+      success: 'text-success',
+      error: 'text-destructive',
+      warning: 'text-warning',
+      info: 'text-info',
     },
   },
   defaultVariants: {

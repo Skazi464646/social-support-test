@@ -48,13 +48,13 @@ export const AIFormField = forwardRef<HTMLTextAreaElement, AIFormFieldProps>(
 
     return (
       <div className={className}>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-text-primary mb-1">
           {label}
-          {required && <span className="text-red-500 ml-1">*</span>}
+          {required && <span className="text-destructive ml-1">*</span>}
         </label>
         
         {helperText && (
-          <p className="text-xs text-gray-600 mb-2">{helperText}</p>
+          <p className="text-xs text-text-secondary mb-2">{helperText}</p>
         )}
         
         <AIEnhancedTextarea
