@@ -8,6 +8,7 @@ import { openAIService, getFieldExamples, getFieldConstraints } from '@/lib/ai';
 import { getFieldModalConfig } from '@/lib/ai/prompt-templates';
 import { cn } from '@/lib/utils';
 import type { AIAssistRequest, AIExampleRequest, AIRelevancyRequest } from '@/lib/api/openai-service';
+import { useNoScrollBody } from '@/hooks';
 
 interface AIAssistModalProps {
   isOpen: boolean;
@@ -340,14 +341,16 @@ export function AIAssistModal({
   const minLength = fieldConstraints?.minLength || 0;
   const maxLength = fieldConstraints?.maxLength || 1000;
   const isValidLength = characterCount >= minLength && characterCount <= maxLength;
+  useNoScrollBody(isOpen);
 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-foreground/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-bg-black/50 z-50 flex items-center justify-center p-4">
       <div 
         ref={modalRef}
-        className="bg-card text-card-foreground border border-card-border rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden focus:outline-none"
+        className="bg-white text-gray-900 border border-gray-200 rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden focus:outline-none"
+        
         tabIndex={-1}
         role="dialog"
         aria-labelledby="ai-modal-title"

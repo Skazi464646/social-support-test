@@ -8,6 +8,7 @@ export {
   getFormHookForStep,
   validateStepData
 } from './useFormValidation';
+export { useNoScrollBody } from './useNoScrollBody';
 export type {
   FormValidationOptions,
   FormValidationReturn
