@@ -1,11 +1,7 @@
-/**
- * AI Enhanced Input Component (for single-line fields)
- * Module 5 - Step 5: Integrate AI Assistance with Form Fields
- */
-
-import { forwardRef, useState } from 'react';
+import { forwardRef } from 'react';
 import { AIAssistModal } from '@/components/organisms/AIAssistModal';
 import { useAIAssist } from '@/hooks/useAIAssist';
+import { AIEnhancedInputView } from './AIEnhancedInputView';
 
 interface AIEnhancedInputProps {
   fieldName: string;
@@ -20,7 +16,7 @@ interface AIEnhancedInputProps {
   className?: string;
   userContext?: any;
   error?: string;
-  showAIAssist?: boolean; // Option to show/hide AI assist for specific fields
+  showAIAssist?: boolean;
 }
 
 export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps>(
@@ -34,100 +30,49 @@ export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps
     type = 'text',
     required = false,
     disabled = false,
-    className = '',
-    userContext = {},
+    className,
+    userContext,
     error,
     showAIAssist = true,
   }, ref) => {
-    const [showModal, setShowModal] = useState(false);
-
-    const {
-      modalProps,
-    } = useAIAssist({
+    const { modalProps, openModal, updateValue } = useAIAssist({
       fieldName,
       fieldLabel,
       initialValue: value,
       userContext,
-      fieldConstraints: {
-        minLength: 0,
-        maxLength,
-        required,
-      },
+      fieldConstraints: { minLength: 0, maxLength, required },
       onValueChange: onChange,
     });
 
-    const characterCount = value.length;
-    const showCharacterCount = maxLength > 0 && maxLength <= 200;
+    const metrics = getInputMetrics(value, maxLength);
+    const viewProps = {
+      type,
+      value,
+      onChange: updateValue,
+      placeholder,
+      maxLength,
+      disabled,
+      className,
+      error,
+      characterCount: metrics.characterCount,
+      showCharacterCount: metrics.showCharacterCount,
+      onOpenAssist: openModal,
+      showAssistButton: showAIAssist && ['text', 'email'].includes(type) && !disabled,
+    };
 
     return (
-      <div className="relative">
-        <input
-          ref={ref}
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          maxLength={maxLength}
-          disabled={disabled}
-          className={`
-            w-full px-3 py-2 rounded-md border
-            focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary
-            ${error ? 'border-destructive-border' : 'border-input'}
-            ${disabled ? 'bg-muted cursor-not-allowed text-text-tertiary' : 'bg-card'}
-            ${className}
-          `}
-        />
-
-        {/* Bottom row with AI button and character count */}
-        {(showAIAssist && ['text', 'email'].includes(type) && !disabled) || showCharacterCount ? (
-          <div className="mt-1 flex flex-col gap-2 text-xs leading-snug sm:flex-row sm:items-center sm:justify-between">
-            {/* Left side - AI Assist Button and Error */}
-            <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-3">
-              {showAIAssist && ['text', 'email'].includes(type) && !disabled && (
-                <button
-                  type="button"
-                  onClick={() => setShowModal(true)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg shadow-sm transition-all duration-200 w-fit
-                  bg-primary text-primary-foreground hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
-                  title="Get AI writing assistance"
-                >
-                  <span className="text-sm">✨</span>
-                  <span>AI Assist</span>
-                </button>
-              )}
-              {error && (
-                <span className="font-medium text-destructive" role="alert">
-                  {error}
-                </span>
-              )}
-            </div>
-
-            {/* Right side - Character Count */}
-            {showCharacterCount && (
-              <div className="text-text-secondary sm:text-right font-medium">
-                {characterCount}/{maxLength}
-              </div>
-            )}
-          </div>
-        ) : error ? (
-          <div className="mt-1">
-            <span className="font-medium text-destructive text-xs" role="alert">
-              {error}
-            </span>
-          </div>
-        ) : null}
-
-        {/* AI Assist Modal */}
-        {showModal && (
-          <AIAssistModal 
-            {...modalProps}
-            isOpen={showModal}
-            onClose={() => setShowModal(false)}
-          />
-        )}
+      <div className="space-y-1">
+        <AIEnhancedInputView ref={ref} {...viewProps} />
+        {modalProps.isOpen && <AIAssistModal {...modalProps} />}
       </div>
     );
-  }
+  },
 );
 
 AIEnhancedInput.displayName = 'AIEnhancedInput';
+
+function getInputMetrics(value: string, maxLength: number) {
+  const characterCount = value.length;
+  const showCharacterCount = maxLength > 0 && maxLength <= 200;
+  return { characterCount, showCharacterCount };
+}

@@ -1,17 +1,11 @@
-/**
- * AI Enhanced Textarea Component
- * Module 5 - Step 4: Build Inline AI Assistance Component
- */
-
-import { forwardRef, Suspense, lazy } from 'react';
+import { forwardRef, lazy, Suspense } from 'react';
 import { useAIAssist } from '@/hooks/useAIAssist';
-import { cn } from '@/lib/utils';
+import { AIEnhancedTextareaView } from './AIEnhancedTextareaView';
 
-// Lazy load AI components for better performance
-const AIAssistModal = lazy(() => 
-  import('@/components/organisms/AIAssistModal').then(module => ({ 
-    default: module.AIAssistModal 
-  }))
+const AIAssistModal = lazy(() =>
+  import('@/components/organisms/AIAssistModal').then(module => ({
+    default: module.AIAssistModal,
+  })),
 );
 
 interface AIEnhancedTextareaProps {
@@ -31,111 +25,96 @@ interface AIEnhancedTextareaProps {
 }
 
 export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedTextareaProps>(
-  ({
+  (props, ref) => {
+    const { modalProps, openModal, updateValue } = useAIAssistTransform(props);
+    const layoutProps = createLayoutProps(props, updateValue, openModal, modalProps);
+    return <TextareaLayout ref={ref} {...layoutProps} />;
+  },
+);
+
+AIEnhancedTextarea.displayName = 'AIEnhancedTextarea';
+
+interface TextareaLayoutProps {
+  viewProps: React.ComponentProps<typeof AIEnhancedTextareaView>;
+  modalProps: React.ComponentProps<typeof AIAssistModal>;
+}
+
+const TextareaLayout = forwardRef<HTMLTextAreaElement, TextareaLayoutProps>(
+  ({ viewProps, modalProps }, ref) => (
+    <div className="relative">
+      <AIEnhancedTextareaView ref={ref} {...viewProps} />
+      <Suspense fallback={null}>
+        <AIAssistModal {...modalProps} />
+      </Suspense>
+    </div>
+  ),
+);
+
+TextareaLayout.displayName = 'TextareaLayout';
+
+function useAIAssistTransform({
+  fieldName,
+  fieldLabel,
+  value,
+  onChange,
+  userContext,
+  minLength,
+  maxLength,
+  required,
+}: AIEnhancedTextareaProps) {
+  return useAIAssist({
     fieldName,
     fieldLabel,
+    initialValue: value,
+    userContext,
+    fieldConstraints: { minLength, maxLength, required },
+    onValueChange: onChange,
+  });
+}
+
+function createLayoutProps(
+  props: AIEnhancedTextareaProps,
+  updateValue: (value: string) => void,
+  openModal: () => void,
+  modalProps: React.ComponentProps<typeof AIAssistModal>,
+): TextareaLayoutProps {
+  const {
     value,
-    onChange,
     placeholder,
     rows = 4,
     maxLength = 1000,
     minLength = 50,
-    required = false,
     disabled = false,
     className = '',
-    userContext = {},
     error,
-  }, ref) => {
-    const {
-      modalProps,
-      openModal,
-    } = useAIAssist({
-      fieldName,
-      fieldLabel,
-      initialValue: value,
-      userContext,
-      fieldConstraints: {
-        minLength,
-        maxLength,
-        required,
-      },
-      onValueChange: onChange,
-    });
+  } = props;
 
-    const characterCount = value.length;
-    const isValidLength = characterCount >= minLength && characterCount <= maxLength;
-    const showCharacterCount = maxLength > 0;
+  const metrics = getTextareaMetrics(value, minLength, maxLength);
 
-    return (
-      <div className="relative">
-        <textarea
-          ref={ref}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          rows={rows}
-          maxLength={maxLength}
-          disabled={disabled}
-          className={`
-            w-full px-3 py-2 rounded-md border resize-none
-            focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary
-            ${error ? 'border-destructive-border' : 'border-input'}
-            ${disabled ? 'bg-muted cursor-not-allowed text-text-tertiary' : 'bg-card'}
-            ${className}
-          `}
-        />
+  return {
+    viewProps: {
+      value,
+      onChange: updateValue,
+      placeholder,
+      rows,
+      maxLength,
+      disabled,
+      className,
+      error,
+      characterCount: metrics.characterCount,
+      minLength,
+      isValidLength: metrics.isValidLength,
+      showCharacterCount: metrics.showCharacterCount,
+      onOpenAssist: openModal,
+    },
+    modalProps,
+  };
+}
 
-        {/* Error and Character Count Row */}
-        <div className="mt-2 flex items-start justify-between gap-2 text-xs">
-          {/* Left side - Error message */}
-          <div className="flex-1 min-w-0">
-            {error && (
-              <span className="font-medium text-destructive" role="alert">
-                {error}
-              </span>
-            )}
-          </div>
+function getTextareaMetrics(value: string, minLength: number, maxLength: number) {
+  const characterCount = value.length;
+  const isValidLength = characterCount >= minLength && characterCount <= maxLength;
+  const showCharacterCount = maxLength > 0;
 
-          {/* Right side - Character Count */}
-          {showCharacterCount && (
-            <div
-              className={cn(
-                'text-right font-medium whitespace-nowrap',
-                isValidLength ? 'text-text-secondary' : 'text-destructive'
-              )}
-            >
-              {characterCount}/{maxLength}
-              {minLength > 0 && characterCount < minLength && (
-                <span className="ml-1 text-destructive">
-                  (min: {minLength})
-                </span>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* AI Assist Button */}
-        <div className="mt-3">
-          <button
-            type="button"
-            onClick={openModal}
-            disabled={disabled}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
-            bg-primary text-primary-foreground hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
-            title="Get AI writing assistance"
-          >
-            <span>✨</span>
-            <span>AI Assist</span>
-          </button>
-        </div>
-
-        {/* AI Assist Modal - Lazy Loaded */}
-        <Suspense fallback={null}>
-          <AIAssistModal {...modalProps} />
-        </Suspense>
-      </div>
-    );
-  }
-);
-
-AIEnhancedTextarea.displayName = 'AIEnhancedTextarea';
+  return { characterCount, isValidLength, showCharacterCount };
+}

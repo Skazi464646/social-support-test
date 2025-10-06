@@ -24,7 +24,7 @@ export default defineConfig({
           'ai-components': [
             './src/components/organisms/AIAssistModal',
             './src/components/molecules/AIEnhancedTextarea',
-            './src/hooks/useAIAssist',
+            './src/hooks/useAIAssist/index.ts',
             './src/lib/api/ai-service',
             './src/lib/api/openai-service',
           ],
