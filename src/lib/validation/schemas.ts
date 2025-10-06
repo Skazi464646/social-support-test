@@ -1,4 +1,14 @@
 import { z } from 'zod';
+import {
+  STRING_LENGTH,
+  NUMERIC_LIMITS,
+  REGEX_PATTERNS,
+  FIELD_LIMITS,
+  GENDER_OPTIONS,
+  MARITAL_STATUS_OPTIONS,
+  EMPLOYMENT_STATUS_OPTIONS,
+  HOUSING_STATUS_OPTIONS
+} from '@/constants';
 
 // =============================================================================
 // STEP 1: PERSONAL INFORMATION SCHEMA
@@ -8,19 +18,19 @@ export const step1Schema = z.object({
   // Personal identification
   fullName: z
     .string()
-    .min(2, 'validation.name.too_short')
-    .max(100, 'validation.name.too_long')
+    .min(STRING_LENGTH.MIN.NAME, 'validation.name.too_short')
+    .max(STRING_LENGTH.MAX.NAME, 'validation.name.too_long')
     .regex(
-      /^[a-zA-Z\u0600-\u06FF\s'-]+$/,
+      REGEX_PATTERNS.NAME,
       'validation.name.invalid_format'
     ),
   
   nationalId: z
     .string()
-    .regex(/^[0-9]{10}$/, 'validation.nationalId.invalid_format')
+    .regex(REGEX_PATTERNS.NATIONAL_ID, 'validation.nationalId.invalid_format')
     .refine((val: string) => {
       // Basic checksum validation for national ID (simplified for demo)
-      return val.length === 10 && /^[0-9]+$/.test(val);
+      return val.length === FIELD_LIMITS.NATIONAL_ID.LENGTH && REGEX_PATTERNS.NATIONAL_ID.test(val);
     }, 'validation.nationalId.invalid_checksum'),
   
   dateOfBirth: z
@@ -33,9 +43,9 @@ export const step1Schema = z.object({
       const monthDiff = today.getMonth() - birthDate.getMonth();
       
       if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-        return age - 1 >= 18;
+        return age - 1 >= NUMERIC_LIMITS.AGE.MIN;
       }
-      return age >= 18;
+      return age >= NUMERIC_LIMITS.AGE.MIN;
     }, 'validation.dateOfBirth.too_young')
     .refine((date: string) => {
       const birthDate = new Date(date);
@@ -43,7 +53,7 @@ export const step1Schema = z.object({
       return birthDate <= today;
     }, 'validation.dateOfBirth.future_date'),
   
-  gender: z.enum(['male', 'female', 'other', 'prefer_not_to_say'], {
+  gender: z.enum([GENDER_OPTIONS.MALE, GENDER_OPTIONS.FEMALE, GENDER_OPTIONS.OTHER, GENDER_OPTIONS.PREFER_NOT_TO_SAY], {
     message: 'validation.gender.required'
   }),
   
@@ -51,35 +61,35 @@ export const step1Schema = z.object({
   email: z
     .string()
     .email('validation.email.invalid')
-    .min(5, 'validation.email.too_short')
-    .max(100, 'validation.email.too_long'),
+    .min(STRING_LENGTH.MIN.EMAIL, 'validation.email.too_short')
+    .max(STRING_LENGTH.MAX.EMAIL, 'validation.email.too_long'),
   
   phone: z
     .string()
     .regex(
-      /^[\+]?[1-9][\d]{0,15}$/,
+      REGEX_PATTERNS.PHONE,
       'Please enter a valid phone number'
     )
-    .min(8, 'Phone number must be at least 8 digits')
-    .max(15, 'Phone number must not exceed 15 digits'),
+    .min(STRING_LENGTH.MIN.PHONE, 'Phone number must be at least 8 digits')
+    .max(STRING_LENGTH.MAX.PHONE, 'Phone number must not exceed 15 digits'),
   
   // Address information
   address: z
     .string()
-    .min(10, 'Address must be at least 10 characters')
-    .max(200, 'Address must not exceed 200 characters'),
+    .min(STRING_LENGTH.MIN.ADDRESS, 'Address must be at least 10 characters')
+    .max(STRING_LENGTH.MAX.ADDRESS, 'Address must not exceed 200 characters'),
   
   city: z
     .string()
-    .min(2, 'City name must be at least 2 characters')
-    .max(50, 'City name must not exceed 50 characters')
-    .regex(/^[a-zA-Z\u0600-\u06FF\s'-]+$/, 'City name can only contain letters'),
+    .min(STRING_LENGTH.MIN.CITY, 'City name must be at least 2 characters')
+    .max(STRING_LENGTH.MAX.CITY, 'City name must not exceed 50 characters')
+    .regex(REGEX_PATTERNS.CITY_STATE, 'City name can only contain letters'),
   
   state: z
     .string()
-    .min(2, 'State/Emirate name must be at least 2 characters')
-    .max(50, 'State/Emirate name must not exceed 50 characters')
-    .regex(/^[a-zA-Z\u0600-\u06FF\s'-]+$/, 'State/Emirate name can only contain letters'),
+    .min(STRING_LENGTH.MIN.STATE, 'State/Emirate name must be at least 2 characters')
+    .max(STRING_LENGTH.MAX.STATE, 'State/Emirate name must not exceed 50 characters')
+    .regex(REGEX_PATTERNS.CITY_STATE, 'State/Emirate name can only contain letters'),
   
   country: z
     .string()
@@ -87,7 +97,7 @@ export const step1Schema = z.object({
   
   postalCode: z
     .string()
-    .regex(/^[0-9]{5}$/, 'Postal code must be exactly 5 digits')
+    .regex(REGEX_PATTERNS.POSTAL_CODE, 'Postal code must be exactly 5 digits')
     .optional()
     .or(z.literal(''))
 });
@@ -98,7 +108,7 @@ export const step1Schema = z.object({
 
 export const step2Schema = z.object({
   // Family information
-  maritalStatus: z.enum(['single', 'married', 'divorced', 'widowed', 'separated'], {
+  maritalStatus: z.enum([MARITAL_STATUS_OPTIONS.SINGLE, MARITAL_STATUS_OPTIONS.MARRIED, MARITAL_STATUS_OPTIONS.DIVORCED, MARITAL_STATUS_OPTIONS.WIDOWED, MARITAL_STATUS_OPTIONS.SEPARATED], {
     message: 'Please select your marital status'
   }),
   
@@ -114,33 +124,33 @@ export const step2Schema = z.object({
     })
     .refine((val) => typeof val === 'number', 'Please enter the number of dependents')
     .refine((val) => Number.isInteger(val), 'Number of dependents must be a whole number')
-    .refine((val) => val >= 0, 'Number of dependents cannot be negative')
-    .refine((val) => val <= 20, 'Number of dependents cannot exceed 20'),
+    .refine((val) => val >= NUMERIC_LIMITS.DEPENDENTS.MIN, 'Number of dependents cannot be negative')
+    .refine((val) => val <= NUMERIC_LIMITS.DEPENDENTS.MAX, 'Number of dependents cannot exceed 20'),
   
   // Employment information
   employmentStatus: z.enum([
-    'employed_full_time',
-    'employed_part_time', 
-    'self_employed',
-    'unemployed',
-    'retired',
-    'student',
-    'disabled'
+    EMPLOYMENT_STATUS_OPTIONS.EMPLOYED_FULL_TIME,
+    EMPLOYMENT_STATUS_OPTIONS.EMPLOYED_PART_TIME, 
+    EMPLOYMENT_STATUS_OPTIONS.SELF_EMPLOYED,
+    EMPLOYMENT_STATUS_OPTIONS.UNEMPLOYED,
+    EMPLOYMENT_STATUS_OPTIONS.RETIRED,
+    EMPLOYMENT_STATUS_OPTIONS.STUDENT,
+    EMPLOYMENT_STATUS_OPTIONS.DISABLED
   ], {
     message: 'Please select your employment status'
   }),
   
   occupation: z
     .string()
-    .min(2, 'Occupation must be at least 2 characters')
-    .max(100, 'Occupation must not exceed 100 characters')
+    .min(STRING_LENGTH.MIN.OCCUPATION, 'Occupation must be at least 2 characters')
+    .max(STRING_LENGTH.MAX.OCCUPATION, 'Occupation must not exceed 100 characters')
     .optional()
     .or(z.literal('')),
   
   employer: z
     .string()
-    .min(2, 'Employer name must be at least 2 characters')
-    .max(100, 'Employer name must not exceed 100 characters')
+    .min(STRING_LENGTH.MIN.EMPLOYER, 'Employer name must be at least 2 characters')
+    .max(STRING_LENGTH.MAX.EMPLOYER, 'Employer name must not exceed 100 characters')
     .optional()
     .or(z.literal('')),
   
@@ -156,8 +166,8 @@ export const step2Schema = z.object({
       return val;
     })
     .refine((val) => typeof val === 'number', 'Please enter your monthly income')
-    .refine((val) => val >= 0, 'Monthly income cannot be negative')
-    .refine((val) => val <= 1000000, 'Monthly income cannot exceed 1,000,000'),
+    .refine((val) => val >= NUMERIC_LIMITS.INCOME.MIN, 'Monthly income cannot be negative')
+    .refine((val) => val <= NUMERIC_LIMITS.INCOME.MAX, 'Monthly income cannot exceed 1,000,000'),
   
   monthlyExpenses: z
     .union([z.number(), z.string()])
@@ -170,8 +180,8 @@ export const step2Schema = z.object({
       return val;
     })
     .refine((val) => typeof val === 'number', 'Please enter your monthly expenses')
-    .refine((val) => val >= 0, 'Monthly expenses cannot be negative')
-    .refine((val) => val <= 1000000, 'Monthly expenses cannot exceed 1,000,000'),
+    .refine((val) => val >= NUMERIC_LIMITS.EXPENSES.MIN, 'Monthly expenses cannot be negative')
+    .refine((val) => val <= NUMERIC_LIMITS.EXPENSES.MAX, 'Monthly expenses cannot exceed 1,000,000'),
   
   totalSavings: z
     .union([z.number(), z.string()])
@@ -184,8 +194,8 @@ export const step2Schema = z.object({
       return val;
     })
     .refine((val) => typeof val === 'number', 'Please enter a valid savings amount')
-    .refine((val) => val >= 0, 'Total savings cannot be negative')
-    .refine((val) => val <= 10000000, 'Total savings cannot exceed 10,000,000')
+    .refine((val) => val >= NUMERIC_LIMITS.SAVINGS.MIN, 'Total savings cannot be negative')
+    .refine((val) => val <= NUMERIC_LIMITS.SAVINGS.MAX, 'Total savings cannot exceed 10,000,000')
     .optional(),
   
   totalDebt: z
@@ -199,12 +209,12 @@ export const step2Schema = z.object({
       return val;
     })
     .refine((val) => typeof val === 'number', 'Please enter a valid debt amount')
-    .refine((val) => val >= 0, 'Total debt cannot be negative')
-    .refine((val) => val <= 10000000, 'Total debt cannot exceed 10,000,000')
+    .refine((val) => val >= NUMERIC_LIMITS.DEBT.MIN, 'Total debt cannot be negative')
+    .refine((val) => val <= NUMERIC_LIMITS.DEBT.MAX, 'Total debt cannot exceed 10,000,000')
     .optional(),
   
   // Housing information
-  housingStatus: z.enum(['own', 'rent', 'living_with_family', 'homeless', 'other'], {
+  housingStatus: z.enum([HOUSING_STATUS_OPTIONS.OWN, HOUSING_STATUS_OPTIONS.RENT, HOUSING_STATUS_OPTIONS.LIVING_WITH_FAMILY, HOUSING_STATUS_OPTIONS.HOMELESS, HOUSING_STATUS_OPTIONS.OTHER], {
     message: 'Please select your housing status'
   }),
   
@@ -219,8 +229,8 @@ export const step2Schema = z.object({
       return val;
     })
     .refine((val) => typeof val === 'number', 'Please enter a valid rent amount')
-    .refine((val) => val >= 0, 'Monthly rent cannot be negative')
-    .refine((val) => val <= 100000, 'Monthly rent cannot exceed 100,000')
+    .refine((val) => val >= NUMERIC_LIMITS.RENT.MIN, 'Monthly rent cannot be negative')
+    .refine((val) => val <= NUMERIC_LIMITS.RENT.MAX, 'Monthly rent cannot exceed 100,000')
     .optional(),
   
   // Benefits information
@@ -257,35 +267,35 @@ export const step3Schema = z.object({
   // Situation descriptions (AI-assisted)
   financialSituation: z
     .string()
-    .min(50, 'Please provide at least 50 characters describing your financial situation')
-    .max(2000, 'Financial situation description cannot exceed 2000 characters')
+    .min(STRING_LENGTH.MIN.DESCRIPTION_SHORT, 'Please provide at least 50 characters describing your financial situation')
+    .max(STRING_LENGTH.MAX.DESCRIPTION_LONG, 'Financial situation description cannot exceed 2000 characters')
     .refine(
-      (text: string) => text.trim().split(/\s+/).length >= 10,
+      (text: string) => text.trim().split(/\s+/).length >= STRING_LENGTH.MIN.WORD_COUNT,
       'Please provide at least 10 words describing your financial situation'
     ),
   
   employmentCircumstances: z
     .string()
-    .min(50, 'Please provide at least 50 characters describing your employment circumstances')
-    .max(2000, 'Employment circumstances description cannot exceed 2000 characters')
+    .min(STRING_LENGTH.MIN.DESCRIPTION_SHORT, 'Please provide at least 50 characters describing your employment circumstances')
+    .max(STRING_LENGTH.MAX.DESCRIPTION_LONG, 'Employment circumstances description cannot exceed 2000 characters')
     .refine(
-      (text: string) => text.trim().split(/\s+/).length >= 10,
+      (text: string) => text.trim().split(/\s+/).length >= STRING_LENGTH.MIN.WORD_COUNT,
       'Please provide at least 10 words describing your employment circumstances'
     ),
   
   reasonForApplying: z
     .string()
-    .min(50, 'Please provide at least 50 characters explaining your reason for applying')
-    .max(2000, 'Reason for applying cannot exceed 2000 characters')
+    .min(STRING_LENGTH.MIN.DESCRIPTION_SHORT, 'Please provide at least 50 characters explaining your reason for applying')
+    .max(STRING_LENGTH.MAX.DESCRIPTION_LONG, 'Reason for applying cannot exceed 2000 characters')
     .refine(
-      (text: string) => text.trim().split(/\s+/).length >= 10,
+      (text: string) => text.trim().split(/\s+/).length >= STRING_LENGTH.MIN.WORD_COUNT,
       'Please provide at least 10 words explaining your reason for applying'
     ),
   
   // Additional information
   additionalComments: z
     .string()
-    .max(1000, 'Additional comments cannot exceed 1000 characters')
+    .max(STRING_LENGTH.MAX.DESCRIPTION_MEDIUM, 'Additional comments cannot exceed 1000 characters')
     .optional()
     .or(z.literal('')),
   
@@ -379,16 +389,16 @@ export const getStepDefaults = (step: number): Partial<FormStepData> => {
       return {
         step2: {
           maritalStatus: undefined,
-          numberOfDependents: 0,
+          numberOfDependents: NUMERIC_LIMITS.DEPENDENTS.MIN,
           employmentStatus: undefined,
           occupation: '',
           employer: '',
-          monthlyIncome: 0,
-          monthlyExpenses: 0,
-          totalSavings: 0,
-          totalDebt: 0,
+          monthlyIncome: NUMERIC_LIMITS.INCOME.MIN,
+          monthlyExpenses: NUMERIC_LIMITS.EXPENSES.MIN,
+          totalSavings: NUMERIC_LIMITS.SAVINGS.MIN,
+          totalDebt: NUMERIC_LIMITS.DEBT.MIN,
           housingStatus: undefined,
-          monthlyRent: 0,
+          monthlyRent: NUMERIC_LIMITS.RENT.MIN,
           receivingBenefits: false,
           benefitTypes: [],
           previouslyApplied: false,

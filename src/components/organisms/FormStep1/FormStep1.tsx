@@ -3,6 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { ValidatedFormField } from '@/components/molecules/ValidatedFormField';
 import { Card } from '@/components/molecules/Card';
 import type { Step1FormData } from '@/lib/validation/schemas';
+import {
+  FIELD_LIMITS,
+  COUNTRIES,
+  GENDER_OPTIONS,
+  FIELD_TYPES
+} from '@/constants';
 
 // =============================================================================
 // COMPONENT
@@ -64,7 +70,7 @@ export function FormStep1() {
               label={t('nationalId', 'National ID')}
               placeholder={t('nationalId_placeholder', 'Enter your 10-digit national ID')}
               // helperText={t('nationalId_help', 'Your official government-issued ID number')}
-              maxLength={10}
+              maxLength={FIELD_LIMITS.NATIONAL_ID.LENGTH}
               required
             />
 
@@ -74,7 +80,7 @@ export function FormStep1() {
               control={control}
               label={t('dateOfBirth', 'Date of Birth')}
               // helperText={t('dateOfBirth_help', 'You must be at least 18 years old')}
-              type="date"
+              type={FIELD_TYPES.DATE}
               required
             />
 
@@ -84,14 +90,14 @@ export function FormStep1() {
               control={control}
               label={t('gender', 'Gender')}
               // helperText={t('gender_help', 'Select your gender')}
-              type="select"
+              type={FIELD_TYPES.SELECT}
               required
               options={[
                 { value: '', label: t('gender_select', 'Select gender') },
-                { value: 'male', label: t('gender_options.male', 'Male') },
-                { value: 'female', label: t('gender_options.female', 'Female') },
-                { value: 'other', label: t('gender_options.other', 'Other') },
-                { value: 'prefer_not_to_say', label: t('gender_options.prefer_not_to_say', 'Prefer not to say') },
+                { value: GENDER_OPTIONS.MALE, label: t('gender_options.male', 'Male') },
+                { value: GENDER_OPTIONS.FEMALE, label: t('gender_options.female', 'Female') },
+                { value: GENDER_OPTIONS.OTHER, label: t('gender_options.other', 'Other') },
+                { value: GENDER_OPTIONS.PREFER_NOT_TO_SAY, label: t('gender_options.prefer_not_to_say', 'Prefer not to say') },
               ]}
             />
           </div>
@@ -118,7 +124,7 @@ export function FormStep1() {
               label={t('email', 'Email Address')}
               placeholder={t('email_placeholder', 'your.email@example.com')}
               // helperText={t('email_help', 'We will send important updates to this email')}
-              type="email"
+              type={FIELD_TYPES.EMAIL}
               required
               className="md:col-span-2"
             />
@@ -130,7 +136,7 @@ export function FormStep1() {
               label={t('phone', 'Phone Number')}
               placeholder={t('phone_placeholder', '+971 50 123 4567')}
               // helperText={t('phone_help', 'Include country code for international numbers')}
-              type="tel"
+              type={FIELD_TYPES.TEL}
               required
             />
           </div>
@@ -185,25 +191,25 @@ export function FormStep1() {
               control={control}
               label={t('country', 'Country')}
               // helperText={t('country_help', 'Select your country of residence')}
-              type="select"
+              type={FIELD_TYPES.SELECT}
               required
               options={[
                 { value: '', label: t('country_select', 'Select country') },
-                { value: 'AE', label: t('common:countries.ae', 'United Arab Emirates') },
-                { value: 'SA', label: t('common:countries.sa', 'Saudi Arabia') },
-                { value: 'QA', label: t('common:countries.qa', 'Qatar') },
-                { value: 'KW', label: t('common:countries.kw', 'Kuwait') },
-                { value: 'BH', label: t('common:countries.bh', 'Bahrain') },
-                { value: 'OM', label: t('common:countries.om', 'Oman') },
-                { value: 'JO', label: t('common:countries.jo', 'Jordan') },
-                { value: 'LB', label: t('common:countries.lb', 'Lebanon') },
-                { value: 'EG', label: t('common:countries.eg', 'Egypt') },
-                { value: 'OTHER', label: t('common:countries.other', 'Other') },
+                { value: COUNTRIES.AE, label: t('common:countries.ae', 'United Arab Emirates') },
+                { value: COUNTRIES.SA, label: t('common:countries.sa', 'Saudi Arabia') },
+                { value: COUNTRIES.QA, label: t('common:countries.qa', 'Qatar') },
+                { value: COUNTRIES.KW, label: t('common:countries.kw', 'Kuwait') },
+                { value: COUNTRIES.BH, label: t('common:countries.bh', 'Bahrain') },
+                { value: COUNTRIES.OM, label: t('common:countries.om', 'Oman') },
+                { value: COUNTRIES.JO, label: t('common:countries.jo', 'Jordan') },
+                { value: COUNTRIES.LB, label: t('common:countries.lb', 'Lebanon') },
+                { value: COUNTRIES.EG, label: t('common:countries.eg', 'Egypt') },
+                { value: COUNTRIES.OTHER, label: t('common:countries.other', 'Other') },
               ]}
             />
 
             {/* Postal Code - Show conditionally based on country */}
-            {selectedCountry && selectedCountry !== 'AE' && (
+            {selectedCountry && selectedCountry !== COUNTRIES.AE && (
               <ValidatedFormField
                 name="postalCode"
                 control={control}

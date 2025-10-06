@@ -5,6 +5,10 @@ import { useController } from 'react-hook-form';
 import { useFormBlur } from '@/context/FormBlurContext';
 import { useDirection } from '@/hooks/useLanguage';
 import { useTranslation } from 'react-i18next';
+import {
+  FIELD_TYPES,
+  FIELD_DIRECTIONS,
+} from '@/constants';
 
 // =============================================================================
 // TYPES
@@ -152,7 +156,7 @@ export function ValidatedFormField<
     // These field types should always be LTR regardless of page direction
     const ltrFields = ['email', 'tel', 'number', 'date'];
     if (ltrFields.includes(type)) {
-      return 'ltr';
+      return FIELD_DIRECTIONS.LTR;
     }
     // For other fields, use auto to let the browser decide based on content
     return 'auto';
@@ -166,7 +170,7 @@ export function ValidatedFormField<
       <div className="flex items-center">
         <input
           ref={ref}
-          type="checkbox"
+          type={FIELD_TYPES.CHECKBOX}
           checked={!!value}
           onChange={(e) => wrappedOnChange(e.target.checked)}
           onBlur={wrappedOnBlur}
@@ -222,7 +226,7 @@ export function ValidatedFormField<
               >
                 <input
                   id={checkboxId}
-                  type="checkbox"
+                  type={FIELD_TYPES.CHECKBOX}
                   checked={isChecked}
                   onChange={(e) => handleCheckboxChange(option.value, e.target.checked)}
                   onBlur={wrappedOnBlur}

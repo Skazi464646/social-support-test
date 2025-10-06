@@ -3,6 +3,15 @@ import { useTranslation } from 'react-i18next';
 import { ValidatedFormField } from '@/components/molecules/ValidatedFormField';
 import { Card } from '@/components/molecules/Card';
 import type { Step2FormData } from '@/lib/validation/schemas';
+import {
+  MARITAL_STATUS_OPTIONS,
+  EMPLOYMENT_STATUS_OPTIONS,
+  HOUSING_STATUS_OPTIONS,
+  BENEFIT_TYPES_OPTIONS,
+  FIELD_TYPES,
+  NUMERIC_LIMITS,
+  BOOLEAN_OPTIONS
+} from '@/constants';
 
 // =============================================================================
 // COMPONENT
@@ -51,15 +60,15 @@ export function FormStep2() {
               control={control}
               label={t('maritalStatus', 'Marital Status')}
               // helperText={t('maritalStatus_help', 'Your current marital status')}
-              type="select"
+              type={FIELD_TYPES.SELECT}
               required
               options={[
                 { value: '', label: t('maritalStatus_select', 'Select marital status') },
-                { value: 'single', label: t('maritalStatus_options.single', 'Single') },
-                { value: 'married', label: t('maritalStatus_options.married', 'Married') },
-                { value: 'divorced', label: t('maritalStatus_options.divorced', 'Divorced') },
-                { value: 'widowed', label: t('maritalStatus_options.widowed', 'Widowed') },
-                { value: 'separated', label: t('maritalStatus_options.separated', 'Separated') },
+                { value: MARITAL_STATUS_OPTIONS.SINGLE, label: t('maritalStatus_options.single', 'Single') },
+                { value: MARITAL_STATUS_OPTIONS.MARRIED, label: t('maritalStatus_options.married', 'Married') },
+                { value: MARITAL_STATUS_OPTIONS.DIVORCED, label: t('maritalStatus_options.divorced', 'Divorced') },
+                { value: MARITAL_STATUS_OPTIONS.WIDOWED, label: t('maritalStatus_options.widowed', 'Widowed') },
+                { value: MARITAL_STATUS_OPTIONS.SEPARATED, label: t('maritalStatus_options.separated', 'Separated') },
               ]}
             />
 
@@ -69,9 +78,9 @@ export function FormStep2() {
               control={control}
               label={t('numberOfDependents', 'Number of Dependents')}
               // helperText={t('numberOfDependents_help', 'Children or family members you financially support')}
-              type="number"
-              min={0}
-              max={20}
+              type={FIELD_TYPES.NUMBER}
+              min={NUMERIC_LIMITS.DEPENDENTS.MIN}
+              max={NUMERIC_LIMITS.DEPENDENTS.MAX}
               placeholder="0"
               required
             />
@@ -98,23 +107,23 @@ export function FormStep2() {
               control={control}
               label={t('employmentStatus', 'Employment Status')}
               // helperText={t('employmentStatus_help', 'Your current work situation')}
-              type="select"
+              type={FIELD_TYPES.SELECT}
               required
               className="md:col-span-2"
               options={[
                 { value: '', label: t('employmentStatus_select', 'Select employment status') },
-                { value: 'employed_full_time', label: t('employmentStatus_options.employed', 'Employed (Full-time)') },
-                { value: 'employed_part_time', label: t('employmentStatus_options.part_time', 'Employed (Part-time)') },
-                { value: 'self_employed', label: t('employmentStatus_options.self_employed', 'Self-employed') },
-                { value: 'unemployed', label: t('employmentStatus_options.unemployed', 'Unemployed') },
-                { value: 'retired', label: t('employmentStatus_options.retired', 'Retired') },
-                { value: 'student', label: t('employmentStatus_options.student', 'Student') },
-                { value: 'disabled', label: t('employmentStatus_options.disabled', 'Unable to work (Disability)') },
+                { value: EMPLOYMENT_STATUS_OPTIONS.EMPLOYED_FULL_TIME, label: t('employmentStatus_options.employed', 'Employed (Full-time)') },
+                { value: EMPLOYMENT_STATUS_OPTIONS.EMPLOYED_PART_TIME, label: t('employmentStatus_options.part_time', 'Employed (Part-time)') },
+                { value: EMPLOYMENT_STATUS_OPTIONS.SELF_EMPLOYED, label: t('employmentStatus_options.self_employed', 'Self-employed') },
+                { value: EMPLOYMENT_STATUS_OPTIONS.UNEMPLOYED, label: t('employmentStatus_options.unemployed', 'Unemployed') },
+                { value: EMPLOYMENT_STATUS_OPTIONS.RETIRED, label: t('employmentStatus_options.retired', 'Retired') },
+                { value: EMPLOYMENT_STATUS_OPTIONS.STUDENT, label: t('employmentStatus_options.student', 'Student') },
+                { value: EMPLOYMENT_STATUS_OPTIONS.DISABLED, label: t('employmentStatus_options.disabled', 'Unable to work (Disability)') },
               ]}
             />
 
             {/* Occupation - Show if employed or self-employed */}
-            {(employmentStatus === 'employed_full_time' || employmentStatus === 'employed_part_time' || employmentStatus === 'self_employed') && (
+            {(employmentStatus === EMPLOYMENT_STATUS_OPTIONS.EMPLOYED_FULL_TIME || employmentStatus === EMPLOYMENT_STATUS_OPTIONS.EMPLOYED_PART_TIME || employmentStatus === EMPLOYMENT_STATUS_OPTIONS.SELF_EMPLOYED) && (
               <ValidatedFormField
                 name="occupation"
                 control={control}
@@ -126,7 +135,7 @@ export function FormStep2() {
             )}
 
             {/* Employer - Show if employed */}
-            {(employmentStatus === 'employed_full_time' || employmentStatus === 'employed_part_time') && (
+            {(employmentStatus === EMPLOYMENT_STATUS_OPTIONS.EMPLOYED_FULL_TIME || employmentStatus === EMPLOYMENT_STATUS_OPTIONS.EMPLOYED_PART_TIME) && (
               <ValidatedFormField
                 name="employer"
                 control={control}
@@ -143,7 +152,7 @@ export function FormStep2() {
               control={control}
               label={t('monthlyIncome', 'Monthly Income (AED)')}
               // helperText={t('monthlyIncome_help', 'Your total monthly income from all sources')}
-              type="number"
+              type={FIELD_TYPES.NUMBER}
               required
             />
 
@@ -153,7 +162,7 @@ export function FormStep2() {
               control={control}
               label={t('monthlyExpenses', 'Monthly Expenses (AED)')}
               // helperText={t('monthlyExpenses_help', 'Your total monthly living expenses')}
-              type="number"
+              type={FIELD_TYPES.NUMBER}
               required
             />
 
@@ -163,7 +172,7 @@ export function FormStep2() {
               control={control}
               label={t('totalSavings', 'Total Savings (AED)')}
               // helperText={t('totalSavings_help', 'Your current savings and bank deposits')}
-              type="number"
+              type={FIELD_TYPES.NUMBER}
               required
             />
 
@@ -173,7 +182,7 @@ export function FormStep2() {
               control={control}
               label={t('totalDebt', 'Total Debt (AED)')}
               // helperText={t('totalDebt_help', 'Your current total debt including loans and credit cards')}
-              type="number"
+              type={FIELD_TYPES.NUMBER}
               required
             />
           </div>
@@ -199,27 +208,27 @@ export function FormStep2() {
               control={control}
               label={t('housingStatus', 'Housing Status')}
               // helperText={t('housingStatus_help', 'Your current housing arrangement')}
-              type="select"
+              type={FIELD_TYPES.SELECT}
               required
               className="md:col-span-2"
               options={[
                 { value: '', label: t('housingStatus_select', 'Select housing status') },
-                { value: 'own', label: t('housingStatus_options.own', 'Own my home') },
-                { value: 'rent', label: t('housingStatus_options.rent', 'Rent') },
-                { value: 'living_with_family', label: t('housingStatus_options.living_with_family', 'Living with family/friends') },
-                { value: 'homeless', label: t('housingStatus_options.homeless', 'Homeless/Temporary shelter') },
-                { value: 'other', label: t('housingStatus_options.other', 'Other') },
+                { value: HOUSING_STATUS_OPTIONS.OWN, label: t('housingStatus_options.own', 'Own my home') },
+                { value: HOUSING_STATUS_OPTIONS.RENT, label: t('housingStatus_options.rent', 'Rent') },
+                { value: HOUSING_STATUS_OPTIONS.LIVING_WITH_FAMILY, label: t('housingStatus_options.living_with_family', 'Living with family/friends') },
+                { value: HOUSING_STATUS_OPTIONS.HOMELESS, label: t('housingStatus_options.homeless', 'Homeless/Temporary shelter') },
+                { value: HOUSING_STATUS_OPTIONS.OTHER, label: t('housingStatus_options.other', 'Other') },
               ]}
             />
 
             {/* Monthly Rent - Show if renting */}
-            {housingStatus === 'rent' && (
+            {housingStatus === HOUSING_STATUS_OPTIONS.RENT && (
               <ValidatedFormField
                 name="monthlyRent"
                 control={control}
                 label={t('monthlyRent', 'Monthly Rent (AED)')}
                 // helperText={t('monthlyRent_help', 'Your monthly rent payment')}
-                type="number"
+                type={FIELD_TYPES.NUMBER}
                 required
               />
             )}
@@ -246,11 +255,11 @@ export function FormStep2() {
               control={control}
               label={t('receivingBenefits', 'Currently Receiving Government Benefits')}
               // helperText={t('receivingBenefits_help', 'Are you currently receiving any form of government assistance?')}
-              type="select"
+              type={FIELD_TYPES.SELECT}
               options={[
                 { value: '', label: t('receivingBenefits_select', 'Select an option') },
-                { value: 'true', label: t('common.yes', 'Yes') },
-                { value: 'false', label: t('common.no', 'No') },
+                { value: BOOLEAN_OPTIONS.TRUE, label: t('common.yes', 'Yes') },
+                { value: BOOLEAN_OPTIONS.FALSE, label: t('common.no', 'No') },
               ]}
             />
 
@@ -261,16 +270,16 @@ export function FormStep2() {
                 control={control}
                 label={t('benefitTypes', 'Types of Benefits Received')}
                 // helperText={t('benefitTypes_help', 'Select all types of government benefits you currently receive')}
-                type="checkbox-group"
+                type={FIELD_TYPES.CHECKBOX_GROUP}
                 options={[
-                  { value: 'unemployment', label: t('benefitTypes_options.unemployment', 'Unemployment Benefits') },
-                  { value: 'disability', label: t('benefitTypes_options.disability', 'Disability Benefits') },
-                  { value: 'housing', label: t('benefitTypes_options.housing', 'Housing Assistance') },
-                  { value: 'food', label: t('benefitTypes_options.food', 'Food Assistance') },
-                  { value: 'medical', label: t('benefitTypes_options.medical', 'Medical Assistance') },
-                  { value: 'elderly', label: t('benefitTypes_options.elderly', 'Elderly Support') },
-                  { value: 'family', label: t('benefitTypes_options.family', 'Family Support') },
-                  { value: 'other', label: t('benefitTypes_options.other', 'Other') },
+                  { value: BENEFIT_TYPES_OPTIONS.UNEMPLOYMENT, label: t('benefitTypes_options.unemployment', 'Unemployment Benefits') },
+                  { value: BENEFIT_TYPES_OPTIONS.DISABILITY, label: t('benefitTypes_options.disability', 'Disability Benefits') },
+                  { value: BENEFIT_TYPES_OPTIONS.HOUSING, label: t('benefitTypes_options.housing', 'Housing Assistance') },
+                  { value: BENEFIT_TYPES_OPTIONS.FOOD, label: t('benefitTypes_options.food', 'Food Assistance') },
+                  { value: BENEFIT_TYPES_OPTIONS.MEDICAL, label: t('benefitTypes_options.medical', 'Medical Assistance') },
+                  { value: BENEFIT_TYPES_OPTIONS.ELDERLY, label: t('benefitTypes_options.elderly', 'Elderly Support') },
+                  { value: BENEFIT_TYPES_OPTIONS.FAMILY, label: t('benefitTypes_options.family', 'Family Support') },
+                  { value: BENEFIT_TYPES_OPTIONS.OTHER, label: t('benefitTypes_options.other', 'Other') },
                 ]}
               />
             )}
@@ -281,11 +290,11 @@ export function FormStep2() {
               control={control}
               label={t('previouslyApplied', 'Previously Applied for Social Support')}
               // helperText={t('previouslyApplied_help', 'Have you applied for social support from this program before?')}
-              type="select"
+              type={FIELD_TYPES.SELECT}
               options={[
                 { value: '', label: t('previouslyApplied_select', 'Select an option') },
-                { value: 'true', label: t('common.yes', 'Yes') },
-                { value: 'false', label: t('common.no', 'No') },
+                { value: BOOLEAN_OPTIONS.TRUE, label: t('common.yes', 'Yes') },
+                { value: BOOLEAN_OPTIONS.FALSE, label: t('common.no', 'No') },
               ]}
             />
           </div>
