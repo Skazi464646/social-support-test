@@ -10,6 +10,7 @@ import {
   detectFieldContext,
   type FieldIntelligence 
 } from './field-intelligence';
+import { analyzeContentRelevance, type ContentAnalysis } from './content-analysis';
 
 export interface PromptContext {
   userContext: {
@@ -28,6 +29,7 @@ export interface PromptContext {
 
 export interface EnhancedPromptContext extends PromptContext {
   fieldIntelligence?: FieldIntelligence;
+  contentAnalysis?: ContentAnalysis;
   intelligentContext?: AIFormContext;
 }
 
@@ -325,21 +327,37 @@ export function buildSmartUserPrompt(
   context: PromptContext,
   intelligentContext?: AIFormContext
 ): string {
+  // Get field label for content analysis
+  const fieldLabel = getFieldLabel(fieldName);
+  
+  // Analyze content relevance and determine strategy
+  const contentAnalysis = analyzeContentRelevance(fieldName, context.currentValue, fieldLabel);
+  
+  // Handle redirect strategy (irrelevant/vague content)
+  if (contentAnalysis.promptStrategy === 'redirect') {
+    return buildRedirectPrompt(fieldName, fieldLabel, contentAnalysis.redirectReason!);
+  }
+
   // Analyze field intelligence if intelligent context is provided
   const fieldIntelligence = intelligentContext 
     ? analyzeFieldIntelligence(fieldName, context.currentValue, intelligentContext)
     : null;
 
-  // Build enhanced context
+  // Build enhanced context with content analysis
   const enhancedContext: EnhancedPromptContext = {
     ...context,
     fieldIntelligence: fieldIntelligence || undefined,
+    contentAnalysis,
     intelligentContext,
   };
 
-  // Use intelligent template if available, otherwise fall back to standard template
+  // Use intelligent template based on strategy
   if (fieldIntelligence && intelligentContext) {
-    return buildIntelligentPrompt(fieldName, enhancedContext);
+    if (contentAnalysis.promptStrategy === 'enhance') {
+      return buildEnhancementPrompt(fieldName, enhancedContext);
+    } else if (contentAnalysis.promptStrategy === 'generate') {
+      return buildGenerationPrompt(fieldName, enhancedContext);
+    }
   }
 
   // Fallback to standard template
@@ -728,4 +746,474 @@ function buildDefaultPrompt(fieldName: string, context: PromptContext): string {
   prompt += `\n\nPlease provide an improved version that is clear, professional, and appropriate for a social support application.`;
   
   return prompt;
+}
+
+/**
+ * Field-specific modal configuration for titles and descriptions
+ */
+interface FieldModalConfig {
+  title: string;
+  description: string;
+  placeholder: string;
+  guidance: string[];
+}
+
+const FIELD_MODAL_CONFIG: Record<string, FieldModalConfig> = {
+  financialSituation: {
+    title: "💰 Describe Your Financial Situation",
+    description: "Help us understand your current financial circumstances and challenges you're facing.",
+    placeholder: "Describe your income, expenses, debts, and any financial difficulties you're experiencing...",
+    guidance: [
+      "Include details about your income sources and amounts",
+      "Mention any significant expenses or debts",
+      "Explain how your situation has changed recently",
+      "Describe specific financial challenges you're facing"
+    ]
+  },
+  employmentCircumstances: {
+    title: "💼 Describe Your Employment Circumstances", 
+    description: "Share details about your work situation, job search, or employment challenges.",
+    placeholder: "Describe your current employment status, work history, and any barriers to employment...",
+    guidance: [
+      "Explain your current employment status and work history",
+      "Mention any job search efforts or applications",
+      "Describe skills, experience, or qualifications you have",
+      "Include any barriers to finding or maintaining employment"
+    ]
+  },
+  reasonForApplying: {
+    title: "📋 Explain Your Reason for Applying",
+    description: "Tell us why you need social support and how it will help your situation.",
+    placeholder: "Explain why you're applying for assistance and how it will help your specific situation...",
+    guidance: [
+      "Be specific about what type of help you need",
+      "Explain the urgency or timeline of your need",
+      "Describe how this assistance will improve your situation",
+      "Mention any steps you're taking to address your challenges"
+    ]
+  },
+  currentFinancialNeed: {
+    title: "💸 Describe Your Current Financial Need",
+    description: "Specify the immediate financial assistance you require.",
+    placeholder: "Detail your urgent financial needs and specific amounts if known...",
+    guidance: [
+      "Specify exact amounts needed if possible",
+      "Explain the urgency of these financial needs",
+      "Describe what expenses this will cover",
+      "Mention consequences if assistance isn't received"
+    ]
+  },
+  monthlyExpenses: {
+    title: "📊 Detail Your Monthly Expenses",
+    description: "Break down your regular monthly costs and financial obligations.",
+    placeholder: "List your monthly expenses including rent, utilities, food, transportation...",
+    guidance: [
+      "Include all major monthly expenses (rent, utilities, food)",
+      "Mention any debt payments or loan obligations",
+      "Note expenses that have increased recently",
+      "Specify which expenses are most challenging to meet"
+    ]
+  },
+  emergencyDescription: {
+    title: "🚨 Describe Your Emergency Situation",
+    description: "Explain the urgent circumstances that require immediate assistance.",
+    placeholder: "Describe the emergency situation and why immediate help is needed...",
+    guidance: [
+      "Clearly explain the nature of the emergency",
+      "Describe the timeline and urgency",
+      "Mention immediate consequences if help isn't provided", 
+      "Include any steps you've already taken to address it"
+    ]
+  }
+};
+
+/**
+ * Get field-specific modal configuration
+ */
+export function getFieldModalConfig(fieldName: string): FieldModalConfig {
+  return FIELD_MODAL_CONFIG[fieldName] || {
+    title: `✨ AI Writing Assistant`,
+    description: `Get help writing your ${getFieldLabel(fieldName)} with AI assistance.`,
+    placeholder: `Describe your ${getFieldLabel(fieldName)} in detail...`,
+    guidance: [
+      "Be specific and detailed in your description",
+      "Include relevant background information",
+      "Explain your current situation clearly",
+      "Mention any important context or circumstances"
+    ]
+  };
+}
+
+/**
+ * Get field label for content analysis
+ */
+function getFieldLabel(fieldName: string): string {
+  const labels: Record<string, string> = {
+    financialSituation: 'financial situation',
+    employmentCircumstances: 'employment circumstances', 
+    reasonForApplying: 'reason for applying',
+    currentFinancialNeed: 'current financial need',
+    monthlyExpenses: 'monthly expenses',
+    emergencyDescription: 'emergency description'
+  };
+  
+  return labels[fieldName] || fieldName.replace(/([A-Z])/g, ' $1').toLowerCase().trim();
+}
+
+/**
+ * Build redirect prompt for irrelevant content
+ */
+function buildRedirectPrompt(fieldName: string, fieldLabel: string, reason: string): string {
+  return `I understand you're looking for help, but ${reason}
+
+Instead, please describe your specific ${fieldLabel}. For example, you could share:
+- What challenges or difficulties you're currently facing
+- How your circumstances have changed recently  
+- What specific support you need and why
+- Any relevant background information about your situation
+
+This will help me provide much better, more relevant assistance for your ${fieldLabel}.`;
+}
+
+/**
+ * Build enhancement prompt for relevant content
+ */
+function buildEnhancementPrompt(fieldName: string, context: EnhancedPromptContext): string {
+  const { currentValue, fieldIntelligence, intelligentContext } = context;
+  const fieldLabel = getFieldLabel(fieldName);
+  
+  let prompt = `I'll help enhance your ${fieldLabel} description. Here's what you've written:
+
+"${currentValue}"
+
+I'll improve this by:`;
+
+  // Add specific enhancement strategies based on field intelligence
+  if (fieldIntelligence && fieldIntelligence.contentAnalysis) {
+    if (fieldIntelligence.contentAnalysis.situationType !== 'general_support') {
+      prompt += `\n- Incorporating your ${fieldIntelligence.contentAnalysis.situationType.replace('_', ' ')} situation more effectively`;
+    }
+    
+    if (fieldIntelligence.contentAnalysis.urgencyLevel === 'critical' || fieldIntelligence.contentAnalysis.urgencyLevel === 'high') {
+      prompt += `\n- Emphasizing the urgent nature of your circumstances`;
+    }
+    
+    if (Object.keys(fieldIntelligence.crossFieldRelationships).length > 0) {
+      prompt += `\n- Connecting it to your other form details for a complete picture`;
+    }
+  }
+
+  // Add context from other form steps  
+  if (intelligentContext && (intelligentContext.step1 || intelligentContext.step2)) {
+    prompt += `\n- Using your background information to make it more specific and compelling`;
+    
+    // Add relevant context hints
+    const contextHints = buildContextualHints(intelligentContext, fieldIntelligence);
+    if (contextHints) {
+      prompt += `\n\nRelevant context from your application:\n${contextHints}`;
+    }
+  }
+
+  prompt += `\n\nPlease provide an enhanced version that is:\n- More detailed and specific\n- Professional yet personal\n- Clear about your needs and circumstances\n- Appropriate for a social support application`;
+
+  return prompt;
+}
+
+/**
+ * Build generation prompt for empty content
+ */
+function buildGenerationPrompt(fieldName: string, context: EnhancedPromptContext): string {
+  const { fieldIntelligence, intelligentContext } = context;
+  const fieldLabel = getFieldLabel(fieldName);
+  
+  let prompt = `I'll help you write your ${fieldLabel} based on the information you've provided in your application.`;
+
+  // Add context from other form steps
+  if (intelligentContext && (intelligentContext.step1 || intelligentContext.step2)) {
+    const contextHints = buildContextualHints(intelligentContext, fieldIntelligence);
+    if (contextHints) {
+      prompt += `\n\nBased on your application details:\n${contextHints}`;
+    }
+  }
+
+  // Add field-specific guidance
+  if (fieldIntelligence && fieldIntelligence.contentAnalysis) {
+    if (fieldIntelligence.contentAnalysis.situationType !== 'general_support') {
+      prompt += `\n\nI'll focus on your ${fieldIntelligence.contentAnalysis.situationType.replace('_', ' ')} situation`;
+    }
+    
+    if (fieldIntelligence.contentAnalysis.urgencyLevel === 'critical' || fieldIntelligence.contentAnalysis.urgencyLevel === 'high') {
+      prompt += ` and emphasize the urgent nature of your circumstances`;
+    }
+  }
+
+  prompt += `\n\nI'll create a description that is:\n- Specific to your situation\n- Professional and compelling\n- Appropriate length and detail\n- Focused on your needs and circumstances`;
+
+  return prompt;
+}
+
+/**
+ * Build contextual hints from form data
+ */
+function buildContextualHints(intelligentContext: AIFormContext, _fieldIntelligence?: FieldIntelligence): string {
+  const hints: string[] = [];
+  
+  // Add employment and family context from step2
+  if (intelligentContext.step2) {
+    // Employment status
+    if (intelligentContext.step2.employmentStatus === 'unemployed') {
+      hints.push('You are currently unemployed');
+    } else if (intelligentContext.step2.employmentStatus === 'employed_full_time') {
+      hints.push('You are currently employed full-time');
+    } else if (intelligentContext.step2.employmentStatus === 'employed_part_time') {
+      hints.push('You are currently employed part-time');
+    } else if (intelligentContext.step2.employmentStatus === 'self_employed') {
+      hints.push('You are self-employed');
+    }
+    
+    // Family size
+    if (intelligentContext.step2.numberOfDependents && Number(intelligentContext.step2.numberOfDependents) > 0) {
+      hints.push(`You have ${intelligentContext.step2.numberOfDependents} dependents`);
+    }
+    
+    // Income level
+    if (intelligentContext.step2.monthlyIncome) {
+      const income = Number(intelligentContext.step2.monthlyIncome);
+      if (income === 0) {
+        hints.push('You have no current income');
+      } else if (income < 2000) {
+        hints.push('You have limited income');
+      }
+    }
+    
+    // Housing status  
+    if (intelligentContext.step2.housingStatus === 'homeless') {
+      hints.push('You are currently experiencing homelessness');
+    } else if (intelligentContext.step2.housingStatus === 'rent') {
+      hints.push('You are renting your current housing');
+    } else if (intelligentContext.step2.housingStatus === 'own') {
+      hints.push('You own your current housing');
+    }
+  }
+  
+  return hints.length > 0 ? `- ${hints.join('\n- ')}` : '';
+}
+
+
+/**
+ * Build system prompt for example generation
+ */
+export function buildExampleGenerationSystemPrompt(fieldName: string, language: 'en' | 'ar'): string {
+  const fieldLabel = getFieldLabel(fieldName);
+  
+  return `You are an AI assistant helping users fill out a financial assistance form.
+
+Your job is to generate 3 relevant examples for the "${fieldLabel}" section that will help the user write their response.
+
+The user is applying for government financial assistance and needs help describing their ${fieldLabel}.
+
+Generate exactly 3 examples that:
+- Are realistic and appropriate for someone applying for financial assistance
+- Show different ways to describe ${fieldLabel} circumstances
+- Use professional but personal tone
+- Are 2-4 sentences each
+- Help demonstrate genuine need for assistance
+
+Language: ${language === 'ar' ? 'Arabic' : 'English'}`;
+}
+
+/**
+ * Build user prompt for example generation based on user input
+ * CORE JOURNEY: User Input + Step1 Context + Step2 Context = Contextual Examples
+ */
+/**
+ * Extract simple form metadata from Step 2 for example generation
+ */
+function extractFormMetadata(intelligentContext: AIFormContext): string {
+  if (!intelligentContext?.step2) {
+    return '- No form data available';
+  }
+
+  const step2 = intelligentContext.step2;
+  const metadata: string[] = [];
+  
+  // Employment
+  if (step2.employmentStatus) {
+    metadata.push(`- Employment: ${step2.employmentStatus}`);
+  }
+  
+  // Income
+  if (step2.monthlyIncome !== undefined) {
+    const income = Number(step2.monthlyIncome);
+    metadata.push(`- Monthly Income: $${income.toLocaleString()}`);
+  }
+  
+  // Family
+  if (step2.numberOfDependents !== undefined) {
+    const dependents = Number(step2.numberOfDependents);
+    metadata.push(`- Dependents: ${dependents}`);
+  }
+  
+  // Housing
+  if (step2.housingStatus) {
+    metadata.push(`- Housing: ${step2.housingStatus}`);
+  }
+  
+  // Marital status
+  if (step2.maritalStatus) {
+    metadata.push(`- Marital Status: ${step2.maritalStatus}`);
+  }
+  
+  return metadata.length > 0 ? metadata.join('\n') : '- No form metadata available';
+}
+
+export function buildExampleGenerationUserPrompt(request: any): string {
+  const fieldLabel = getFieldLabel(request.fieldName);
+  const hasUserInput = request.userInput && request.userInput.trim().length >= 10;
+  
+  let prompt = '';
+
+  // Get key form metadata from Step 2
+  const formMetadata = extractFormMetadata(request.intelligentContext);
+  
+  if (hasUserInput) {
+    // SCENARIO 1: User has input - generate examples based on input + form metadata
+    prompt = `The user is filling out a financial assistance form and wrote this for their ${fieldLabel}:
+
+"${request.userInput}"
+
+Their current situation from the form:
+${formMetadata}
+
+Based on what they wrote about "${request.userInput}" and their current situation (${request.intelligentContext?.step2?.employmentStatus || 'unemployed'}, ${request.intelligentContext?.step2?.numberOfDependents || '0'} dependents, ${request.intelligentContext?.step2?.housingStatus || 'housing situation'}), generate 3 examples that:
+
+- Build directly on their specific situation: "${request.userInput}"
+- Show how someone with their exact employment/family circumstances would describe similar experiences
+- Connect their input to their need for financial assistance
+- Use professional but personal tone
+- Be 2-4 sentences each
+
+Start each example with "Example:"`;
+  } else {
+    // SCENARIO 2: No input - generate examples based on form metadata only
+    prompt = `The user is filling out a financial assistance form and needs help with the ${fieldLabel} section.
+
+Their situation:
+${formMetadata}
+
+Generate 3 realistic examples for someone in their situation that show:
+- How their employment/income situation creates need for assistance
+- Impact on their family if applicable
+- Clear demonstration of financial hardship
+- Professional but personal tone
+
+Each example should be 2-4 sentences.
+Start each example with "Example:"`;
+  }
+
+  return prompt;
+}
+
+/**
+ * Build system prompt for relevancy validation
+ */
+export function buildRelevancySystemPrompt(fieldName: string, language: 'en' | 'ar',userInput:string): string {
+  const fieldLabel = getFieldLabel(fieldName);
+  
+  return `You are an AI assistant that evaluates if user input is relevant to a specific form field.
+
+Your job is to determine if the user's input- ${userInput} is relevant to the "${fieldLabel}" field in a financial assistance application.
+
+Evaluate the input and respond with a JSON object:
+{
+  "isRelevant": true/false,
+  "relevancyScore": 0-100,
+  "reason": "Brief explanation of why it is or isn't relevant"
+}
+
+Consider relevant:
+- Content that describes ${fieldLabel} circumstances
+- Personal experiences related to ${fieldLabel}
+- Information that helps understand their ${fieldLabel} situation
+
+Consider irrelevant:
+- Random text or gibberish
+- Content unrelated to ${fieldLabel}
+- Very vague statements without context
+- Off-topic information
+
+Language: ${language === 'ar' ? 'Arabic' : 'English'}`;
+}
+
+/**
+ * Build user prompt for relevancy validation
+ */
+export function buildRelevancyUserPrompt(request: any): string {
+  const fieldLabel = getFieldLabel(request.fieldName);
+  const formMetadata = extractFormMetadata(request.intelligentContext);
+  
+  return `Field: ${fieldLabel}
+Form context:
+${formMetadata}
+
+User input to evaluate:
+"${request.userInput}"
+
+Is this input relevant to the "${fieldLabel}" field? Consider their form context and evaluate if the input helps describe their ${fieldLabel}.
+
+Respond with JSON only.`;
+}
+
+/**
+ * Parse relevancy response from OpenAI
+ */
+export function parseRelevancyResponse(content: string): {
+  isRelevant: boolean;
+  relevancyScore: number;
+  reason: string;
+} {
+  try {
+    // Try to parse JSON response
+    const jsonMatch = content.match(/\{[\s\S]*\}/);
+    if (jsonMatch) {
+      const parsed = JSON.parse(jsonMatch[0]);
+      return {
+        isRelevant: Boolean(parsed.isRelevant),
+        relevancyScore: Math.min(100, Math.max(0, Number(parsed.relevancyScore) || 0)),
+        reason: String(parsed.reason || 'No reason provided'),
+      };
+    }
+  } catch (error) {
+    console.warn('[Relevancy] Failed to parse JSON response:', error);
+  }
+  
+  // Fallback parsing if JSON fails
+  const isRelevant = /relevant.*true|true.*relevant/i.test(content) && !/not.*relevant|irrelevant/i.test(content);
+  
+  return {
+    isRelevant,
+    relevancyScore: isRelevant ? 70 : 30,
+    reason: isRelevant ? 'Content appears relevant' : 'Content appears irrelevant or unclear',
+  };
+}
+
+/**
+ * Parse examples from OpenAI response
+ */
+export function parseExamplesFromResponse(content: string): string[] {
+  // Split by "Example:" and clean up
+  const parts = content.split(/Example:\s*/i);
+  
+  // Remove the first part (usually empty or contains instructions)
+  const examples = parts.slice(1)
+    .map(example => example.trim())
+    .filter(example => example.length > 0)
+    .map(example => {
+      // Remove any trailing instructions or notes
+      const firstPart = example.split('\n\n')[0];
+      return firstPart ? firstPart.trim() : example.trim();
+    })
+    .slice(0, 3); // Limit to 3 examples
+  
+  return examples;
 }

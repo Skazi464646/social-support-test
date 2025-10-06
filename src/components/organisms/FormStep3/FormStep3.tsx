@@ -70,7 +70,7 @@ export function FormStep3() {
             name="employmentCircumstances"
             control={control}
             label={t('employmentCircumstances', 'Describe Your Employment Circumstances')}
-            // helperText={t('employmentCircumstances_help', 'Please explain your current work situation, including any recent changes, challenges in finding employment, or barriers you face. Minimum 50 characters required.')}
+            helperText={t('employmentCircumstances_help', 'Please explain your current work situation, including any recent changes, challenges in finding employment, or barriers you face. Minimum 50 characters required.')}
             placeholder={t('employmentCircumstances_placeholder', 'Example: I was employed as a retail associate for 3 years but was laid off due to company downsizing. I have been actively searching for employment for 6 months but have faced challenges due to limited opportunities in my field...')}
             fieldName="employmentCircumstances"
             rows={6}
@@ -98,7 +98,7 @@ export function FormStep3() {
             name="reasonForApplying"
             control={control}
             label={t('reasonForApplying', 'Why Are You Applying for Social Support?')}
-            // helperText={t('reasonForApplying_help', 'Please explain why you need social support, what specific assistance you are seeking, and how this support will help improve your situation. Minimum 50 characters required.')}
+            helperText={t('reasonForApplying_help', 'Please explain why you need social support, what specific assistance you are seeking, and how this support will help improve your situation. Minimum 50 characters required.')}
             placeholder={t('reasonForApplying_placeholder', 'Example: I am applying for social support to help cover basic living expenses including rent, utilities, and groceries while I search for stable employment. This assistance would provide me with the stability I need to focus on job searching and skills development...')}
             fieldName="reasonForApplying"
             rows={6}
@@ -126,7 +126,7 @@ export function FormStep3() {
             name="additionalComments"
             control={control}
             label={t('additionalComments', 'Additional Comments')}
-            // helperText={t('additionalComments_help', 'Share any other relevant information that might help us understand your situation better. This field is optional.')}
+            helperText={t('additionalComments_help', 'Share any other relevant information that might help us understand your situation better. This field is optional.')}
             placeholder={t('additionalComments_placeholder', 'Any additional information about your circumstances, family situation, health issues, or other factors that might be relevant to your application...')}
             fieldName="additionalComments"
             rows={4}

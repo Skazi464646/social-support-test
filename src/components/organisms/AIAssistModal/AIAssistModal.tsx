@@ -3,10 +3,11 @@
  * Module 5 - Step 4: Build Inline AI Assistance Component
  */
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { openAIService, getFieldExamples, getFieldConstraints } from '@/lib/ai';
+import { getFieldModalConfig } from '@/lib/ai/prompt-templates';
 import { cn } from '@/lib/utils';
-import type { AIAssistRequest } from '@/lib/api/openai-service';
+import type { AIAssistRequest, AIExampleRequest, AIRelevancyRequest } from '@/lib/api/openai-service';
 
 interface AIAssistModalProps {
   isOpen: boolean;
@@ -50,6 +51,9 @@ export function AIAssistModal({
   const [isEditing, setIsEditing] = useState(false);
   const [, setStreamingText] = useState('');
   const [showExamples, setShowExamples] = useState(false);
+  const [dynamicExamples, setDynamicExamples] = useState<string[]>([]);
+  const [loadingExamples, setLoadingExamples] = useState(false);
+  const [examplesError, setExamplesError] = useState<string | null>(null);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
@@ -57,6 +61,7 @@ export function AIAssistModal({
   // Get field-specific data
   const examples = getFieldExamples(fieldName);
   const constraints = getFieldConstraints(fieldName);
+  const fieldConfig = getFieldModalConfig(fieldName);
 
   // Auto-resize textarea
   useEffect(() => {
@@ -74,6 +79,18 @@ export function AIAssistModal({
       setSuggestions([]); // Clear previous suggestions
       setActiveSuggestionId(null); // Clear active suggestion
       setError(null); // Clear any previous errors
+      setDynamicExamples([]); // Clear previous dynamic examples
+      setExamplesError(null); // Clear examples error
+      
+      // Auto-generate dynamic examples if we have either:
+      // 1. User input (≥10 characters for meaningful content) 
+      // 2. OR intelligent context (form data) to work with
+      const hasUserInput = currentValue.trim().length >= 10;
+      const hasIntelligentContext = intelligentContext && (intelligentContext.step1 || intelligentContext.step2);
+      
+      if (hasUserInput || hasIntelligentContext) {
+        generateDynamicExamples();
+      }
     }
   }, [isOpen, currentValue]);
 
@@ -122,6 +139,46 @@ export function AIAssistModal({
     setStreamingText('');
 
     try {
+      // STEP 1: If user has input, validate relevancy first
+      const hasUserInput = currentValue.trim().length >= 10;
+      
+      if (hasUserInput) {
+        const relevancyRequest: AIRelevancyRequest = {
+          fieldName,
+          userInput: currentValue,
+          intelligentContext,
+          language: 'en',
+        };
+
+        console.log('[AI Suggestion Relevancy] Checking relevancy for:', currentValue.substring(0, 50));
+        const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
+        
+        console.log('[AI Suggestion Relevancy] Result:', {
+          isRelevant: relevancyResponse.isRelevant,
+          score: relevancyResponse.relevancyScore,
+          reason: relevancyResponse.reason
+        });
+
+        // Set threshold at 60% - adjust as needed
+        const RELEVANCY_THRESHOLD = 60;
+        
+        if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < RELEVANCY_THRESHOLD) {
+          // Input is not relevant - create a suggestion with feedback
+          const irrelevantSuggestion: Suggestion = {
+            id: `irrelevant_${Date.now()}`,
+            text: `Your input is not relevant to this context. ${relevancyResponse.reason}. Please provide more relevant information about your ${fieldName.replace(/([A-Z])/g, ' $1').toLowerCase()}.`,
+            isEdited: false,
+            confidence: 0,
+          };
+          
+          setSuggestions(prev => [irrelevantSuggestion, ...prev]);
+          setActiveSuggestionId(irrelevantSuggestion.id);
+          setEditedText(irrelevantSuggestion.text);
+          return;
+        }
+      }
+
+      // STEP 2: If relevant (or no user input), generate suggestion
       const request: AIAssistRequest = {
         fieldName,
         currentValue,
@@ -207,6 +264,78 @@ export function AIAssistModal({
     generateSuggestion();
   };
 
+  const generateDynamicExamples = useCallback(async () => {
+    if (!openAIService.isAvailable) {
+      setExamplesError('AI assistance is not available. Please check your configuration.');
+      return;
+    }
+
+    // Only generate dynamic examples if we have either:
+    // 1. User input (≥10 characters for meaningful content)
+    // 2. OR intelligent context (form data) to work with
+    const hasUserInput = currentValue.trim().length >= 10;
+    const hasIntelligentContext = intelligentContext && (intelligentContext.step1 || intelligentContext.step2);
+    
+    if (!hasUserInput && !hasIntelligentContext) {
+      return; // Skip if no meaningful input or context
+    }
+
+    setLoadingExamples(true);
+    setExamplesError(null);
+
+    try {
+      // STEP 1: If user has input, validate relevancy first
+      if (hasUserInput) {
+        const relevancyRequest: AIRelevancyRequest = {
+          fieldName,
+          userInput: currentValue,
+          intelligentContext,
+          language: 'en',
+        };
+
+        console.log('[AI Relevancy] Checking relevancy for:', currentValue.substring(0, 50));
+        const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
+        
+        console.log('[AI Relevancy] Result:', {
+          isRelevant: relevancyResponse.isRelevant,
+          score: relevancyResponse.relevancyScore,
+          reason: relevancyResponse.reason
+        });
+
+        // Set threshold at 60% - adjust as needed
+        const RELEVANCY_THRESHOLD = 60;
+        
+        if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < RELEVANCY_THRESHOLD) {
+          // Input is not relevant - show helpful feedback
+          setExamplesError(
+            `Not relevant to this context. ${relevancyResponse.reason}. Please try to provide more relevant information about your ${fieldName.replace(/([A-Z])/g, ' $1').toLowerCase()}.`
+          );
+          setDynamicExamples([]);
+          return;
+        }
+      }
+
+      // STEP 2: If relevant (or no user input), generate examples
+      const request: AIExampleRequest = {
+        fieldName,
+        userInput: hasUserInput ? currentValue : '', // Pass empty string if no user input
+        userContext,
+        intelligentContext,
+        language: 'en',
+      };
+
+      const response = await openAIService.generateDynamicExamples(request);
+      setDynamicExamples(response.examples);
+      
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to generate examples';
+      setExamplesError(errorMessage);
+      console.error('Dynamic examples generation error:', err);
+    } finally {
+      setLoadingExamples(false);
+    }
+  }, [currentValue, fieldName, userContext, intelligentContext]);
+
   // Character count helper
   const characterCount = editedText.length;
   const minLength = fieldConstraints?.minLength || 0;
@@ -230,10 +359,10 @@ export function AIAssistModal({
           <div className="flex items-center justify-between">
             <div>
               <h2 id="ai-modal-title" className="text-xl font-semibold text-gray-900">
-                ✨ AI Writing Assistant
+                {fieldConfig.title}
               </h2>
               <p id="ai-modal-description" className="text-sm text-gray-600 mt-1">
-                {currentValue ? `Edit and improve your ${fieldLabel.toLowerCase()} with AI assistance` : `Get help writing your ${fieldLabel.toLowerCase()}`}
+                {fieldConfig.description}
               </p>
             </div>
             <button
@@ -282,13 +411,28 @@ export function AIAssistModal({
                 )}
               </div>
 
-              {examples.length > 0 && (
+              {/* Show Examples Button - with loading state for dynamic examples */}
+              {(examples.length > 0 || currentValue.trim().length >= 10 || (intelligentContext && (intelligentContext.step1 || intelligentContext.step2))) && (
                 <button
                   type="button"
                   onClick={() => setShowExamples(!showExamples)}
-                  className="w-full mt-2 text-sm text-blue-600 hover:text-blue-700 py-1"
+                  disabled={loadingExamples}
+                  className="w-full mt-2 text-sm text-blue-600 hover:text-blue-700 py-1 disabled:opacity-50"
                 >
-                  {showExamples ? 'Hide' : 'Show'} examples ({examples.length})
+                  {loadingExamples ? (
+                    <>
+                      <span className="animate-spin inline-block w-3 h-3 border border-current border-t-transparent rounded-full mr-1"></span>
+                      Loading examples...
+                    </>
+                  ) : (
+                    `${showExamples ? 'Hide' : 'Show'} examples (${
+                      dynamicExamples.length > 0 
+                        ? `${dynamicExamples.length} personalized` 
+                        : examples.length > 0 
+                          ? examples.length 
+                          : 'generating...'
+                    })`
+                  )}
                 </button>
               )}
             </div>
@@ -303,23 +447,53 @@ export function AIAssistModal({
                 </div>
               )}
 
-              {/* Examples */}
-              {showExamples && examples.length > 0 && (
+              {/* Examples - Show dynamic examples if available, otherwise static examples */}
+              {showExamples && (
                 <div className="border-b border-gray-100">
                   <div className="p-3 bg-gray-50">
-                    <h4 className="text-sm font-medium text-gray-700 mb-2">Sample Responses</h4>
-                    <div className="space-y-2">
-                      {examples.map((example, index) => (
-                        <button
-                          type="button"
-                          key={index}
-                          onClick={() => useExample(example)}
-                          className="w-full text-left p-2 text-xs border rounded hover:bg-white transition-colors"
-                        >
-                          {example.substring(0, 100)}...
-                        </button>
-                      ))}
-                    </div>
+                    {dynamicExamples.length > 0 ? (
+                      <>
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">
+                          ✨ Examples Similar to Yours
+                        </h4>
+                        <div className="space-y-2">
+                          {dynamicExamples.map((example, index) => (
+                            <button
+                              type="button"
+                              key={`dynamic-${index}`}
+                              onClick={() => useExample(example)}
+                              className="w-full text-left p-2 text-xs border border-purple-200 bg-purple-50 rounded hover:bg-purple-100 transition-colors"
+                            >
+                              <div className="font-medium text-purple-700 mb-1">Example {index + 1}:</div>
+                              <div className="text-gray-700">
+                                {example.length > 120 ? `${example.substring(0, 120)}...` : example}
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    ) : examples.length > 0 ? (
+                      <>
+                        <h4 className="text-sm font-medium text-gray-700 mb-2">Sample Responses</h4>
+                        <div className="space-y-2">
+                          {examples.map((example, index) => (
+                            <button
+                              type="button"
+                              key={`static-${index}`}
+                              onClick={() => useExample(example)}
+                              className="w-full text-left p-2 text-xs border rounded hover:bg-white transition-colors"
+                            >
+                              {example.substring(0, 100)}...
+                            </button>
+                          ))}
+                        </div>
+                      </>
+                    ) : examplesError ? (
+                      <div className="text-sm text-red-600 p-2">
+                        <div className="font-medium">Failed to load personalized examples</div>
+                        <div className="text-xs mt-1">{examplesError}</div>
+                      </div>
+                    ) : null}
                   </div>
                 </div>
               )}
@@ -329,8 +503,11 @@ export function AIAssistModal({
                 {suggestions.length === 0 ? (
                   <div className="text-center text-gray-500 text-sm py-8">
                     <div className="mb-2">💡</div>
-                    <p>Click "Generate" to get AI suggestions</p>
-                    <p className="text-xs mt-1">or use an example to get started</p>
+                    <p className="font-medium">Click "Generate" for AI suggestions</p>
+                    <p className="text-xs mt-1 text-gray-400">AI will help you write about your {fieldLabel.toLowerCase()}</p>
+                    {examples.length > 0 && (
+                      <p className="text-xs mt-1">or use an example to get started</p>
+                    )}
                   </div>
                 ) : (
                   suggestions.map((suggestion) => (
@@ -408,18 +585,33 @@ export function AIAssistModal({
                       ? "Edit your text here or generate AI suggestions for improvements..." 
                       : activeSuggestionId 
                         ? "Select a suggestion to edit it here..." 
-                        : "Type your content here or generate AI suggestions..."
+                        : fieldConfig.placeholder
                   }
                   className={`w-full flex-1 p-3 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-blue-500 ${
                     isEditing ? 'bg-white' : 'bg-gray-50'
                   }`}
                 />
                 
+                {/* Field-specific guidance */}
+                {!editedText && (
+                  <div className="mt-3 p-3 bg-blue-50 border border-blue-200 rounded-md">
+                    <h4 className="text-sm font-medium text-blue-900 mb-2">💡 What to include:</h4>
+                    <ul className="text-xs text-blue-800 space-y-1">
+                      {fieldConfig.guidance.map((tip, index) => (
+                        <li key={index} className="flex items-start">
+                          <span className="text-blue-600 mr-1">•</span>
+                          <span>{tip}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 {/* Character Count */}
-                <div className="mt-1 flex flex-wrap items-end justify-between gap-y-1 text-xs leading-snug text-text-secondary">
+                <div className="mt-3 flex flex-wrap items-end justify-between gap-y-1 text-xs leading-snug text-text-secondary">
                   {constraints.length > 0 && (
                     <p className="max-w-full pr-4">
-                      <span className="font-semibold text-text-primary">Guidelines:</span> {constraints.join(', ')}
+                      <span className="font-semibold text-text-primary">Technical Guidelines:</span> {constraints.join(', ')}
                     </p>
                   )}
                   <div

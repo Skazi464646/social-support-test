@@ -247,7 +247,6 @@ export function FormStep2() {
               label={t('receivingBenefits', 'Currently Receiving Government Benefits')}
               // helperText={t('receivingBenefits_help', 'Are you currently receiving any form of government assistance?')}
               type="select"
-              required
               options={[
                 { value: '', label: t('receivingBenefits_select', 'Select an option') },
                 { value: 'true', label: t('common.yes', 'Yes') },
@@ -263,7 +262,6 @@ export function FormStep2() {
                 label={t('benefitTypes', 'Types of Benefits Received')}
                 // helperText={t('benefitTypes_help', 'Select all types of government benefits you currently receive')}
                 type="checkbox-group"
-                required
                 options={[
                   { value: 'unemployment', label: t('benefitTypes_options.unemployment', 'Unemployment Benefits') },
                   { value: 'disability', label: t('benefitTypes_options.disability', 'Disability Benefits') },
@@ -284,7 +282,6 @@ export function FormStep2() {
               label={t('previouslyApplied', 'Previously Applied for Social Support')}
               // helperText={t('previouslyApplied_help', 'Have you applied for social support from this program before?')}
               type="select"
-              required
               options={[
                 { value: '', label: t('previouslyApplied_select', 'Select an option') },
                 { value: 'true', label: t('common.yes', 'Yes') },

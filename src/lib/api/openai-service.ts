@@ -20,6 +20,12 @@ import {
   getSystemPrompt, 
   buildUserPrompt,
   buildSmartUserPrompt, 
+  buildExampleGenerationSystemPrompt,
+  buildExampleGenerationUserPrompt,
+  buildRelevancySystemPrompt,
+  buildRelevancyUserPrompt,
+  parseExamplesFromResponse,
+  parseRelevancyResponse,
   type PromptContext,
   type EnhancedPromptContext 
 } from '@/lib/ai/prompt-templates';
@@ -58,6 +64,42 @@ export interface AIAssistRequest {
   userContext: any;
   intelligentContext?: AIFormContext;
   language: 'en' | 'ar';
+}
+
+export interface AIExampleRequest {
+  fieldName: string;
+  userInput: string;
+  userContext: any;
+  intelligentContext?: AIFormContext;
+  language: 'en' | 'ar';
+}
+
+export interface AIRelevancyRequest {
+  fieldName: string;
+  userInput: string;
+  intelligentContext?: AIFormContext;
+  language: 'en' | 'ar';
+}
+
+export interface AIRelevancyResponse {
+  isRelevant: boolean;
+  relevancyScore: number; // 0-100
+  reason: string;
+  requestId: string;
+  metadata: {
+    timestamp: number;
+    tokensUsed: number;
+  };
+}
+
+export interface AIExampleResponse {
+  examples: string[];
+  requestId: string;
+  metadata: {
+    timestamp: number;
+    tokensUsed: number;
+    basedinput: string;
+  };
 }
 
 export interface AIAssistResponse {
@@ -263,6 +305,116 @@ class OpenAIService {
     return requestDeduplicator.getPendingCount();
   }
 
+  /**
+   * Generate dynamic examples based on user input
+   */
+  async generateDynamicExamples(
+    request: AIExampleRequest,
+    requestId: string = generateRequestId()
+  ): Promise<AIExampleResponse> {
+    if (!this.isAvailable) {
+      throw new Error('OpenAI API key not configured');
+    }
+
+    // Rate limiting check
+    if (!aiRateLimiter.isAllowed(this.sessionId)) {
+      const retryAfter = aiRateLimiter.getRetryAfter(this.sessionId);
+      throw new Error(`Rate limit exceeded. Try again in ${Math.ceil(retryAfter / 1000)} seconds.`);
+    }
+
+    // Input safety validation
+    const safetyCheck = validateInputSafety(request.userInput);
+    if (!safetyCheck.safe) {
+      console.warn('[OpenAI] Input safety issues detected:', safetyCheck.issues);
+    }
+
+    return retryOpenAICall(async () => {
+      const startTime = Date.now();
+      
+      try {
+        // Build example generation prompt
+        const systemPrompt = buildExampleGenerationSystemPrompt(request.fieldName, request.language);
+        const userPrompt = buildExampleGenerationUserPrompt(request);
+
+        const openAIRequest: OpenAIRequest = {
+          model: 'gpt-4-turbo-preview',
+          messages: [
+            {
+              role: 'system',
+              content: systemPrompt
+            },
+            {
+              role: 'user', 
+              content: userPrompt
+            }
+          ],
+          max_tokens: 1000, // Increased for more detailed examples
+          temperature: 0.7, // Balanced temperature for relevant but varied examples
+          stream: false // Don't stream for examples
+        };
+
+        // Log request (sanitized)
+        console.log('[OpenAI Examples] Request:', sanitizeForLogging({
+          requestId,
+          fieldName: request.fieldName,
+          language: request.language,
+          inputLength: request.userInput.length,
+          model: openAIRequest.model,
+        }));
+
+        const response = await fetch(this.baseURL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json',
+            'X-Request-ID': requestId,
+          },
+          body: JSON.stringify(openAIRequest),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`OpenAI API error: ${response.status} ${response.statusText} - ${redactPII(errorText)}`);
+        }
+
+        const data = await response.json();
+        const content = data.choices[0]?.message?.content || '';
+        
+        // Parse examples from response (assuming they're separated by numbered lines or special markers)
+        const examples = parseExamplesFromResponse(content);
+        const responseTime = Date.now() - startTime;
+        
+        // Log successful response (sanitized)
+        console.log('[OpenAI Examples] Success:', sanitizeForLogging({
+          requestId,
+          responseTime,
+          exampleCount: examples.length,
+          tokensEstimate: Math.ceil(content.length / 4),
+        }));
+
+        return {
+          examples,
+          requestId,
+          metadata: {
+            timestamp: Date.now(),
+            tokensUsed: Math.ceil(content.length / 4),
+            basedinput: request.userInput.substring(0, 50) + '...', // Truncated for privacy
+          },
+        };
+
+      } catch (error) {
+        // Log error (sanitized)
+        console.error('[OpenAI Examples] Error:', sanitizeForLogging({
+          requestId,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          responseTime: Date.now() - startTime,
+        }));
+        
+        throw error;
+      }
+    });
+  }
+
   private async handleStreamResponse(response: Response, signal: AbortSignal): Promise<string> {
     const reader = response.body?.getReader();
     if (!reader) {
@@ -316,6 +468,112 @@ class OpenAIService {
     }
     
     return result;
+  }
+
+  /**
+   * Validate if user input is relevant to the form field context
+   */
+  async validateInputRelevancy(
+    request: AIRelevancyRequest,
+    requestId: string = generateRequestId()
+  ): Promise<AIRelevancyResponse> {
+    if (!this.isAvailable) {
+      throw new Error('OpenAI API key not configured');
+    }
+
+    // Rate limiting check
+    if (!aiRateLimiter.isAllowed(this.sessionId)) {
+      const retryAfter = aiRateLimiter.getRetryAfter(this.sessionId);
+      throw new Error(`Rate limit exceeded. Try again in ${Math.ceil(retryAfter / 1000)} seconds.`);
+    }
+
+    return retryOpenAICall(async () => {
+      const startTime = Date.now();
+      
+      try {
+        // Build relevancy validation prompt
+        const systemPrompt = buildRelevancySystemPrompt(request.fieldName, request.language,request.userInput);
+        const userPrompt = buildRelevancyUserPrompt(request);
+
+        const openAIRequest: OpenAIRequest = {
+          model: 'gpt-4-turbo-preview',
+          messages: [
+            {
+              role: 'system',
+              content: systemPrompt
+            },
+            {
+              role: 'user',
+              content: userPrompt
+            }
+          ],
+          max_tokens: 200, // Short response for relevancy check
+          temperature: 0.3, // Lower temperature for more consistent evaluation
+          stream: false
+        };
+
+        // Log request (sanitized)
+        console.log('[OpenAI Relevancy] Request:', sanitizeForLogging({
+          requestId,
+          fieldName: request.fieldName,
+          language: request.language,
+          inputLength: request.userInput.length,
+          model: openAIRequest.model,
+        }));
+
+        const response = await fetch(this.baseURL, {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${this.apiKey}`,
+            'Content-Type': 'application/json',
+            'X-Request-ID': requestId,
+          },
+          body: JSON.stringify(openAIRequest),
+        });
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          throw new Error(`OpenAI API error: ${response.status} ${response.statusText} - ${redactPII(errorText)}`);
+        }
+
+        const data = await response.json();
+        const content = data.choices[0]?.message?.content || '';
+        
+        // Parse relevancy response
+        const relevancyResult = parseRelevancyResponse(content);
+        const responseTime = Date.now() - startTime;
+        
+        // Log successful response (sanitized)
+        console.log('[OpenAI Relevancy] Success:', sanitizeForLogging({
+          requestId,
+          responseTime,
+          isRelevant: relevancyResult.isRelevant,
+          relevancyScore: relevancyResult.relevancyScore,
+          tokensEstimate: Math.ceil(content.length / 4),
+        }));
+
+        return {
+          isRelevant: relevancyResult.isRelevant,
+          relevancyScore: relevancyResult.relevancyScore,
+          reason: relevancyResult.reason,
+          requestId,
+          metadata: {
+            timestamp: Date.now(),
+            tokensUsed: Math.ceil(content.length / 4),
+          },
+        };
+
+      } catch (error) {
+        // Log error (sanitized)
+        console.error('[OpenAI Relevancy] Error:', sanitizeForLogging({
+          requestId,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          responseTime: Date.now() - startTime,
+        }));
+        
+        throw error;
+      }
+    });
   }
 
 }
