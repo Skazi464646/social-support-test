@@ -771,6 +771,15 @@ body {
   @apply absolute -top-10 left-4 bg-blue-600 text-white px-4 py-2 rounded-md z-50 focus:top-4;
 }
 
+/* Modal scroll lock - prevent background scrolling when modals are open */
+body.modal-open {
+  overflow: hidden !important;
+}
+
+html.modal-open {
+  overflow: hidden !important;
+}
+
 /* =============================================================================
    HIGH CONTRAST MODE SUPPORT (WCAG AAA)
    ============================================================================= */

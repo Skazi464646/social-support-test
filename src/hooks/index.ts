@@ -1,6 +1,7 @@
 export { useDirection } from './useDirection';
 export { useToast, ToastContainer } from './useToast';
 export { useAIAssist } from './useAIAssist';
+export { useBodyScrollLock } from './useBodyScrollLock';
 export { 
   useFormValidation,
   useStep1Form,
