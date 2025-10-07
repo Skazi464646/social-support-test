@@ -363,15 +363,19 @@ export function AIAssistModal({
                   type="button"
                   onClick={generateSuggestion}
                   disabled={isLoading}
-                  className="flex-1 px-3 py-2 text-sm font-medium rounded bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-6 py-3 text-base font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary-hover hover:shadow-gold-md hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none shadow-sm border border-primary/20"
+                  title={AI_MESSAGES.modal.generateButton}
                 >
                   {isLoading ? (
                     <>
-                      <span className="animate-spin inline-block w-4 h-4 border border-current border-t-transparent rounded-full mr-2"></span>
+                      <span className="animate-spin inline-block w-5 h-5 border border-current border-t-transparent rounded-full mr-3"></span>
                       {AI_MESSAGES.modal.generating}
                     </>
                   ) : (
-                    AI_MESSAGES.modal.generateButton
+                    <>
+                      <span className="mr-2">✨</span>
+                      {AI_MESSAGES.modal.generateButton}
+                    </>
                   )}
                 </button>
                 {suggestions.length > 0 && (
@@ -379,7 +383,7 @@ export function AIAssistModal({
                     type="button"
                     onClick={regenerateSuggestion}
                     disabled={isLoading}
-                    className="px-3 py-2 text-sm font-medium rounded border border-border hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+                    className="px-4 py-3 text-base font-medium rounded-lg border border-primary/30 bg-background text-primary hover:bg-primary/10 hover:border-primary hover:shadow-gold-sm hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:transform-none disabled:shadow-none"
                     title={AI_MESSAGES.modal.regenerateTitle}
                   >
                     🔄
@@ -393,7 +397,8 @@ export function AIAssistModal({
                   type="button"
                   onClick={() => setShowExamples(!showExamples)}
                   disabled={loadingExamples}
-                  className="w-full mt-2 py-1 text-sm text-primary hover:text-primary/80 transition-colors disabled:opacity-50"
+                  className="w-full mt-3 py-2 px-3 text-sm font-medium text-primary hover:text-primary/80 hover:bg-primary/5 rounded-md border border-primary/20 hover:border-primary/40 transition-all duration-200 disabled:opacity-50"
+                  title={AI_MESSAGES.modal.regenerateTitle}
                 >
                   {loadingExamples ? (
                     <>
