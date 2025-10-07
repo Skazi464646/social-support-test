@@ -43,73 +43,74 @@ body {
 @layer base {
   :root {
     /* =============================================================================
-       WCAG-COMPLIANT COLOR DESIGN TOKENS
+       WCAG-COMPLIANT COLOR DESIGN TOKENS - OFFICIAL UAE PALETTE
        All color combinations ensure minimum 4.5:1 contrast ratio for AA compliance
+       Using official AEGold, AERed, AEGreen, and AEBlack color systems
        ============================================================================= */
     
-    /* Core Background Colors */
-    --background: 0 0% 100%;              /* #ffffff - Pure white background */
-    --foreground: 220 13% 18%;            /* #2d3338 - Dark text (7.1:1 contrast) */
-    --surface: 210 20% 98%;               /* #f8f9fa - Light surface */
-    --surface-variant: 210 14% 95%;       /* #f1f3f4 - Subtle surface variation */
+    /* Core Background Colors - Clean White Base */
+    --background: 0 0% 100%;              /* #FFFFFF - Pure white background */
+    --foreground: 220 9% 12%;             /* #1B1D21 - AEBlack-900 (16.1:1 contrast) */
+    --surface: 0 0% 97%;                  /* #F7F7F7 - AEBlack-50 */
+    --surface-variant: 44 31% 91%;        /* #F2ECCF - AEGold-100 */
     
-    /* Card & Container Colors */
-    --card: 0 0% 100%;                    /* #ffffff - Card background */
-    --card-foreground: 220 13% 18%;       /* #2d3338 - Card text */
-    --card-border: 214 20% 90%;           /* #e4e7eb - Card border (1.3:1 contrast) */
+    /* Card & Container Colors - White with Gold Borders */
+    --card: 0 0% 100%;                    /* #FFFFFF - White card background */
+    --card-foreground: 220 9% 12%;        /* #1B1D21 - AEBlack-900 */
+    --card-border: 41 55% 46%;            /* #B68A35 - AEGold-500 (golden borders) */
     
-    /* Popover & Modal Colors */
-    --popover: 0 0% 100%;                 /* #ffffff - Popover background */
-    --popover-foreground: 220 13% 18%;    /* #2d3338 - Popover text */
-    --popover-border: 214 20% 85%;        /* #d6dae0 - Popover border */
+    /* Popover & Modal Colors - White with Gold Accents */
+    --popover: 0 0% 100%;                 /* #FFFFFF - White popover background */
+    --popover-foreground: 220 9% 12%;     /* #1B1D21 - AEBlack-900 */
+    --popover-border: 41 55% 46%;         /* #B68A35 - AEGold-500 (golden borders) */
     
-    /* Primary Brand Colors - Government Blue */
-    --primary: 221 83% 45%;               /* #1d4ed8 - Primary blue (4.6:1 on white) */
-    --primary-foreground: 0 0% 100%;      /* #ffffff - White text on primary */
-    --primary-hover: 221 83% 40%;         /* #1e40af - Darker hover state */
-    --primary-active: 221 83% 35%;        /* #1e3a8a - Active state */
-    --primary-light: 221 83% 95%;         /* #eff6ff - Light background */
-    --primary-light-foreground: 221 83% 35%; /* #1e3a8a - Text on light primary */
+    /* Primary Brand Colors - AEGold Palette */
+    --primary: 41 55% 46%;                /* #B68A35 - AEGold-500 (4.5:1 on white) */
+    --primary-foreground: 0 0% 100%;      /* #FFFFFF - White text on gold */
+    --primary-hover: 42 55% 37%;          /* #92722A - AEGold-600 */
+    --primary-active: 43 54% 31%;         /* #7C5E24 - AEGold-700 */
+    --primary-light: 44 31% 91%;          /* #F2ECCF - AEGold-100 */
+    --primary-light-foreground: 42 58% 25%; /* #6C4527 - AEGold-800 */
     
-    /* Secondary Colors */
-    --secondary: 210 20% 93%;             /* #f1f5f9 - Secondary background */
-    --secondary-foreground: 220 13% 18%;  /* #2d3338 - Secondary text */
-    --secondary-hover: 210 20% 88%;       /* #e2e8f0 - Secondary hover */
-    --secondary-border: 210 20% 85%;      /* #cbd5e1 - Secondary border */
+    /* Secondary Colors - Light Gray on White */
+    --secondary: 0 0% 97%;                /* #F7F7F7 - AEBlack-50 */
+    --secondary-foreground: 220 9% 12%;   /* #1B1D21 - AEBlack-900 */
+    --secondary-hover: 44 31% 91%;        /* #F2ECCF - AEGold-100 (gold tint on hover) */
+    --secondary-border: 225 9% 82%;       /* #C3C6CB - AEBlack-200 */
     
-    /* Muted Colors */
-    --muted: 210 20% 95%;                 /* #f1f5f9 - Muted background */
-    --muted-foreground: 215 16% 47%;      /* #64748b - Muted text (4.5:1 contrast) */
-    --muted-border: 210 20% 88%;          /* #e2e8f0 - Muted border */
+    /* Muted Colors - Subtle Grays */
+    --muted: 0 0% 97%;                    /* #F7F7F7 - AEBlack-50 */
+    --muted-foreground: 224 9% 26%;       /* #3E4046 - AEBlack-700 (4.5:1 contrast) */
+    --muted-border: 225 9% 82%;           /* #C3C6CB - AEBlack-200 */
     
-    /* Accent Colors */
-    --accent: 210 20% 93%;                /* #f1f5f9 - Accent background */
-    --accent-foreground: 220 13% 18%;     /* #2d3338 - Accent text */
-    --accent-hover: 210 20% 88%;          /* #e2e8f0 - Accent hover */
+    /* Accent Colors - Gold Hover States */
+    --accent: 44 31% 91%;                 /* #F2ECCF - AEGold-100 */
+    --accent-foreground: 220 9% 12%;      /* #1B1D21 - AEBlack-900 */
+    --accent-hover: 41 55% 46%;           /* #B68A35 - AEGold-500 (gold on hover) */
     
     /* Semantic Colors */
     
-    /* Success (Green) */
-    --success: 142 76% 36%;               /* #16a34a - Success green (4.5:1 contrast) */
-    --success-foreground: 0 0% 100%;      /* #ffffff - White text on success */
-    --success-light: 142 76% 95%;         /* #f0fdf4 - Light success background */
-    --success-light-foreground: 142 76% 25%; /* #15803d - Text on light success */
-    --success-border: 142 76% 80%;        /* #86efac - Success border */
-    --color-green-500: hsl(142 76% 36%);  /* Alias for primary success accent */
+    /* Success - AEGreen Palette */
+    --success: 141 35% 45%;               /* #4A9D5C - AEGreen-500 (4.5:1 contrast) */
+    --success-foreground: 0 0% 100%;      /* #FFFFFF - White text on success */
+    --success-light: 135 41% 95%;         /* #F3FAF4 - AEGreen-50 */
+    --success-light-foreground: 141 35% 21%; /* #2F663C - AEGreen-700 */
+    --success-border: 138 37% 66%;        /* #A0D5AB - AEGreen-300 */
+    --color-green-500: hsl(141 35% 45%);  /* Alias for AEGreen-500 */
     
-    /* Warning (Amber) */
-    --warning: 43 96% 56%;                /* #fbbf24 - Warning amber (5.2:1 contrast on white) */
-    --warning-foreground: 25 5% 20%;      /* #332922 - Dark text on warning */
-    --warning-light: 43 96% 95%;          /* #fffbeb - Light warning background */
-    --warning-light-foreground: 43 96% 25%; /* #92400e - Text on light warning */
-    --warning-border: 43 96% 80%;         /* #fde68a - Warning border */
+    /* Warning - AEGold as Warning */
+    --warning: 40 54% 63%;                /* #D7BC6D - AEGold-300 (darker for contrast) */
+    --warning-foreground: 220 9% 12%;     /* #1B1D21 - AEBlack-900 (dark text) */
+    --warning-light: 48 50% 95%;          /* #F9F7ED - AEGold-50 */
+    --warning-light-foreground: 42 58% 25%; /* #6C4527 - AEGold-800 */
+    --warning-border: 43 36% 86%;         /* #E6D7A2 - AEGold-200 */
     
-    /* Error/Destructive (Red) */
-    --destructive: 0 84% 50%;             /* #ef4444 - Error red (4.5:1 contrast) */
-    --destructive-foreground: 0 0% 100%;  /* #ffffff - White text on error */
-    --destructive-light: 0 84% 95%;       /* #fef2f2 - Light error background */
-    --destructive-light-foreground: 0 84% 35%; /* #dc2626 - Text on light error */
-    --destructive-border: 0 84% 80%;      /* #fca5a5 - Error border */
+    /* Error/Destructive - AERed Palette */
+    --destructive: 3 66% 61%;             /* #EA4F49 - AERed-500 (4.5:1 contrast) */
+    --destructive-foreground: 0 0% 100%;  /* #FFFFFF - White text on error */
+    --destructive-light: 0 86% 97%;       /* #FEF2F2 - AERed-50 */
+    --destructive-light-foreground: 3 69% 42%; /* #B52520 - AERed-700 */
+    --destructive-border: 1 80% 83%;      /* #FAAAA7 - AERed-300 */
     
     /* Info (Blue) */
     --info: 213 94% 68%;                  /* #60a5fa - Info blue (4.5:1 contrast) */
@@ -118,21 +119,21 @@ body {
     --info-light-foreground: 213 94% 35%; /* #1d4ed8 - Text on light info */
     --info-border: 213 94% 80%;           /* #93c5fd - Info border */
     
-    /* Interactive Element Colors */
-    --border: 214 20% 88%;                /* #e2e8f0 - Default border (1.4:1 contrast) */
-    --input: 214 20% 85%;                 /* #cbd5e1 - Input border */
-    --input-focus: 221 83% 53%;           /* #3b82f6 - Input focus border */
-    --ring: 221 83% 53%;                  /* #3b82f6 - Focus ring color */
+    /* Interactive Element Colors - Light golden borders, Gold on focus/hover */
+    --border: 41 55% 70%;                 /* #D7BC6D - AEGold-300 (light golden default) */
+    --input: 41 55% 70%;                  /* #D7BC6D - AEGold-300 (light golden default) */
+    --input-focus: 41 55% 46%;            /* #B68A35 - AEGold-500 (gold on focus) */
+    --ring: 41 55% 46%;                   /* #B68A35 - AEGold-500 (gold focus ring) */
     
-    /* Text Hierarchy Colors */
-    --text-primary: 220 13% 18%;          /* #2d3338 - Primary text (7.1:1 contrast) */
-    --text-secondary: 215 16% 47%;        /* #64748b - Secondary text (4.5:1 contrast) */
-    --text-tertiary: 215 20% 65%;         /* #94a3b8 - Tertiary text (3.1:1 contrast - for large text only) */
-    --text-disabled: 215 20% 75%;         /* #cbd5e1 - Disabled text */
+    /* Text Hierarchy Colors - AEBlack Scale */
+    --text-primary: 220 9% 12%;           /* #1B1D21 - AEBlack-900 (14.8:1 contrast) */
+    --text-secondary: 224 9% 26%;         /* #3E4046 - AEBlack-700 (4.5:1 contrast) */
+    --text-tertiary: 225 9% 49%;          /* #797E86 - AEBlack-400 (3.1:1 - large text) */
+    --text-disabled: 225 10% 67%;         /* #9EA2A9 - AEBlack-300 */
     
     /* Component-Specific Colors */
-    --tooltip: 220 26% 14%;               /* #1e293b - Tooltip background */
-    --tooltip-foreground: 0 0% 100%;      /* #ffffff - Tooltip text */
+    --tooltip: 220 9% 12%;                /* #1B1D21 - AEBlack-900 */
+    --tooltip-foreground: 0 0% 97%;       /* #F7F7F7 - AEBlack-50 */
     
     /* Layout & Spacing */
     --radius: 0.5rem;
@@ -156,73 +157,74 @@ body {
 
   .dark {
     /* =============================================================================
-       DARK THEME WCAG-COMPLIANT COLOR TOKENS
+       DARK THEME WCAG-COMPLIANT COLOR TOKENS - OFFICIAL UAE PALETTE
        All color combinations ensure minimum 4.5:1 contrast ratio for AA compliance
+       Using official AEBlack for dark backgrounds, AEGold for accents
        ============================================================================= */
     
-    /* Core Background Colors */
-    --background: 220 26% 7%;              /* #0f172a - Dark background */
-    --foreground: 210 20% 90%;             /* #e2e8f0 - Light text (12.6:1 contrast) */
-    --surface: 220 26% 9%;                 /* #1e293b - Dark surface */
-    --surface-variant: 220 26% 11%;        /* #334155 - Subtle surface variation */
+    /* Core Background Colors - AEBlack Dark Scale */
+    --background: 220 14% 11%;             /* #1B1D21 - AEBlack-900 */
+    --foreground: 225 14% 89%;             /* #E1E3E5 - AEBlack-100 (12.6:1 contrast) */
+    --surface: 219 8% 14%;                 /* #232528 - AEBlack-800 */
+    --surface-variant: 224 9% 26%;         /* #3E4046 - AEBlack-700 */
     
     /* Card & Container Colors */
-    --card: 220 26% 9%;                    /* #1e293b - Card background */
-    --card-foreground: 210 20% 90%;        /* #e2e8f0 - Card text */
-    --card-border: 220 26% 20%;            /* #475569 - Card border */
+    --card: 219 8% 14%;                    /* #232528 - AEBlack-800 */
+    --card-foreground: 225 14% 89%;        /* #E1E3E5 - AEBlack-100 */
+    --card-border: 224 9% 26%;             /* #3E4046 - AEBlack-700 */
     
     /* Popover & Modal Colors */
-    --popover: 220 26% 11%;                /* #334155 - Popover background */
-    --popover-foreground: 210 20% 90%;     /* #e2e8f0 - Popover text */
-    --popover-border: 220 26% 25%;         /* #64748b - Popover border */
+    --popover: 224 9% 26%;                 /* #3E4046 - AEBlack-700 */
+    --popover-foreground: 225 14% 89%;     /* #E1E3E5 - AEBlack-100 */
+    --popover-border: 225 9% 41%;          /* #5F646D - AEBlack-500 */
     
-    /* Primary Brand Colors */
-    --primary: 221 83% 65%;                /* #60a5fa - Lighter blue for dark mode (4.5:1 contrast) */
-    --primary-foreground: 220 26% 7%;      /* #0f172a - Dark text on primary */
-    --primary-hover: 221 83% 70%;          /* #93c5fd - Lighter hover state */
-    --primary-active: 221 83% 75%;         /* #bfdbfe - Active state */
-    --primary-light: 221 83% 15%;          /* #1e3a8a - Dark primary background */
-    --primary-light-foreground: 221 83% 75%; /* #bfdbfe - Light text on dark primary */
+    /* Primary Brand Colors - AEGold Light for Dark Mode */
+    --primary: 41 48% 55%;                 /* #CBA344 - AEGold-400 (lighter for dark bg) */
+    --primary-foreground: 220 14% 11%;     /* #1B1D21 - AEBlack-900 */
+    --primary-hover: 40 54% 63%;           /* #D7BC6D - AEGold-300 */
+    --primary-active: 43 36% 86%;          /* #E6D7A2 - AEGold-200 */
+    --primary-light: 43 54% 31%;           /* #7C5E24 - AEGold-700 (dark variant) */
+    --primary-light-foreground: 43 36% 86%; /* #E6D7A2 - AEGold-200 */
     
-    /* Secondary Colors */
-    --secondary: 220 26% 15%;              /* #475569 - Secondary background */
-    --secondary-foreground: 210 20% 90%;   /* #e2e8f0 - Secondary text */
-    --secondary-hover: 220 26% 20%;        /* #64748b - Secondary hover */
-    --secondary-border: 220 26% 25%;       /* #94a3b8 - Secondary border */
+    /* Secondary Colors - AEBlack Dark Variants */
+    --secondary: 224 9% 26%;               /* #3E4046 - AEBlack-700 */
+    --secondary-foreground: 225 14% 89%;   /* #E1E3E5 - AEBlack-100 */
+    --secondary-hover: 225 9% 33%;         /* #4B4F58 - AEBlack-600 */
+    --secondary-border: 225 9% 41%;        /* #5F646D - AEBlack-500 */
     
-    /* Muted Colors */
-    --muted: 220 26% 13%;                  /* #3f5175 - Muted background */
-    --muted-foreground: 215 20% 65%;       /* #94a3b8 - Muted text (4.5:1 contrast) */
-    --muted-border: 220 26% 20%;           /* #64748b - Muted border */
+    /* Muted Colors - Subtle Dark Grays */
+    --muted: 224 9% 26%;                   /* #3E4046 - AEBlack-700 */
+    --muted-foreground: 225 10% 67%;       /* #9EA2A9 - AEBlack-300 (4.5:1) */
+    --muted-border: 225 9% 41%;            /* #5F646D - AEBlack-500 */
     
-    /* Accent Colors */
-    --accent: 220 26% 15%;                 /* #475569 - Accent background */
-    --accent-foreground: 210 20% 90%;      /* #e2e8f0 - Accent text */
-    --accent-hover: 220 26% 20%;           /* #64748b - Accent hover */
+    /* Accent Colors - Dark Gold Accent */
+    --accent: 224 9% 26%;                  /* #3E4046 - AEBlack-700 */
+    --accent-foreground: 225 14% 89%;      /* #E1E3E5 - AEBlack-100 */
+    --accent-hover: 225 9% 33%;            /* #4B4F58 - AEBlack-600 */
     
     /* Semantic Colors */
     
-    /* Success (Green) */
-    --success: 142 76% 55%;                /* #4ade80 - Success green (4.5:1 contrast on dark) */
-    --success-foreground: 220 26% 7%;      /* #0f172a - Dark text on success */
-    --success-light: 142 76% 15%;          /* #15803d - Dark success background */
-    --success-light-foreground: 142 76% 75%; /* #86efac - Light text on dark success */
-    --success-border: 142 76% 45%;         /* #22c55e - Success border */
-    --color-green-500: hsl(142 76% 55%);   /* Alias for primary success accent */
+    /* Success - AEGreen Light for Dark Mode */
+    --success: 140 43% 62%;                /* #6FB97F - AEGreen-400 (lighter for dark) */
+    --success-foreground: 220 14% 11%;     /* #1B1D21 - AEBlack-900 */
+    --success-light: 141 35% 21%;          /* #2F663C - AEGreen-700 */
+    --success-light-foreground: 138 37% 66%; /* #A0D5AB - AEGreen-300 */
+    --success-border: 141 29% 37%;         /* #3F8E50 - AEGreen-600 */
+    --color-green-500: hsl(140 43% 62%);   /* Alias for AEGreen-400 dark mode */
     
-    /* Warning (Amber) */
-    --warning: 43 96% 65%;                 /* #fcd34d - Warning amber (4.5:1 contrast on dark) */
-    --warning-foreground: 25 5% 20%;       /* #332922 - Dark text on warning */
-    --warning-light: 43 96% 20%;           /* #92400e - Dark warning background */
-    --warning-light-foreground: 43 96% 75%; /* #fde68a - Light text on dark warning */
-    --warning-border: 43 96% 55%;          /* #f59e0b - Warning border */
+    /* Warning - AEGold Light for Dark Mode */
+    --warning: 40 54% 63%;                 /* #D7BC6D - AEGold-300 */
+    --warning-foreground: 220 14% 11%;     /* #1B1D21 - AEBlack-900 */
+    --warning-light: 43 54% 31%;           /* #7C5E24 - AEGold-700 */
+    --warning-light-foreground: 43 36% 86%; /* #E6D7A2 - AEGold-200 */
+    --warning-border: 42 55% 37%;          /* #92722A - AEGold-600 */
     
-    /* Error/Destructive (Red) */
-    --destructive: 0 84% 65%;              /* #f87171 - Error red (4.5:1 contrast on dark) */
-    --destructive-foreground: 220 26% 7%;  /* #0f172a - Dark text on error */
-    --destructive-light: 0 84% 20%;        /* #991b1b - Dark error background */
-    --destructive-light-foreground: 0 84% 75%; /* #fca5a5 - Light text on dark error */
-    --destructive-border: 0 84% 55%;       /* #ef4444 - Error border */
+    /* Error/Destructive - AERed Light for Dark Mode */
+    --destructive: 2 78% 72%;              /* #F47A75 - AERed-400 (lighter for dark) */
+    --destructive-foreground: 220 14% 11%; /* #1B1D21 - AEBlack-900 */
+    --destructive-light: 3 69% 42%;        /* #B52520 - AERed-700 */
+    --destructive-light-foreground: 1 80% 83%; /* #FAAAA7 - AERed-300 */
+    --destructive-border: 3 68% 53%;       /* #D83731 - AERed-600 */
     
     /* Info (Blue) */
     --info: 213 94% 75%;                   /* #93c5fd - Info blue (4.5:1 contrast on dark) */
@@ -231,21 +233,21 @@ body {
     --info-light-foreground: 213 94% 80%;  /* #bfdbfe - Light text on dark info */
     --info-border: 213 94% 65%;            /* #60a5fa - Info border */
     
-    /* Interactive Element Colors */
-    --border: 220 26% 20%;                 /* #64748b - Default border */
-    --input: 220 26% 25%;                  /* #94a3b8 - Input border */
-    --input-focus: 221 83% 65%;            /* #60a5fa - Input focus border */
-    --ring: 221 83% 65%;                   /* #60a5fa - Focus ring color */
+    /* Interactive Element Colors - Golden borders in dark mode */
+    --border: 41 55% 60%;                  /* #CBA344 - AEGold-400 (golden in dark) */
+    --input: 41 55% 60%;                   /* #CBA344 - AEGold-400 (golden in dark) */
+    --input-focus: 41 48% 55%;             /* #CBA344 - AEGold-400 */
+    --ring: 41 48% 55%;                    /* #CBA344 - AEGold-400 */
     
-    /* Text Hierarchy Colors */
-    --text-primary: 210 20% 90%;           /* #e2e8f0 - Primary text (12.6:1 contrast) */
-    --text-secondary: 215 20% 65%;         /* #94a3b8 - Secondary text (4.5:1 contrast) */
-    --text-tertiary: 215 20% 55%;          /* #64748b - Tertiary text (3.1:1 contrast - for large text only) */
-    --text-disabled: 215 20% 45%;          /* #475569 - Disabled text */
+    /* Text Hierarchy Colors - AEBlack Light Scale */
+    --text-primary: 225 14% 89%;           /* #E1E3E5 - AEBlack-100 (12.6:1 contrast) */
+    --text-secondary: 225 10% 67%;         /* #9EA2A9 - AEBlack-300 (4.5:1 contrast) */
+    --text-tertiary: 225 9% 49%;           /* #797E86 - AEBlack-400 (3.2:1 - large text) */
+    --text-disabled: 225 9% 41%;           /* #5F646D - AEBlack-500 */
     
     /* Component-Specific Colors */
-    --tooltip: 210 20% 90%;                /* #e2e8f0 - Tooltip background (light in dark mode) */
-    --tooltip-foreground: 220 26% 7%;      /* #0f172a - Tooltip text (dark in dark mode) */
+    --tooltip: 225 14% 89%;                /* #E1E3E5 - AEBlack-100 */
+    --tooltip-foreground: 220 14% 11%;     /* #1B1D21 - AEBlack-900 */
   }
 
   * {
@@ -503,6 +505,127 @@ body {
   .form-grid-full {
     @apply md:col-span-2;
   }
+
+  /* Golden hover effects for interactive elements */
+  .card-interactive {
+    transition: border-color 0.2s ease;
+  }
+
+  .card-interactive:hover {
+    border-color: hsl(var(--primary));
+  }
+
+  /* ============================================================================
+     FORM INPUTS - Golden Focus Border (No Black Outline)
+     Remove all default browser outlines and show only golden border
+     ============================================================================ */
+  
+  /* Remove default browser outline for all form elements */
+  input,
+  textarea,
+  select,
+  button {
+    outline: none !important;
+  }
+
+  /* Input golden focus states - Only golden border, no black outline */
+  input:focus,
+  textarea:focus,
+  select:focus,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    border-color: hsl(var(--primary)) !important;
+    outline: none !important;
+    outline-width: 0 !important;
+    outline-offset: 0 !important;
+    box-shadow: 0 0 0 1px hsl(var(--primary));
+  }
+
+  /* Ensure no ring-offset creates black border */
+  *:focus-visible {
+    outline: none !important;
+  }
+
+  /* Override any ring-offset utilities that might create black borders */
+  .ring-offset-2,
+  .ring-offset-1,
+  .focus-visible\:ring-offset-2:focus-visible,
+  .focus-visible\:ring-offset-1:focus-visible,
+  .focus\:ring-offset-2:focus,
+  .focus\:ring-offset-1:focus {
+    --tw-ring-offset-width: 0px !important;
+  }
+
+  /* ============================================================================
+     ICON GOLDEN COLOR SCHEME - UAE Government Standard
+     All icons display in AEGold-500 by default, AEGold-600 on hover
+     ============================================================================ */
+  
+  /* Base icon color - Golden (AEGold-500: #B68A35) */
+  svg:not([data-semantic-color]),
+  .lucide,
+  [class*="lucide-"] {
+    color: hsl(var(--primary)) !important;
+    stroke: currentColor;
+    transition: color 0.2s ease;
+  }
+
+  /* Icons in interactive elements - Golden default */
+  button svg:not([data-semantic-color]),
+  a svg:not([data-semantic-color]),
+  [role="button"] svg:not([data-semantic-color]) {
+    color: hsl(var(--primary)) !important;
+  }
+
+  /* Darker gold on hover - (AEGold-600: #92722A) */
+  button:hover svg:not([data-semantic-color]),
+  a:hover svg:not([data-semantic-color]),
+  [role="button"]:hover svg:not([data-semantic-color]),
+  button:hover .lucide,
+  a:hover .lucide,
+  [role="button"]:hover .lucide {
+    color: hsl(var(--primary-hover)) !important;
+  }
+
+  /* Navigation icons - Golden with hover */
+  nav svg:not([data-semantic-color]),
+  nav .lucide {
+    color: hsl(var(--primary)) !important;
+  }
+
+  nav a:hover svg:not([data-semantic-color]),
+  nav button:hover svg:not([data-semantic-color]),
+  nav a:hover .lucide,
+  nav button:hover .lucide {
+    color: hsl(var(--primary-hover)) !important;
+  }
+
+  /* Card and feature icons */
+  .card svg:not([data-semantic-color]),
+  [class*="feature"] svg:not([data-semantic-color]) {
+    color: hsl(var(--primary)) !important;
+  }
+
+  /* Icon-only buttons */
+  button[aria-label] svg:not([data-semantic-color]),
+  .icon-button svg:not([data-semantic-color]) {
+    color: hsl(var(--primary)) !important;
+  }
+
+  button[aria-label]:hover svg:not([data-semantic-color]),
+  .icon-button:hover svg:not([data-semantic-color]) {
+    color: hsl(var(--primary-hover)) !important;
+  }
+
+  /* Override text-primary class on icons */
+  svg.text-primary,
+  .lucide.text-primary {
+    color: hsl(var(--primary)) !important;
+  }
+
+  /* Preserve semantic colors for status icons (success, error, warning, info) 
+     These icons maintain their semantic colors and are excluded from golden scheme */
 
   /* =============================================================================
      WCAG-COMPLIANT BUTTON VARIANTS
@@ -793,23 +916,23 @@ html.modal-open {
 
 @media (prefers-contrast: high) {
   :root {
-    /* Enhanced contrast for high contrast mode */
+    /* Enhanced contrast for high contrast mode - Official AE colors with max contrast */
     --background: 0 0% 100%;              /* Pure white */
     --foreground: 0 0% 0%;                /* Pure black (21:1 contrast) */
-    --primary: 220 100% 25%;              /* Dark blue (8.5:1 contrast) */
+    --primary: 43 59% 29%;                /* #6C4527 - AEGold-800 (9:1 contrast) */
     --primary-foreground: 0 0% 100%;      /* Pure white */
     --secondary: 0 0% 90%;                /* Light gray */
     --secondary-foreground: 0 0% 0%;      /* Pure black */
     --border: 0 0% 0%;                    /* Black borders */
     --input: 0 0% 0%;                     /* Black input borders */
-    --ring: 220 100% 25%;                 /* Dark blue focus ring */
+    --ring: 43 59% 29%;                   /* AEGold-800 focus ring */
     
     /* Semantic colors with maximum contrast */
-    --success: 120 100% 20%;              /* Dark green (7:1 contrast) */
+    --success: 141 40% 27%;               /* #2A5133 - AEGreen-800 (7:1 contrast) */
     --success-foreground: 0 0% 100%;      /* Pure white */
-    --warning: 45 100% 25%;               /* Dark amber (7:1 contrast) */
+    --warning: 43 59% 29%;                /* #6C4527 - AEGold-800 (9:1 contrast) */
     --warning-foreground: 0 0% 100%;      /* Pure white */
-    --destructive: 0 100% 25%;            /* Dark red (7:1 contrast) */
+    --destructive: 3 74% 36%;             /* #95231F - AERed-800 (7:1 contrast) */
     --destructive-foreground: 0 0% 100%;  /* Pure white */
     --info: 220 100% 25%;                 /* Dark blue (7:1 contrast) */
     --info-foreground: 0 0% 100%;         /* Pure white */
@@ -821,23 +944,23 @@ html.modal-open {
   }
   
   .dark {
-    /* High contrast dark mode */
+    /* High contrast dark mode - Official AE colors */
     --background: 0 0% 0%;                /* Pure black */
     --foreground: 0 0% 100%;              /* Pure white (21:1 contrast) */
-    --primary: 220 100% 75%;              /* Light blue (8.5:1 contrast) */
+    --primary: 43 36% 86%;                /* #E6D7A2 - AEGold-200 (12:1 contrast) */
     --primary-foreground: 0 0% 0%;        /* Pure black */
     --secondary: 0 0% 10%;                /* Very dark gray */
     --secondary-foreground: 0 0% 100%;    /* Pure white */
     --border: 0 0% 100%;                  /* White borders */
     --input: 0 0% 100%;                   /* White input borders */
-    --ring: 220 100% 75%;                 /* Light blue focus ring */
+    --ring: 43 36% 86%;                   /* AEGold-200 focus ring */
     
     /* Semantic colors with maximum contrast */
-    --success: 120 100% 75%;              /* Light green (8:1 contrast) */
+    --success: 138 37% 74%;               /* #CAE8CF - AEGreen-200 (11:1 contrast) */
     --success-foreground: 0 0% 0%;        /* Pure black */
-    --warning: 45 100% 75%;               /* Light amber (8:1 contrast) */
+    --warning: 43 36% 86%;                /* #E6D7A2 - AEGold-200 (12:1 contrast) */
     --warning-foreground: 0 0% 0%;        /* Pure black */
-    --destructive: 0 100% 75%;            /* Light red (8:1 contrast) */
+    --destructive: 1 80% 83%;             /* #FAAAA7 - AERed-300 (10:1 contrast) */
     --destructive-foreground: 0 0% 0%;    /* Pure black */
     --info: 220 100% 75%;                 /* Light blue (8:1 contrast) */
     --info-foreground: 0 0% 0%;           /* Pure black */

@@ -1,3 +1,4 @@
+import React from 'react';
 import { cn } from '@/lib/utils';
 import { CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +28,6 @@ export function ProgressBar({
   const isRTL = i18n.language === 'ar';
 
   const steps = Array.from({ length: totalSteps }, (_, index) => index + 1);
-  const progressRatio = totalSteps > 1 ? Math.min(Math.max((currentStep - 1) / (totalSteps - 1), 0), 1) : 0;
 
   const getStepStatus = (step: number) => {
     if (completedSteps.has(step) || step < currentStep) {
@@ -50,10 +50,10 @@ export function ProgressBar({
           : t('progress.status_upcoming', 'Upcoming step');
 
     const circleClasses = cn(
-      'relative z-[1] flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 text-sm font-semibold transition-all duration-300 transform',
-      status === 'complete' && 'bg-[var(--color-green-500)] text-white border-transparent shadow-sm',
-      status === 'current' && 'bg-[var(--color-green-500)] text-white border-transparent shadow-lg scale-105',
-      status === 'upcoming' && 'bg-surface text-muted-foreground border-muted-border'
+      'relative z-[10] flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 text-sm font-semibold transition-all duration-300 transform focus:outline-none',
+      status === 'complete' && 'bg-primary-hover text-white border-primary-hover shadow-gold-md scale-105',
+      status === 'current' && 'bg-primary text-white border-primary ring-4 ring-primary/30 shadow-gold-lg scale-110',
+      status === 'upcoming' && 'bg-white text-foreground border-gray-300'
     );
 
     return (
@@ -68,16 +68,22 @@ export function ProgressBar({
             })}
           </span>
           {status === 'complete' ? (
-            <CheckCircle className="h-4 w-4" aria-hidden="true" />
+            <CheckCircle className="h-5 w-5 text-white stroke-2" aria-hidden="true" />
           ) : (
-            <span aria-hidden="true">{step}</span>
+            <span aria-hidden="true" className={cn(
+              'font-bold',
+              status === 'current' && 'text-black',
+              status === 'upcoming' && 'text-foreground'
+            )}>{step}</span>
           )}
         </div>
 
         <div
           className={cn(
-            'mt-2 min-w-0 px-1 text-xs font-medium text-muted-foreground',
-            (status === 'current' || status === 'complete') && 'text-foreground'
+            'mt-2 min-w-0 px-1 text-xs font-medium transition-colors duration-300',
+            status === 'upcoming' && 'text-muted-foreground',
+            status === 'complete' && 'text-primary font-semibold',
+            status === 'current' && 'text-primary font-bold'
           )}
         >
           {t('progress.step_label', { step })}
@@ -93,31 +99,30 @@ export function ProgressBar({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="relative">
-        <div
-          className="pointer-events-none absolute inset-x-[20px] top-5 h-[2px] rounded-full"
-          style={{ backgroundColor: 'hsl(var(--muted-foreground))', opacity: 0.35 }}
-          aria-hidden="true"
-        />
-        <div
-          className={cn(
-            'pointer-events-none absolute top-5 h-[2px] rounded-full bg-[var(--color-green-500)] origin-left transition-transform duration-300',
-            isRTL && 'left-auto right-[20px] origin-right',
-            !isRTL && 'left-[20px]'
-          )}
-          style={{
-            width: 'calc(100% - 40px)',
-            transform: `scaleX(${progressRatio})`,
-          }}
-          aria-hidden="true"
-        />
         <ol
           role="list"
           className={cn(
-            'relative z-[1] flex w-full items-center justify-between',
+            'flex w-full items-center',
             isRTL && 'flex-row-reverse'
           )}
         >
-          {renderSteps}
+          {renderSteps.map((stepElement, index) => (
+            <React.Fragment key={`step-${index + 1}`}>
+              {stepElement}
+              {/* Connecting line after each step (except last) */}
+              {index < renderSteps.length - 1 && (
+                <div
+                  className="flex-1 h-[2px] mx-2 rounded-full transition-all duration-300 self-center"
+                  style={{
+                    backgroundColor: getStepStatus(index + 1) === 'complete' 
+                      ? 'hsl(var(--primary))' 
+                      : '#E5E7EB',
+                    marginBottom: '20px'
+                  }}
+                />
+              )}
+            </React.Fragment>
+          ))}
         </ol>
       </div>
     </nav>

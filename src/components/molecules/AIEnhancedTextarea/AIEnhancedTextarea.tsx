@@ -65,8 +65,8 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
           maxLength={maxLength}
           disabled={disabled}
           className={`
-            w-full px-3 py-2 rounded-md border resize-none
-            focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary
+            w-full px-3 py-2 rounded-md border resize-none transition-all duration-200
+            focus:outline-none focus:border-primary focus:shadow-gold-sm
             ${error ? 'border-destructive-border' : 'border-input'}
             ${disabled ? 'bg-muted cursor-not-allowed text-text-tertiary' : 'bg-card'}
             ${className}
@@ -109,7 +109,7 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
             onClick={openModal}
             disabled={disabled}
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
-            bg-primary text-primary-foreground hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+            bg-primary text-primary-foreground hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary"
             title="Get AI writing assistance"
           >
             <span>✨</span>

@@ -14,7 +14,7 @@ export function AIAssistButton({
   currentValue,
   onSuggestionAccept,
   userContext = {},
-  className = "absolute top-2 right-2 px-3 py-1 text-xs rounded border transition-colors bg-primary-light text-primary-light-foreground border-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+  className = "absolute top-2 right-2 px-3 py-1 text-xs rounded border transition-colors bg-primary-light text-primary-light-foreground border-primary hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary"
 }: AIAssistButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [, setError] = useState<string | null>(null);

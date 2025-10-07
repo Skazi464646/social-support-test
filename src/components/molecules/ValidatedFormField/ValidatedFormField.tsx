@@ -175,7 +175,7 @@ export function ValidatedFormField<
           data-dirty={isDirty}
           data-touched={isTouched}
           dir={fieldDir}
-          className="rounded border-input text-primary focus:ring-ring focus:ring-2"
+          className="rounded border-input text-primary focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
     );
@@ -232,7 +232,7 @@ export function ValidatedFormField<
                   data-dirty={isDirty}
                   data-touched={isTouched}
                   dir={fieldDir}
-                  className="rounded border-input text-primary focus:ring-ring focus:ring-2 disabled:opacity-50 disabled:pointer-events-none"
+                  className="rounded border-input text-primary focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:pointer-events-none"
                 />
                 <span className="text-sm text-foreground select-none">
                   {option.label}
@@ -265,7 +265,7 @@ export function ValidatedFormField<
           data-dirty={isDirty}
           data-touched={isTouched}
           dir={fieldDir}
-          className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-50 disabled:pointer-events-none"
+          className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm transition-all duration-200 focus:outline-none focus:border-primary focus:shadow-gold-sm disabled:opacity-50 disabled:pointer-events-none"
         >
           {options.map((option) => (
             <option 
@@ -312,7 +312,7 @@ export function ValidatedFormField<
           data-dirty={isDirty}
           data-touched={isTouched}
           dir={fieldDir}
-          className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent disabled:opacity-50 disabled:pointer-events-none resize-none"
+          className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm transition-all duration-200 focus:outline-none focus:border-primary focus:shadow-gold-sm disabled:opacity-50 disabled:pointer-events-none resize-none"
         />
       </FormField>
     );

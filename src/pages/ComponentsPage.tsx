@@ -29,26 +29,75 @@ export function ComponentsPage() {
           {t('components.title', 'Component Showcase')}
         </h1>
 
-        {/* Buttons */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Buttons</h2>
-          <div className="flex flex-wrap gap-4">
-            <Button variant="default">Default</Button>
-            <Button variant="secondary">Secondary</Button>
-            <Button variant="outline">Outline</Button>
-            <Button variant="ghost">Ghost</Button>
-            <Button variant="destructive">Destructive</Button>
-            <Button 
-              onClick={() => success({ title: 'Success!', description: 'This is a success toast.' })}
-            >
-              Show Success Toast
-            </Button>
-            <Button 
-              variant="destructive"
-              onClick={() => error({ title: 'Error!', description: 'This is an error toast.' })}
-            >
-              Show Error Toast
-            </Button>
+        {/* Button Variants */}
+        <Card className="p-6 space-y-6">
+          <h2 className="text-xl font-semibold">Button Variants - UAE Design System</h2>
+          
+          {/* Solid/Primary Buttons */}
+          <div>
+            <h3 className="text-sm font-medium text-text-secondary mb-3">Solid (Primary) - Main Actions</h3>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="primary" size="lg">Large button</Button>
+              <Button variant="primary" size="base">Base button</Button>
+              <Button variant="primary" size="sm">Small button</Button>
+              <Button variant="primary" size="xs">Extra small button</Button>
+            </div>
+          </div>
+
+          {/* Outline/Secondary Buttons */}
+          <div>
+            <h3 className="text-sm font-medium text-text-secondary mb-3">Outline (Secondary) - Alternative Actions</h3>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="outline" size="lg">Large button</Button>
+              <Button variant="outline" size="base">Base button</Button>
+              <Button variant="outline" size="sm">Small button</Button>
+              <Button variant="outline" size="xs">Extra small button</Button>
+            </div>
+          </div>
+
+          {/* Soft/Ghost Buttons */}
+          <div>
+            <h3 className="text-sm font-medium text-text-secondary mb-3">Soft (Ghost) - Subtle Actions</h3>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="ghost" size="lg">Large button</Button>
+              <Button variant="ghost" size="base">Base button</Button>
+              <Button variant="ghost" size="sm">Small button</Button>
+              <Button variant="ghost" size="xs">Extra small button</Button>
+            </div>
+          </div>
+
+          {/* Semantic Variants */}
+          <div>
+            <h3 className="text-sm font-medium text-text-secondary mb-3">Semantic Variants</h3>
+            <div className="flex flex-wrap gap-3">
+              <Button variant="destructive">Destructive</Button>
+              <Button variant="success" onClick={() => success({ title: 'Success!', description: 'Action completed.' })}>
+                Success
+              </Button>
+              <Button variant="warning">Warning</Button>
+              <Button variant="info">Info</Button>
+              <Button variant="link">Link Button</Button>
+            </div>
+          </div>
+
+          {/* Interactive Examples */}
+          <div>
+            <h3 className="text-sm font-medium text-text-secondary mb-3">Interactive Examples</h3>
+            <div className="flex flex-wrap gap-3">
+              <Button 
+                variant="primary"
+                onClick={() => success({ title: 'Success!', description: 'This is a success toast.' })}
+              >
+                Show Success Toast
+              </Button>
+              <Button 
+                variant="destructive"
+                onClick={() => error({ title: 'Error!', description: 'This is an error toast.' })}
+              >
+                Show Error Toast
+              </Button>
+              <Button variant="outline" isLoading>Loading...</Button>
+            </div>
           </div>
         </Card>
 

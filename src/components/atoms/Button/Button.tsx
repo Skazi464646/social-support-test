@@ -4,59 +4,58 @@ import { cn } from '@/lib/utils';
 import { Spinner } from './Spinner';
 
 const buttonVariants = cva(
-  // Base styles using design tokens with enhanced accessibility and interaction states
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] select-none',
+  // Base styles - UAE Government Design System
+  'inline-flex items-center justify-center whitespace-nowrap font-medium transition-all duration-200 focus-visible:outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:pointer-events-none disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98] select-none',
   {
     variants: {
       variant: {
-        // Primary: Main action button using primary design tokens
-        default: 'bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active shadow-sm hover:shadow-md focus-visible:ring-primary/30',
-        primary: 'bg-primary text-primary-foreground hover:bg-primary-hover active:bg-primary-active shadow-sm hover:shadow-md focus-visible:ring-primary/30',
+        // Solid (Primary): Golden background with white text - Main CTAs
+        default: 'bg-primary text-primary-foreground hover:bg-primary-hover hover:shadow-gold-md active:bg-primary-active focus-visible:ring-primary/30 shadow-sm',
+        primary: 'bg-primary text-primary-foreground hover:bg-primary-hover hover:shadow-gold-md active:bg-primary-active focus-visible:ring-primary/30 shadow-sm',
+        solid: 'bg-primary text-primary-foreground hover:bg-primary-hover hover:shadow-gold-md active:bg-primary-active focus-visible:ring-primary/30 shadow-sm',
         
-        // Secondary: Alternative action using secondary design tokens
-        secondary: 'bg-secondary text-secondary-foreground border border-secondary-border hover:bg-secondary-hover active:bg-secondary-hover/80 shadow-sm hover:shadow focus-visible:ring-secondary/30',
+        // Outline (Secondary): White background with golden border - Secondary actions
+        outline: 'border-2 border-primary bg-background text-primary hover:bg-accent hover:border-primary-hover hover:shadow-gold-sm active:bg-accent/80 focus-visible:ring-primary/30',
+        secondary: 'border-2 border-primary bg-background text-primary hover:bg-accent hover:border-primary-hover hover:shadow-gold-sm active:bg-accent/80 focus-visible:ring-primary/30',
         
-        // Destructive: Dangerous actions using destructive design tokens
-        destructive: 'bg-destructive text-destructive-foreground hover:opacity-90 active:opacity-95 shadow-sm hover:shadow-md focus-visible:ring-destructive/30',
+        // Soft (Ghost/Tertiary): Light beige background with golden text - Subtle actions
+        ghost: 'bg-primary-light text-primary hover:bg-primary-light/80 hover:shadow-sm active:bg-primary-light/60 focus-visible:ring-primary/30',
+        soft: 'bg-primary-light text-primary hover:bg-primary-light/80 hover:shadow-sm active:bg-primary-light/60 focus-visible:ring-primary/30',
+        tertiary: 'bg-primary-light text-primary hover:bg-primary-light/80 hover:shadow-sm active:bg-primary-light/60 focus-visible:ring-primary/30',
         
-        // Outline: Subtle action with border using design tokens
-        outline: 'border border-input bg-background text-foreground hover:bg-accent hover:text-accent-foreground hover:border-accent-hover active:bg-accent/80 focus-visible:ring-accent/30',
+        // Semantic variants
+        destructive: 'bg-destructive text-destructive-foreground hover:bg-destructive/90 hover:shadow-md active:bg-destructive/80 shadow-sm focus-visible:ring-destructive/30',
+        success: 'bg-success text-success-foreground hover:bg-success/90 hover:shadow-md active:bg-success/80 shadow-sm focus-visible:ring-success/30',
+        warning: 'bg-warning text-warning-foreground hover:bg-warning/90 hover:shadow-md active:bg-warning/80 shadow-sm focus-visible:ring-warning/30',
+        info: 'bg-info text-info-foreground hover:bg-info/90 hover:shadow-md active:bg-info/80 shadow-sm focus-visible:ring-info/30',
         
-        // Ghost: Minimal styling for subtle actions
-        ghost: 'text-foreground hover:bg-accent hover:text-accent-foreground active:bg-accent/80 focus-visible:ring-accent/30',
-        
-        // Success: Positive actions using success design tokens
-        success: 'bg-success text-success-foreground hover:opacity-90 active:opacity-95 shadow-sm hover:shadow-md focus-visible:ring-success/30',
-        
-        // Warning: Caution actions using warning design tokens
-        warning: 'bg-warning text-warning-foreground hover:opacity-90 active:opacity-95 shadow-sm hover:shadow-md focus-visible:ring-warning/30',
-        
-        // Info: Informational actions using info design tokens
-        info: 'bg-info text-info-foreground hover:opacity-90 active:opacity-95 shadow-sm hover:shadow-md focus-visible:ring-info/30',
+        // Link variant for text-only buttons
+        link: 'text-primary underline-offset-4 hover:underline hover:text-primary-hover focus-visible:ring-primary/30',
       },
       size: {
-        // Small: Compact buttons using design token spacing
-        sm: 'h-8 rounded-md px-3 text-sm gap-1.5',
+        // Extra small: Very compact buttons
+        xs: 'h-7 rounded-md px-3 py-1 text-xs gap-1',
         
-        // Medium: Default size using design token spacing
-        md: 'h-10 rounded-md px-4 py-2 text-sm gap-2',
+        // Small: Compact buttons
+        sm: 'h-9 rounded-md px-4 py-2 text-sm gap-1.5',
         
-        // Large: Prominent buttons using design token spacing
+        // Base (Medium): Default size - most common
+        base: 'h-11 rounded-lg px-5 py-2.5 text-sm gap-2',
+        md: 'h-11 rounded-lg px-5 py-2.5 text-sm gap-2',
+        
+        // Large: Prominent buttons for primary actions
         lg: 'h-12 rounded-lg px-6 py-3 text-base gap-2.5',
         
-        // Icon: Square buttons for icons using design token spacing
+        // Extra large: Hero/Featured buttons
+        xl: 'h-14 rounded-xl px-8 py-4 text-lg gap-3',
+        
+        // Icon: Square buttons for icons only
         icon: 'h-10 w-10 rounded-md p-0',
-        
-        // Extra small: Very compact buttons
-        xs: 'h-7 rounded px-2 text-xs gap-1',
-        
-        // Extra large: Hero buttons
-        xl: 'h-14 rounded-lg px-8 py-4 text-lg gap-3',
       },
     },
     defaultVariants: {
       variant: 'default',
-      size: 'md',
+      size: 'base',
     },
   }
 );

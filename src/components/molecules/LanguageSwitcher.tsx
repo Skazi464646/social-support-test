@@ -51,7 +51,7 @@ export function LanguageSwitcher({
             'text-sm font-medium text-foreground',
             'hover:bg-accent hover:text-accent-foreground',
             'rounded-md transition-colors',
-            'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+            'focus-visible:outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             className
           )}
@@ -77,7 +77,7 @@ export function LanguageSwitcher({
         'text-sm font-medium text-foreground',
         'hover:bg-accent hover:text-accent-foreground',
         'rounded-md transition-all duration-200',
-        'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
+        'focus-visible:outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         'group relative',
         className

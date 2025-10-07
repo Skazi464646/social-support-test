@@ -363,7 +363,7 @@ export function AIAssistModal({
                   type="button"
                   onClick={generateSuggestion}
                   disabled={isLoading}
-                  className="flex-1 px-3 py-2 text-sm font-medium rounded bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex-1 px-3 py-2 text-sm font-medium rounded bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isLoading ? (
                     <>
@@ -379,7 +379,7 @@ export function AIAssistModal({
                     type="button"
                     onClick={regenerateSuggestion}
                     disabled={isLoading}
-                    className="px-3 py-2 text-sm font-medium rounded border border-border hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 disabled:opacity-50"
+                    className="px-3 py-2 text-sm font-medium rounded border border-border hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
                     title={AI_MESSAGES.modal.regenerateTitle}
                   >
                     🔄
@@ -523,7 +523,7 @@ export function AIAssistModal({
                       type="button"
                       onClick={editSuggestion}
                       disabled={!activeSuggestionId}
-                      className="px-3 py-1 text-sm border border-border rounded hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 disabled:opacity-50"
+                      className="px-3 py-1 text-sm border border-border rounded hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
                     >
                       ✏️ Edit
                     </button>
@@ -532,14 +532,14 @@ export function AIAssistModal({
                       <button
                         type="button"
                         onClick={cancelEdit}
-                        className="px-3 py-1 text-sm border border-border rounded hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+                        className="px-3 py-1 text-sm border border-border rounded hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
                       >
                         Cancel
                       </button>
                       <button
                         type="button"
                         onClick={saveEdit}
-                        className="px-3 py-1 text-sm rounded bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+                        className="px-3 py-1 text-sm rounded bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
                       >
                         Save
                       </button>
@@ -563,7 +563,7 @@ export function AIAssistModal({
                         ? AI_MESSAGES.modal.selectPlaceholder
                         : fieldConfig.placeholder
                   }
-                  className={`w-full flex-1 p-3 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary ${isEditing ? 'bg-card' : 'bg-muted'
+                  className={`w-full flex-1 p-3 border rounded-md resize-none transition-all duration-200 focus:outline-none focus:border-primary focus:shadow-gold-sm ${isEditing ? 'bg-card' : 'bg-muted'
                     }`}
                 />
 
@@ -610,7 +610,7 @@ export function AIAssistModal({
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 border border-border rounded-md text-text-primary hover:bg-muted transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 w-full sm:w-auto"
+                className="px-4 py-2 border border-border rounded-md text-text-primary hover:bg-muted transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-auto"
               >
                 Cancel
               </button>
@@ -618,7 +618,7 @@ export function AIAssistModal({
                 type="button"
                 onClick={acceptSuggestion}
                 disabled={!editedText.trim() || !isValidLength}
-                className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 disabled:opacity-50 disabled:cursor-not-allowed font-medium w-full sm:w-auto"
+                className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed font-medium w-full sm:w-auto"
               >
                 Use This Text
               </button>

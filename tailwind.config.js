@@ -117,9 +117,30 @@ export default {
         },
       },
       borderRadius: {
-        lg: 'var(--radius)',
-        md: 'calc(var(--radius) - 2px)',
-        sm: 'calc(var(--radius) - 4px)',
+        'xs': '0.25rem',   // 4px - Extra small for badges, tags
+        'sm': '0.375rem',  // 6px - Small for inputs, small buttons
+        'md': '0.5rem',    // 8px - Default for buttons
+        'lg': '0.75rem',   // 12px - Large for cards, modals
+        'xl': '1rem',      // 16px - Extra large for prominent cards
+        '2xl': '1.25rem',  // 20px - Very large for hero elements
+        '3xl': '1.5rem',   // 24px - Massive for special containers
+        'full': '9999px',  // Full rounded for pills
+      },
+      boxShadow: {
+        // Subtle elevation shadows with warm tones
+        'xs': '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+        'sm': '0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08)',
+        'md': '0 4px 6px -1px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.08)',
+        'lg': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.08)',
+        'xl': '0 20px 25px -5px rgba(0, 0, 0, 0.08), 0 8px 10px -6px rgba(0, 0, 0, 0.08)',
+        '2xl': '0 25px 50px -12px rgba(0, 0, 0, 0.12)',
+        'inner': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.05)',
+        // AEGold glow for focus/hover states (using AEGold-500: #B68A35)
+        'gold-sm': '0 0 0 3px rgba(182, 138, 53, 0.1)',
+        'gold-md': '0 0 0 4px rgba(182, 138, 53, 0.15)',
+        'gold-lg': '0 0 0 6px rgba(182, 138, 53, 0.2)',
+        // None
+        'none': 'none',
       },
       fontFamily: {
         sans: ['var(--font-family)', 'ui-sans-serif', 'system-ui'],

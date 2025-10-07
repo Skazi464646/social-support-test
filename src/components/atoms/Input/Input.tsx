@@ -3,14 +3,14 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import { cn } from '@/lib/utils';
 
 const inputVariants = cva(
-  'flex w-full rounded-md border transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-muted/30',
+  'flex w-full rounded-md border transition-all duration-200 file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 disabled:bg-muted/30',
   {
     variants: {
       variant: {
-        default: 'border-input bg-background text-foreground placeholder:text-muted-foreground hover:border-ring focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2',
-        error: 'border-destructive bg-destructive-light/20 text-foreground placeholder:text-muted-foreground focus-visible:border-destructive focus-visible:ring-2 focus-visible:ring-destructive/30 focus-visible:ring-offset-2',
-        success: 'border-success bg-success-light/20 text-foreground placeholder:text-muted-foreground focus-visible:border-success focus-visible:ring-2 focus-visible:ring-success/30 focus-visible:ring-offset-2',
-        warning: 'border-warning bg-warning-light/20 text-foreground placeholder:text-muted-foreground focus-visible:border-warning focus-visible:ring-2 focus-visible:ring-warning/30 focus-visible:ring-offset-2',
+        default: 'border-input bg-background text-foreground placeholder:text-muted-foreground hover:border-primary/50 focus-visible:border-primary focus:border-primary focus-visible:shadow-gold-sm',
+        error: 'border-destructive bg-destructive-light/20 text-foreground placeholder:text-muted-foreground focus-visible:border-destructive focus:border-destructive',
+        success: 'border-success bg-success-light/20 text-foreground placeholder:text-muted-foreground focus-visible:border-success focus:border-success',
+        warning: 'border-warning bg-warning-light/20 text-foreground placeholder:text-muted-foreground focus-visible:border-warning focus:border-warning',
       },
       size: {
         sm: 'h-8 px-2 py-1 text-sm',

@@ -7,10 +7,10 @@ const cardVariants = cva(
   {
     variants: {
       variant: {
-        flat: 'border-border shadow-none hover:shadow-sm',
-        elevated: 'border-card-border shadow-sm hover:shadow-md',
-        outlined: 'border-2 border-border shadow-none hover:border-primary/20',
-        interactive: 'border-card-border shadow-sm hover:shadow-lg hover:border-primary/30 cursor-pointer',
+        flat: 'border-primary/40 shadow-none hover:shadow-sm hover:border-primary/60',
+        elevated: 'border-primary shadow-sm hover:shadow-md',
+        outlined: 'border-2 border-primary/50 shadow-none hover:border-primary',
+        interactive: 'border-primary shadow-sm hover:shadow-lg hover:border-primary-hover cursor-pointer',
         success: 'border-success-border bg-success-light text-success-light-foreground shadow-sm',
         warning: 'border-warning-border bg-warning-light text-warning-light-foreground shadow-sm',
         destructive: 'border-destructive-border bg-destructive-light text-destructive-light-foreground shadow-sm',
