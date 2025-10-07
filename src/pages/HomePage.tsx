@@ -45,10 +45,10 @@ export function HomePage() {
       <div className="mx-auto flex w-full max-w-6xl flex-col gap-16 lg:gap-24">
         {/* Hero Section */}
         <section className="mx-auto w-full max-w-3xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-6xl">
+          <h1 className="text-display-lg font-bold tracking-tight text-foreground sm:text-display-2xl">
             {t('home.hero.title', 'Social Support Portal')}
           </h1>
-          <p className="mt-6 text-lg leading-8 text-muted-foreground">
+          <p className="mt-6 text-xl leading-relaxed text-muted-foreground">
             {t('home.hero.description', 'Apply for financial assistance through our secure, AI-enhanced portal. Get intelligent writing assistance and guidance throughout your application process.')}
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
@@ -67,17 +67,17 @@ export function HomePage() {
 
         {/* Features Grid */}
         <section className="w-full">
-          <h2 className="mb-12 text-center text-3xl font-bold tracking-tight text-foreground">
+          <h2 className="mb-12 text-center text-display-md font-bold tracking-tight text-foreground">
             {t('home.features.title', 'Why Choose Our Portal?')}
           </h2>
           <dl className="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {features.map((feature) => (
               <Card key={feature.title} className="h-full p-6">
-                <dt className="flex items-center gap-x-3 text-base font-semibold leading-7 text-foreground">
+                <dt className="flex items-center gap-x-3 text-lg font-semibold leading-relaxed text-foreground">
                   <feature.icon className="h-5 w-5 flex-none text-primary" aria-hidden="true" />
                   {feature.title}
                 </dt>
-                <dd className="mt-4 flex flex-auto flex-col text-base leading-7 text-muted-foreground">
+                <dd className="mt-4 flex flex-auto flex-col text-base leading-relaxed text-muted-foreground">
                   <p className="flex-auto">{feature.description}</p>
                 </dd>
               </Card>
@@ -88,10 +88,10 @@ export function HomePage() {
         {/* CTA Section */}
         <section className="mx-auto w-full max-w-3xl text-center">
           <Card className="border-primary/20 bg-primary/5 p-8">
-            <h2 className="text-2xl font-bold tracking-tight text-foreground">
+            <h2 className="text-display-sm font-bold tracking-tight text-foreground">
               {t('home.cta.title', 'Ready to Apply?')}
             </h2>
-            <p className="mt-6 text-lg leading-8 text-muted-foreground">
+            <p className="mt-6 text-xl leading-relaxed text-muted-foreground">
               {t('home.cta.description', 'Start your application today with our AI-powered assistance to help you every step of the way.')}
             </p>
             <div className="mt-8">

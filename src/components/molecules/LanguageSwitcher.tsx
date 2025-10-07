@@ -48,10 +48,10 @@ export function LanguageSwitcher({
           disabled={isChanging}
           className={cn(
             'inline-flex items-center gap-2 ps-3 pe-3 py-2',
-            'text-sm font-medium text-foreground',
-            'hover:bg-accent hover:text-accent-foreground',
-            'rounded-md transition-colors',
-            'focus-visible:outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+            'text-sm font-medium text-foreground/70',
+            'hover:bg-primary/15 hover:text-primary hover:shadow-gold-sm hover:scale-105 hover:border-primary/40',
+            'rounded-md transition-all duration-300 border border-primary/20 bg-primary/5',
+            'focus-visible:outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:scale-105',
             'disabled:opacity-50 disabled:cursor-not-allowed',
             className
           )}
@@ -74,10 +74,10 @@ export function LanguageSwitcher({
       disabled={isChanging}
       className={cn(
         'inline-flex items-center gap-2 ps-3 pe-3 py-2',
-        'text-sm font-medium text-foreground',
-        'hover:bg-accent hover:text-accent-foreground',
-        'rounded-md transition-all duration-200',
-        'focus-visible:outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary',
+        'text-sm font-medium text-foreground/70',
+        'hover:bg-primary/15 hover:text-primary hover:shadow-gold-sm hover:scale-105 hover:border-primary/40',
+        'rounded-md transition-all duration-300 border border-primary/20 bg-primary/5',
+        'focus-visible:outline-none focus:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:scale-105',
         'disabled:opacity-50 disabled:cursor-not-allowed',
         'group relative',
         className

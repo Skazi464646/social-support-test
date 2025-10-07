@@ -144,8 +144,54 @@ export default {
       },
       fontFamily: {
         sans: ['var(--font-family)', 'ui-sans-serif', 'system-ui'],
-        arabic: ['"Noto Sans Arabic"', '"IBM Plex Sans Arabic"', '"Dubai"', '"Tahoma"', 'sans-serif'],
+        arabic: ['Cairo', '"Noto Sans Arabic"', '"IBM Plex Sans Arabic"', '"Dubai"', '"Tahoma"', 'sans-serif'],
         english: ['Inter', '"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', 'sans-serif'],
+        mono: ['"JetBrains Mono"', '"Fira Code"', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+      },
+      fontSize: {
+        // Display sizes for hero sections
+        'display-2xl': ['4.5rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '800' }],
+        'display-xl': ['3.75rem', { lineHeight: '1.1', letterSpacing: '-0.02em', fontWeight: '800' }],
+        'display-lg': ['3rem', { lineHeight: '1.2', letterSpacing: '-0.02em', fontWeight: '700' }],
+        'display-md': ['2.25rem', { lineHeight: '1.2', letterSpacing: '-0.01em', fontWeight: '700' }],
+        'display-sm': ['1.875rem', { lineHeight: '1.3', letterSpacing: '-0.01em', fontWeight: '600' }],
+        'display-xs': ['1.5rem', { lineHeight: '1.4', letterSpacing: '0', fontWeight: '600' }],
+        
+        // Body text sizes
+        'text-xl': ['1.25rem', { lineHeight: '1.6', letterSpacing: '0', fontWeight: '400' }],
+        'text-lg': ['1.125rem', { lineHeight: '1.6', letterSpacing: '0', fontWeight: '400' }],
+        'text-base': ['1rem', { lineHeight: '1.6', letterSpacing: '0', fontWeight: '400' }],
+        'text-sm': ['0.875rem', { lineHeight: '1.5', letterSpacing: '0.01em', fontWeight: '400' }],
+        'text-xs': ['0.75rem', { lineHeight: '1.4', letterSpacing: '0.02em', fontWeight: '400' }],
+        
+        // UI element sizes
+        'ui-lg': ['1rem', { lineHeight: '1.5', letterSpacing: '0', fontWeight: '500' }],
+        'ui-base': ['0.875rem', { lineHeight: '1.4', letterSpacing: '0.01em', fontWeight: '500' }],
+        'ui-sm': ['0.75rem', { lineHeight: '1.3', letterSpacing: '0.02em', fontWeight: '500' }],
+        'ui-xs': ['0.6875rem', { lineHeight: '1.2', letterSpacing: '0.03em', fontWeight: '500' }],
+      },
+      fontWeight: {
+        thin: '300',
+        normal: '400',
+        medium: '500',
+        semibold: '600',
+        bold: '700',
+        extrabold: '800',
+      },
+      lineHeight: {
+        tight: '1.1',
+        snug: '1.3',
+        normal: '1.5',
+        relaxed: '1.6',
+        loose: '1.8',
+      },
+      letterSpacing: {
+        tighter: '-0.02em',
+        tight: '-0.01em',
+        normal: '0',
+        wide: '0.01em',
+        wider: '0.02em',
+        widest: '0.03em',
       },
       keyframes: {
         'accordion-down': {

@@ -35,15 +35,15 @@ export function AppLayout({ children }: AppLayoutProps) {
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       {/* Header */}
-      <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="sticky top-0 z-50 w-full border-b border-primary/20 bg-gradient-to-r from-primary/5 via-primary/8 to-primary/5 backdrop-blur supports-[backdrop-filter]:bg-gradient-to-r supports-[backdrop-filter]:from-primary/5 supports-[backdrop-filter]:via-primary/8 supports-[backdrop-filter]:to-primary/5">
         <div className="w-full px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between max-w-screen-2xl mx-auto">
             {/* Logo/Brand */}
-            <Link to="/" className="flex items-center space-x-2 flex-shrink-0">
-              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground">
+            <Link to="/" className="flex items-center space-x-2 flex-shrink-0 transition-all duration-300 hover:scale-105 hover:opacity-80 group">
+              <div className="flex h-6 w-6 items-center justify-center rounded-md bg-primary text-primary-foreground transition-all duration-300 group-hover:shadow-gold-sm group-hover:scale-110">
                 <FileText className="h-4 w-4" />
               </div>
-              <span className="hidden text-sm font-bold sm:inline-block truncate">
+              <span className="hidden text-lg font-semibold sm:inline-block truncate transition-colors duration-300 group-hover:text-primary">
                 {t('app.name', 'Social Support Portal')}
               </span>
             </Link>
@@ -55,10 +55,10 @@ export function AppLayout({ children }: AppLayoutProps) {
                   key={item.name}
                   to={item.href}
                   className={cn(
-                    'p-2 rounded-md transition-colors hover:bg-accent',
+                    'p-2 rounded-md transition-all duration-300 hover:bg-primary/15 hover:text-primary hover:shadow-gold-sm hover:scale-105',
                     item.current 
-                      ? 'text-foreground bg-accent' 
-                      : 'text-foreground/60'
+                      ? 'text-primary bg-primary/10 border border-primary/20 shadow-sm' 
+                      : 'text-foreground/70 hover:text-primary'
                   )}
                   aria-label={item.name}
                 >
@@ -74,10 +74,10 @@ export function AppLayout({ children }: AppLayoutProps) {
                   key={item.name}
                   to={item.href}
                   className={cn(
-                    'flex items-center space-x-2 text-sm transition-colors hover:text-foreground/80 whitespace-nowrap',
+                    'flex items-center space-x-2 text-base font-medium transition-all duration-300 hover:text-primary whitespace-nowrap px-3 py-2 rounded-md hover:bg-primary/15 hover:shadow-gold-sm hover:scale-105 hover:border-primary/30',
                     item.current 
-                      ? 'text-foreground' 
-                      : 'text-foreground/60'
+                      ? 'text-primary bg-primary/10 border border-primary/20 shadow-sm' 
+                      : 'text-foreground/70 hover:text-primary border border-transparent'
                   )}
                 >
                   <item.icon className="h-4 w-4" />
@@ -91,23 +91,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               <LanguageSwitcher />
               <div className="hidden sm:flex items-center space-x-1">
                 <ThemeToggle />
-                
-                {/* GitHub link */}
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  asChild
-                  className="hidden lg:inline-flex"
-                >
-                  <a
-                    href={import.meta.env.VITE_GITHUB_REPO_URL || 'https://github.com/Skazi464646/social-support-test'}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={t('nav.github', 'GitHub repository')}
-                  >
-                    <ExternalLink className="h-4 w-4" />
-                  </a>
-                </Button>
+      
               </div>
             </div>
           </div>
