@@ -362,7 +362,7 @@ export function AIAssistModal({
                 <button
                   type="button"
                   onClick={generateSuggestion}
-                  disabled={isLoading}
+                  disabled={isLoading || !isValidLength}
                   className="flex-1 px-6 py-3 text-base font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary-hover hover:shadow-gold-md hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none shadow-sm border border-primary/20"
                   title={AI_MESSAGES.modal.generateButton}
                 >
