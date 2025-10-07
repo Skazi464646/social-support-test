@@ -16,6 +16,7 @@ import {
   generateSessionId,
   validateInputSafety 
 } from '@/lib/utils/simple-utils';
+import { AI_ENDPOINTS, AI_MODELS as CONST_MODELS, AI_SUGGESTION, AI_EXAMPLES, AI_RELEVANCY, AI_FIELD_DEFAULTS } from '@/constants';
 import { 
   getSystemPrompt, 
   buildUserPrompt,
@@ -112,7 +113,7 @@ export interface AIAssistResponse {
 }
 
 class OpenAIService {
-  private readonly baseURL = 'https://api.openai.com/v1/chat/completions';
+  private readonly baseURL = AI_ENDPOINTS.openaiChatCompletions;
   private readonly apiKey: string;
   private readonly sessionId: string;
 
@@ -165,8 +166,8 @@ class OpenAIService {
               currentValue: request.currentValue,
               language: request.language,
               fieldConstraints: {
-                minLength: 50,
-                maxLength: 1000,
+                minLength: AI_FIELD_DEFAULTS.minLength,
+                maxLength: AI_FIELD_DEFAULTS.maxLength,
                 required: true,
               },
             };
@@ -193,14 +194,14 @@ class OpenAIService {
               userPrompt = buildUserPrompt(request.fieldName, promptContext);
             }
             
-            const optimizedPrompt = optimizePromptLength(userPrompt, 400);
+            const optimizedPrompt = optimizePromptLength(userPrompt, AI_SUGGESTION.optimizedPromptMaxTokens);
 
             // Calculate efficiency metrics
             const efficiency = calculatePromptEfficiency(optimizedPrompt);
             console.log('[OpenAI] Prompt efficiency:', efficiency);
 
             const openAIRequest: OpenAIRequest = {
-              model: 'gpt-4-turbo-preview',
+              model: CONST_MODELS.defaultModel,
               messages: [
                 {
                   role: 'system',
@@ -211,9 +212,9 @@ class OpenAIService {
                   content: optimizedPrompt
                 }
               ],
-              max_tokens: 500,
-              temperature: 0.7,
-              stream: true
+              max_tokens: AI_SUGGESTION.maxTokens,
+              temperature: AI_SUGGESTION.temperature,
+              stream: AI_SUGGESTION.stream
             };
 
             // Log request (sanitized)
@@ -337,7 +338,7 @@ class OpenAIService {
         const userPrompt = buildExampleGenerationUserPrompt(request);
 
         const openAIRequest: OpenAIRequest = {
-          model: 'gpt-4-turbo-preview',
+          model: CONST_MODELS.defaultModel,
           messages: [
             {
               role: 'system',
@@ -348,9 +349,9 @@ class OpenAIService {
               content: userPrompt
             }
           ],
-          max_tokens: 1000, // Increased for more detailed examples
-          temperature: 0.7, // Balanced temperature for relevant but varied examples
-          stream: false // Don't stream for examples
+          max_tokens: AI_EXAMPLES.maxTokens,
+          temperature: AI_EXAMPLES.temperature,
+          stream: AI_EXAMPLES.stream
         };
 
         // Log request (sanitized)
@@ -496,7 +497,7 @@ class OpenAIService {
         const userPrompt = buildRelevancyUserPrompt(request);
 
         const openAIRequest: OpenAIRequest = {
-          model: 'gpt-4-turbo-preview',
+          model: CONST_MODELS.defaultModel,
           messages: [
             {
               role: 'system',
@@ -507,9 +508,9 @@ class OpenAIService {
               content: userPrompt
             }
           ],
-          max_tokens: 200, // Short response for relevancy check
-          temperature: 0.3, // Lower temperature for more consistent evaluation
-          stream: false
+          max_tokens: AI_RELEVANCY.maxTokens,
+          temperature: AI_RELEVANCY.temperature,
+          stream: AI_RELEVANCY.stream
         };
 
         // Log request (sanitized)

@@ -4,7 +4,8 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { openAIService, getFieldExamples, getFieldConstraints } from '@/lib/ai';
+import { AI_RELEVANCY, AI_FIELD_DEFAULTS, AI_RATE_LIMIT, AI_MESSAGES } from '@/constants';
+import { openAIService, getFieldExamples } from '@/lib/ai';
 import { getFieldModalConfig } from '@/lib/ai/prompt-templates';
 import { cn } from '@/lib/utils';
 import type { AIAssistRequest, AIExampleRequest, AIRelevancyRequest } from '@/lib/api/openai-service';
@@ -81,13 +82,13 @@ export function AIAssistModal({
       setError(null); // Clear any previous errors
       setDynamicExamples([]); // Clear previous dynamic examples
       setExamplesError(null); // Clear examples error
-      
+
       // Auto-generate dynamic examples if we have either:
       // 1. User input (≥10 characters for meaningful content) 
       // 2. OR intelligent context (form data) to work with
-      const hasUserInput = currentValue.trim().length >= 10;
+      const hasUserInput = currentValue.trim().length >= AI_FIELD_DEFAULTS.hasUserInputMinChars;
       const hasIntelligentContext = intelligentContext && (intelligentContext.step1 || intelligentContext.step2);
-      
+
       if (hasUserInput || hasIntelligentContext) {
         generateDynamicExamples();
       }
@@ -122,15 +123,15 @@ export function AIAssistModal({
 
   const generateSuggestion = async () => {
     if (!openAIService.isAvailable) {
-      setError('AI assistance is not available. Please check your configuration.');
+      setError(AI_MESSAGES.errors.unavailable);
       return;
     }
 
     // Check rate limits
     const rateLimitStatus = openAIService.getRateLimitStatus();
-    if (rateLimitStatus.tokensAvailable < 1) {
+    if (rateLimitStatus.tokensAvailable < AI_RATE_LIMIT.minTokensAvailable) {
       const retrySeconds = Math.ceil(rateLimitStatus.retryAfter / 1000);
-      setError(`Rate limit reached. Please wait ${retrySeconds} seconds before trying again.`);
+      setError(AI_MESSAGES.errors.rateLimitReached(retrySeconds));
       return;
     }
 
@@ -140,8 +141,8 @@ export function AIAssistModal({
 
     try {
       // STEP 1: If user has input, validate relevancy first
-      const hasUserInput = editedText.trim().length >= 10;
-      
+      const hasUserInput = editedText.trim().length >= AI_FIELD_DEFAULTS.hasUserInputMinChars;
+
       if (hasUserInput) {
         const relevancyRequest: AIRelevancyRequest = {
           fieldName,
@@ -152,25 +153,22 @@ export function AIAssistModal({
 
         console.log('[AI Suggestion Relevancy] Checking relevancy for:', editedText.substring(0, 50));
         const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
-        
+
         console.log('[AI Suggestion Relevancy] Result:', {
           isRelevant: relevancyResponse.isRelevant,
           score: relevancyResponse.relevancyScore,
           reason: relevancyResponse.reason
         });
 
-        // Set threshold at 60% - adjust as needed
-        const RELEVANCY_THRESHOLD = 60;
-        
-        if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < RELEVANCY_THRESHOLD) {
+        if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < AI_RELEVANCY.threshold) {
           // Input is not relevant - create a suggestion with feedback
           const irrelevantSuggestion: Suggestion = {
             id: `irrelevant_${Date.now()}`,
-            text: `Your input is not relevant to this context. ${relevancyResponse.reason}. Please provide more relevant information about your ${fieldName.replace(/([A-Z])/g, ' $1').toLowerCase()}.`,
+            text: AI_MESSAGES.relevancy.notRelevant(relevancyResponse.reason, fieldName),
             isEdited: false,
             confidence: 0,
           };
-          
+
           setSuggestions(prev => [irrelevantSuggestion, ...prev]);
           setActiveSuggestionId(irrelevantSuggestion.id);
           setEditedText(irrelevantSuggestion.text);
@@ -181,27 +179,27 @@ export function AIAssistModal({
       // STEP 2: If relevant (or no user input), generate suggestion
       const request: AIAssistRequest = {
         fieldName,
-        currentValue:editedText,
+        currentValue: editedText,
         userContext,
         intelligentContext,
         language: 'en',
       };
 
       const response = await openAIService.generateSuggestion(request);
-      
+
       const newSuggestion: Suggestion = {
         id: `suggestion_${Date.now()}`,
         text: response.suggestion,
         isEdited: false,
         confidence: 0.85,
       };
-      
+
       setSuggestions(prev => [newSuggestion, ...prev]);
       setActiveSuggestionId(newSuggestion.id);
       setEditedText(newSuggestion.text);
 
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      const errorMessage = err instanceof Error ? err.message : AI_MESSAGES.errors.unknownError;
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -230,8 +228,8 @@ export function AIAssistModal({
 
   const saveEdit = () => {
     if (activeSuggestionId) {
-      setSuggestions(prev => prev.map(s => 
-        s.id === activeSuggestionId 
+      setSuggestions(prev => prev.map(s =>
+        s.id === activeSuggestionId
           ? { ...s, text: editedText, isEdited: true }
           : s
       ));
@@ -266,16 +264,16 @@ export function AIAssistModal({
 
   const generateDynamicExamples = useCallback(async () => {
     if (!openAIService.isAvailable) {
-      setExamplesError('AI assistance is not available. Please check your configuration.');
+      setExamplesError(AI_MESSAGES.errors.unavailable);
       return;
     }
 
     // Only generate dynamic examples if we have either:
     // 1. User input (≥10 characters for meaningful content)
     // 2. OR intelligent context (form data) to work with
-    const hasUserInput = editedText.trim().length >= 10;
+    const hasUserInput = editedText.trim().length >= AI_FIELD_DEFAULTS.hasUserInputMinChars;
     const hasIntelligentContext = intelligentContext && (intelligentContext.step1 || intelligentContext.step2);
-    
+
     if (!hasUserInput && !hasIntelligentContext) {
       return; // Skip if no meaningful input or context
     }
@@ -295,20 +293,17 @@ export function AIAssistModal({
 
         console.log('[AI Relevancy] Checking relevancy for:', editedText.substring(0, 50));
         const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
-        
+
         console.log('[AI Relevancy] Result:', {
           isRelevant: relevancyResponse.isRelevant,
           score: relevancyResponse.relevancyScore,
           reason: relevancyResponse.reason
         });
 
-        // Set threshold at 60% - adjust as needed
-        const RELEVANCY_THRESHOLD = 60;
-        
-        if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < RELEVANCY_THRESHOLD) {
+        if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < AI_RELEVANCY.threshold) {
           // Input is not relevant - show helpful feedback
           setExamplesError(
-            `Not relevant to this context. ${relevancyResponse.reason}. Please try to provide more relevant information about your ${fieldName.replace(/([A-Z])/g, ' $1').toLowerCase()}.`
+            AI_MESSAGES.relevancy.notRelevantExamples(relevancyResponse.reason, fieldName)
           );
           setDynamicExamples([]);
           return;
@@ -326,9 +321,9 @@ export function AIAssistModal({
 
       const response = await openAIService.generateDynamicExamples(request);
       setDynamicExamples(response.examples);
-      
+
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to generate examples';
+      const errorMessage = err instanceof Error ? err.message : AI_MESSAGES.errors.failedExamples;
       setExamplesError(errorMessage);
       console.error('Dynamic examples generation error:', err);
     } finally {
@@ -339,7 +334,7 @@ export function AIAssistModal({
   // Character count helper
   const characterCount = editedText.length;
   const minLength = fieldConstraints?.minLength || 0;
-  const maxLength = fieldConstraints?.maxLength || 1000;
+  const maxLength = fieldConstraints?.maxLength || AI_FIELD_DEFAULTS.maxLength;
   const isValidLength = characterCount >= minLength && characterCount <= maxLength;
   useNoScrollBody(isOpen);
 
@@ -347,10 +342,10 @@ export function AIAssistModal({
 
   return (
     <div className="fixed inset-0 bg-bg-black/50 z-50 flex items-center justify-center p-4">
-      <div 
+      <div
         ref={modalRef}
         className="bg-white text-gray-900 border border-gray-200 rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden focus:outline-none"
-        
+
         tabIndex={-1}
         role="dialog"
         aria-labelledby="ai-modal-title"
@@ -371,7 +366,7 @@ export function AIAssistModal({
               type="button"
               onClick={onClose}
               className="text-text-tertiary hover:text-text-secondary transition-colors"
-              aria-label="Close modal"
+              aria-label={AI_MESSAGES.modal.closeAriaLabel}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -394,10 +389,10 @@ export function AIAssistModal({
                   {isLoading ? (
                     <>
                       <span className="animate-spin inline-block w-4 h-4 border border-current border-t-transparent rounded-full mr-2"></span>
-                      Generating...
+                      {AI_MESSAGES.modal.generating}
                     </>
                   ) : (
-                    '✨ Generate'
+                    AI_MESSAGES.modal.generateButton
                   )}
                 </button>
                 {suggestions.length > 0 && (
@@ -406,7 +401,7 @@ export function AIAssistModal({
                     onClick={regenerateSuggestion}
                     disabled={isLoading}
                     className="px-3 py-2 text-sm font-medium rounded border border-border hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 disabled:opacity-50"
-                    title="Generate another suggestion"
+                    title={AI_MESSAGES.modal.regenerateTitle}
                   >
                     🔄
                   </button>
@@ -427,13 +422,13 @@ export function AIAssistModal({
                       Loading examples...
                     </>
                   ) : (
-                    `${showExamples ? 'Hide' : 'Show'} examples (${
-                      dynamicExamples.length > 0 
-                        ? `${dynamicExamples.length} personalized` 
-                        : examples.length > 0 
-                          ? examples.length 
-                          : 'generating...'
-                    })`
+                    AI_MESSAGES.modal.toggleExamples(showExamples,
+                      dynamicExamples.length > 0
+                        ? dynamicExamples.length
+                        : examples.length > 0
+                          ? examples.length
+                          : 0
+                    )
                   )}
                 </button>
               )}
@@ -506,7 +501,7 @@ export function AIAssistModal({
                 {suggestions.length === 0 ? (
                   <div className="text-center text-text-secondary text-sm py-8">
                     <div className="mb-2">💡</div>
-                    <p className="font-medium">Click "Generate" for AI suggestions</p>
+                    <p className="font-medium">{AI_MESSAGES.modal.generatePrompt}</p>
                     <p className="text-xs mt-1 text-text-tertiary">AI will help you write about your {fieldLabel.toLowerCase()}</p>
                     {examples.length > 0 && (
                       <p className="text-xs mt-1">or use an example to get started</p>
@@ -516,11 +511,10 @@ export function AIAssistModal({
                   suggestions.map((suggestion) => (
                     <div
                       key={suggestion.id}
-                      className={`p-3 border rounded cursor-pointer transition-colors ${
-                        activeSuggestionId === suggestion.id
+                      className={`p-3 border rounded cursor-pointer transition-colors ${activeSuggestionId === suggestion.id
                           ? 'border-primary bg-primary-light'
                           : 'border-border hover:border-primary'
-                      }`}
+                        }`}
                       onClick={() => selectSuggestion(suggestion)}
                     >
                       <div className="text-sm text-text-primary line-clamp-3">
@@ -584,17 +578,16 @@ export function AIAssistModal({
                   onChange={(e) => setEditedText(e.target.value)}
                   readOnly={!isEditing}
                   placeholder={
-                    editedText 
-                      ? "Edit your text here or generate AI suggestions for improvements..." 
-                      : activeSuggestionId 
-                        ? "Select a suggestion to edit it here..." 
+                    editedText
+                      ? AI_MESSAGES.modal.editPlaceholder
+                      : activeSuggestionId
+                        ? AI_MESSAGES.modal.selectPlaceholder
                         : fieldConfig.placeholder
                   }
-                  className={`w-full flex-1 p-3 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary ${
-                    isEditing ? 'bg-card' : 'bg-muted'
-                  }`}
+                  className={`w-full flex-1 p-3 border rounded-md resize-none focus:outline-none focus:ring-2 focus:ring-ring focus:border-primary ${isEditing ? 'bg-card' : 'bg-muted'
+                    }`}
                 />
-                
+
                 {/* Character Count - positioned right below input field */}
                 <div className="mt-2 flex justify-end">
                   <div

@@ -1,5 +1,6 @@
 import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
 import { FormSubmissionError } from './form-submission';
+import { API_DEFAULTS, ERROR_MESSAGES } from '@/constants';
 
 // Extend Axios config to include metadata
 declare module 'axios' {
@@ -7,6 +8,8 @@ declare module 'axios' {
     metadata?: {
       startTime: number;
       endTime?: number;
+      retryCount?: number;
+      isRetrying?: boolean;
     };
   }
 }
@@ -15,8 +18,8 @@ declare module 'axios' {
 // AXIOS INSTANCE CONFIGURATION
 // =============================================================================
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api';
-const REQUEST_TIMEOUT = 30000; // 30 seconds
+const API_BASE_URL = API_DEFAULTS.baseUrl;
+const REQUEST_TIMEOUT = API_DEFAULTS.requestTimeoutMs; // 30 seconds
 
 // Create axios instance with base configuration
 export const apiClient = axios.create({
@@ -67,9 +70,11 @@ apiClient.interceptors.response.use(
     // Log successful responses in development
     if (import.meta.env.DEV) {
       const requestId = response.config.headers?.['X-Request-ID'];
+      const retryCount = response.config.metadata?.retryCount || 0;
       console.log(`[API Response] ${response.status} ${response.config.url}`, {
         requestId,
         data: response.data,
+        retryCount: retryCount > 0 ? retryCount : undefined,
          duration: response.config.metadata?.endTime &&
         response.config.metadata?.startTime 
                   ? response.config.metadata.endTime - 
@@ -82,6 +87,12 @@ apiClient.interceptors.response.use(
   },
   async (error: AxiosError) => {
     const requestId = error.config?.headers?.['X-Request-ID'];
+    const originalRequest = error.config;
+    
+    // Initialize retry count if not present
+    if (originalRequest && !originalRequest.metadata) {
+      originalRequest.metadata = { startTime: Date.now(), retryCount: 0 };
+    }
     
     // Log errors in development
     if (import.meta.env.DEV) {
@@ -89,135 +100,240 @@ apiClient.interceptors.response.use(
         requestId,
         error: error.message,
         response: error.response?.data,
+        retryCount: originalRequest?.metadata?.retryCount || 0,
       });
     }
 
-    // Handle different HTTP status codes
-    if (error.response) {
-      const { status, statusText, data } = error.response;
+    // =============================================================================
+    // AUTOMATIC RETRY LOGIC
+    // =============================================================================
+    
+    // Convert error to FormSubmissionError first
+    const formError = convertToFormSubmissionError(error);
+    
+    // Check if we should retry
+    if (originalRequest && shouldRetryRequest(formError, originalRequest)) {
+      const retryCount = (originalRequest.metadata?.retryCount || 0) + 1;
+      originalRequest.metadata = {
+        ...originalRequest.metadata,
+        retryCount,
+        isRetrying: true,
+        startTime: Date.now(),
+      };
       
-      switch (status) {
-        case 400:
-          throw new FormSubmissionError(
-            'VALIDATION_ERROR',
-            (data as any)?.message || 'Invalid request data',
-            (data as any)?.field,
-            { statusCode: status, details: data }
-          );
-          
-        case 401:
-          throw new FormSubmissionError(
-            'UNAUTHORIZED',
-            'Authentication required. Please log in and try again.',
-            undefined,
-            { statusCode: status }
-          );
-          
-        case 403:
-          throw new FormSubmissionError(
-            'FORBIDDEN',
-            'You do not have permission to perform this action.',
-            undefined,
-            { statusCode: status }
-          );
-          
-        case 404:
-          throw new FormSubmissionError(
-            'SERVICE_NOT_FOUND',
-            'Service temporarily unavailable. Please try again later.',
-            undefined,
-            { statusCode: status }
-          );
-          
-        case 409:
-          throw new FormSubmissionError(
-            'CONFLICT',
-            (data as any)?.message || 'A conflict occurred with your request.',
-            (data as any)?.field,
-            { statusCode: status, details: data }
-          );
-          
-        case 422:
-          throw new FormSubmissionError(
-            'VALIDATION_ERROR',
-            (data as any)?.message || 'Validation failed for submitted data.',
-            (data as any)?.field,
-            { statusCode: status, details: data }
-          );
-          
-        case 429:
-          throw new FormSubmissionError(
-            'RATE_LIMITED',
-            'Too many requests. Please wait a moment and try again.',
-            undefined,
-            { statusCode: status, retryAfter: error.response.headers['retry-after'] }
-          );
-          
-        case 500:
-          throw new FormSubmissionError(
-            'SERVER_ERROR',
-            'Server error occurred. Please try again in a moment.',
-            undefined,
-            { statusCode: status }
-          );
-          
-        case 502:
-        case 503:
-        case 504:
-          throw new FormSubmissionError(
-            'SERVICE_UNAVAILABLE',
-            'Service temporarily unavailable. Please try again later.',
-            undefined,
-            { statusCode: status }
-          );
-          
-        default:
-          throw new FormSubmissionError(
-            'HTTP_ERROR',
-            `Request failed with status ${status}: ${statusText}`,
-            undefined,
-            { statusCode: status, statusText }
-          );
+      // Calculate retry delay
+      const delay = calculateRetryDelay(formError, retryCount);
+      
+      if (import.meta.env.DEV) {
+        console.log(`[API Retry] Attempt ${retryCount}/${MAX_RETRIES} for ${originalRequest.url}`, {
+          requestId,
+          delayMs: delay,
+          errorCode: formError.code,
+        });
+      }
+      
+      // Wait before retrying
+      await new Promise(resolve => setTimeout(resolve, delay));
+      
+      // Retry the request
+      try {
+        return await apiClient.request(originalRequest);
+      } catch (retryError) {
+        // If retry fails, continue to error handling below
+        if (import.meta.env.DEV) {
+          console.error(`[API Retry Failed] Attempt ${retryCount}/${MAX_RETRIES}`, {
+            requestId,
+            error: retryError,
+          });
+        }
+        // Let the retry fail naturally and be handled by next interceptor invocation
+        throw retryError;
       }
     }
     
-    // Handle network errors (no response received)
-    if (error.request) {
-      if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
-        throw new FormSubmissionError(
-          'SUBMISSION_TIMEOUT',
-          'Request timed out. Please check your connection and try again.',
-          undefined,
-          { code: error.code }
+    // =============================================================================
+    // ERROR HANDLING (No retry or max retries exceeded)
+    // =============================================================================
+    
+    throw formError;
+  }
+);
+
+// =============================================================================
+// HELPER FUNCTIONS FOR RETRY LOGIC
+// =============================================================================
+
+/**
+ * Convert Axios error to FormSubmissionError
+ */
+function convertToFormSubmissionError(error: AxiosError): FormSubmissionError {
+  // Handle different HTTP status codes
+  if (error.response) {
+    const { status, statusText, data } = error.response;
+    
+    switch (status) {
+      case 400:
+        return new FormSubmissionError(
+          'VALIDATION_ERROR',
+          (data as any)?.message || 'Invalid request data',
+          (data as any)?.field,
+          { statusCode: status, details: data }
         );
-      }
-      
-      if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
-        throw new FormSubmissionError(
-          'NETWORK_ERROR',
-          'Network connection failed. Please check your internet connection.',
+        
+      case 401:
+        return new FormSubmissionError(
+          'UNAUTHORIZED',
+          ERROR_MESSAGES.server.authRequired,
           undefined,
-          { code: error.code }
+          { statusCode: status }
         );
-      }
-      
-      throw new FormSubmissionError(
-        'CONNECTION_ERROR',
-        'Unable to connect to the server. Please try again.',
+        
+      case 403:
+        return new FormSubmissionError(
+          'FORBIDDEN',
+          ERROR_MESSAGES.server.forbidden,
+          undefined,
+          { statusCode: status }
+        );
+        
+      case 404:
+        return new FormSubmissionError(
+          'SERVICE_NOT_FOUND',
+          ERROR_MESSAGES.server.unavailable,
+          undefined,
+          { statusCode: status }
+        );
+        
+      case 409:
+        return new FormSubmissionError(
+          'CONFLICT',
+          ERROR_MESSAGES.server.conflict((data as any)?.message),
+          (data as any)?.field,
+          { statusCode: status, details: data }
+        );
+        
+      case 422:
+        return new FormSubmissionError(
+          'VALIDATION_ERROR',
+          ERROR_MESSAGES.server.validationFailed((data as any)?.message),
+          (data as any)?.field,
+          { statusCode: status, details: data }
+        );
+        
+      case 429:
+        return new FormSubmissionError(
+          'RATE_LIMITED',
+          ERROR_MESSAGES.server.rateLimited,
+          undefined,
+          { statusCode: status, retryAfter: error.response.headers['retry-after'] }
+        );
+        
+      case 500:
+        return new FormSubmissionError(
+          'SERVER_ERROR',
+          ERROR_MESSAGES.server.error,
+          undefined,
+          { statusCode: status }
+        );
+        
+      case 502:
+      case 503:
+      case 504:
+        return new FormSubmissionError(
+          'SERVICE_UNAVAILABLE',
+          ERROR_MESSAGES.server.unavailable,
+          undefined,
+          { statusCode: status }
+        );
+        
+      default:
+        return new FormSubmissionError(
+          'HTTP_ERROR',
+          ERROR_MESSAGES.server.httpError(status, statusText),
+          undefined,
+          { statusCode: status, statusText }
+        );
+    }
+  }
+  
+  // Handle network errors (no response received)
+  if (error.request) {
+    if (error.code === 'ECONNABORTED' || error.message.includes('timeout')) {
+      return new FormSubmissionError(
+        'SUBMISSION_TIMEOUT',
+        ERROR_MESSAGES.network.timeout,
         undefined,
-        { code: error.code, message: error.message }
+        { code: error.code }
       );
     }
     
-    // Handle request setup errors
-    throw new FormSubmissionError(
-      'REQUEST_ERROR',
-      'Failed to set up the request. Please try again.',
+    if (error.code === 'ERR_NETWORK' || error.message.includes('Network Error')) {
+      return new FormSubmissionError(
+        'NETWORK_ERROR',
+        ERROR_MESSAGES.network.failed,
+        undefined,
+        { code: error.code }
+      );
+    }
+    
+    return new FormSubmissionError(
+      'CONNECTION_ERROR',
+      ERROR_MESSAGES.connection.error,
       undefined,
-      { message: error.message }
+      { code: error.code, message: error.message }
     );
   }
-);
+  
+  // Handle request setup errors
+  return new FormSubmissionError(
+    'REQUEST_ERROR',
+    ERROR_MESSAGES.connection.requestError,
+    undefined,
+    { message: error.message }
+  );
+}
+
+/**
+ * Determine if request should be retried
+ */
+function shouldRetryRequest(
+  error: FormSubmissionError,
+  config: InternalAxiosRequestConfig
+): boolean {
+  // Don't retry if max retries exceeded
+  const retryCount = config.metadata?.retryCount || 0;
+  if (retryCount >= MAX_RETRIES) {
+    return false;
+  }
+  
+  // Only retry specific error types
+  const retryableErrors = [
+    'SUBMISSION_TIMEOUT',
+    'NETWORK_ERROR',
+    'CONNECTION_ERROR',
+    'SERVER_ERROR',
+    'SERVICE_UNAVAILABLE',
+    'RATE_LIMITED',
+  ];
+  
+  return retryableErrors.includes(error.code);
+}
+
+/**
+ * Calculate delay before retry with exponential backoff
+ */
+function calculateRetryDelay(
+  error: FormSubmissionError,
+  retryCount: number
+): number {
+  // For rate limiting, use retry-after header if available
+  if (error.code === 'RATE_LIMITED' && error.details?.retryAfter) {
+    return parseInt(error.details.retryAfter as string) * 1000;
+  }
+  
+  // Exponential backoff: delay * 2^(retryCount - 1)
+  return RETRY_DELAY * Math.pow(2, retryCount - 1);
+}
 
 // =============================================================================
 // REQUEST/RESPONSE TIMING MIDDLEWARE
@@ -247,8 +363,8 @@ apiClient.interceptors.response.use(
 // RETRY LOGIC WITH EXPONENTIAL BACKOFF
 // =============================================================================
 
-const MAX_RETRIES = 3;
-const RETRY_DELAY = 1000; // Base delay in milliseconds
+const MAX_RETRIES = API_DEFAULTS.maxRetries;
+const RETRY_DELAY = API_DEFAULTS.retryBaseDelayMs; // Base delay in milliseconds
 
 export const retryRequest = async (
   requestFn: () => Promise<AxiosResponse>,
@@ -284,7 +400,7 @@ export const retryRequest = async (
     }
     
     await new Promise(resolve => setTimeout(resolve, delay));
-    return retryRequest(requestFn, retries - 1);
+    return retryRequest(requestFn, Number(retries) - 1);
   }
 };
 

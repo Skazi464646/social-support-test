@@ -1,6 +1,7 @@
 import type { CompleteFormData } from '@/lib/validation/schemas';
 import { z } from 'zod';
 import { apiClient, retryRequest } from './axios-config';
+import { ERROR_MESSAGES, ERROR_TITLES, ERROR_ACTIONS, SUBMISSION_METADATA, MOCK_SUBMISSION, FORM_MESSAGES } from '@/constants';
 
 // =============================================================================
 // TYPES
@@ -47,7 +48,7 @@ async function validateCompleteForm(data: unknown): Promise<CompleteFormData> {
       const firstError = error.issues[0];
       throw new FormSubmissionError(
         'VALIDATION_ERROR',
-        `Validation failed: ${firstError?.message || 'Invalid form data'}`,
+        ERROR_MESSAGES.validation.failed(firstError?.message || ERROR_MESSAGES.validation.invalidData),
         firstError?.path?.join('.'),
         { errors: error.issues }
       );
@@ -79,7 +80,7 @@ export class FormSubmissionService {
             metadata: {
               userAgent: navigator.userAgent,
               timestamp: Date.now(),
-              version: '1.0.0',
+              version: SUBMISSION_METADATA.version,
             },
           }
         )
@@ -90,7 +91,7 @@ export class FormSubmissionService {
 
         throw new FormSubmissionError(
           'SUBMISSION_FAILED',
-          response.data.message || 'Application submission failed',
+          response.data.message || ERROR_MESSAGES.submission.failed,
           undefined,
           errorDetails
         );
@@ -107,21 +108,21 @@ export class FormSubmissionService {
         if (error.name === 'AbortError') {
           throw new FormSubmissionError(
             'SUBMISSION_CANCELLED',
-            'Submission was cancelled'
+            ERROR_MESSAGES.submission.cancelled
           );
         }
 
         if (error.message.includes('timeout')) {
           throw new FormSubmissionError(
             'SUBMISSION_TIMEOUT',
-            'Submission timed out. Please try again.'
+            ERROR_MESSAGES.submission.timeout
           );
         }
 
         if (error.message.includes('Network Error')) {
           throw new FormSubmissionError(
             'NETWORK_ERROR',
-            'Network error. Please check your connection and try again.'
+            ERROR_MESSAGES.network.error
           );
         }
       }
@@ -129,7 +130,7 @@ export class FormSubmissionService {
       // Generic error fallback
       throw new FormSubmissionError(
         'UNKNOWN_ERROR',
-        'An unexpected error occurred during submission. Please try again.',
+        ERROR_MESSAGES.unknownDuringSubmission,
         undefined,
         { originalError: error }
       );
@@ -144,13 +145,13 @@ export class FormSubmissionService {
     validateCompleteForm(formData);
 
     // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise(resolve => setTimeout(resolve, MOCK_SUBMISSION.networkDelay));
 
     // Simulate occasional failures for testing
-    if (Math.random() < 0.1) {
+    if (Math.random() < MOCK_SUBMISSION.failureRate) {
       throw new FormSubmissionError(
         'SERVER_ERROR',
-        'Server temporarily unavailable. Please try again.'
+        ERROR_MESSAGES.server.unavailable
       );
     }
 
@@ -160,7 +161,7 @@ export class FormSubmissionService {
     return {
       success: true,
       applicationId,
-      message: 'Application submitted successfully. You will receive a confirmation email shortly.',
+      message: FORM_MESSAGES.submission.success,
       submittedAt: new Date().toISOString(),
     };
   }
@@ -178,12 +179,12 @@ export class FormSubmissionService {
         apiClient.post<SubmissionResponse>(url, {
           formData: validatedData,
           submittedAt: new Date().toISOString(),
-          metadata: {
-            userAgent: navigator.userAgent,
-            timestamp: Date.now(),
-            version: '1.0.0',
-            testMode: true,
-          },
+            metadata: {
+              userAgent: navigator.userAgent,
+              timestamp: Date.now(),
+              version: SUBMISSION_METADATA.version,
+              testMode: SUBMISSION_METADATA.testMode,
+            },
         })
       );
 
@@ -193,7 +194,7 @@ export class FormSubmissionService {
         ? error
         : new FormSubmissionError(
             'SUBMISSION_ERROR',
-            'Failed to submit application',
+            ERROR_MESSAGES.submission.failed,
             undefined,
             { originalError: error }
           );
@@ -233,33 +234,33 @@ export function formatSubmissionError(error: FormSubmissionError): {
 } {
   const errorMap = {
     VALIDATION_ERROR: {
-      title: 'Form Validation Error',
-      message: 'Please check your form data and try again.',
-      action: 'Review Form',
+      title: ERROR_TITLES.formValidation,
+      message: ERROR_MESSAGES.validation.checkForm,
+      action: ERROR_ACTIONS.reviewForm,
     },
     SUBMISSION_TIMEOUT: {
-      title: 'Submission Timeout',
-      message: 'Your submission is taking longer than expected. Please try again.',
-      action: 'Retry Submission',
+      title: ERROR_TITLES.submissionTimeout,
+      message: ERROR_MESSAGES.submission.timeoutLong,
+      action: ERROR_ACTIONS.retrySubmission,
     },
     NETWORK_ERROR: {
-      title: 'Network Error',
-      message: 'Please check your internet connection and try again.',
-      action: 'Retry Submission',
+      title: ERROR_TITLES.networkError,
+      message: ERROR_MESSAGES.network.errorShort,
+      action: ERROR_ACTIONS.retrySubmission,
     },
     SERVER_ERROR: {
-      title: 'Server Error',
-      message: 'Our servers are temporarily unavailable. Please try again later.',
-      action: 'Retry Later',
+      title: ERROR_TITLES.serverError,
+      message: ERROR_MESSAGES.server.temporarilyUnavailable,
+      action: ERROR_ACTIONS.retryLater,
     },
     SUBMISSION_CANCELLED: {
-      title: 'Submission Cancelled',
-      message: 'Your submission was cancelled.',
+      title: ERROR_TITLES.submissionCancelled,
+      message: ERROR_MESSAGES.submission.cancelled,
     },
     UNKNOWN_ERROR: {
-      title: 'Unexpected Error',
-      message: 'An unexpected error occurred. Please try again or contact support.',
-      action: 'Contact Support',
+      title: ERROR_TITLES.unexpectedError,
+      message: ERROR_MESSAGES.unknown,
+      action: ERROR_ACTIONS.contactSupport,
     },
   } satisfies Record<
     'VALIDATION_ERROR'

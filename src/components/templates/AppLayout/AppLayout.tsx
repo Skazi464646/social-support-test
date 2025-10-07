@@ -104,7 +104,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                   className="hidden lg:inline-flex"
                 >
                   <a
-                    href="https://github.com/Skazi464646/social-support-test"
+                    href={import.meta.env.VITE_GITHUB_REPO_URL || 'https://github.com/Skazi464646/social-support-test'}
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={t('nav.github', 'GitHub repository')}

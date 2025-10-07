@@ -5,6 +5,7 @@
  */
 
 import type { AIFormContext } from '@/hooks/useAIFormContext';
+import { AI_FIELD_DEFAULTS } from '@/constants';
 import { 
   analyzeFieldIntelligence, 
   detectFieldContext,
@@ -562,7 +563,7 @@ function getDefaultSystemPrompt(language: 'en' | 'ar'): string {
     return `أنت مساعد مفيد يساعد الأشخاص في تحسين كتابتهم لطلبات الدعم الاجتماعي. قدم اقتراحات واضحة ومهنية ومحترمة.`;
   }
   
-  return `You are a helpful assistant that helps people improve their writing for social support applications. Provide clear, professional, and respectful suggestions.`;
+  return `You are a helpful assistant that helps people improve their writing for social support applications. Provide clear, professional, and respectful suggestions.If User provided a value, use it to improve the prompt.`;
 }
 
 /**
@@ -1069,7 +1070,7 @@ function extractFormMetadata(intelligentContext: AIFormContext): string {
 
 export function buildExampleGenerationUserPrompt(request: any): string {
   const fieldLabel = getFieldLabel(request.fieldName);
-  const hasUserInput = request.userInput && request.userInput.trim().length >= 10;
+  const hasUserInput = request.userInput && request.userInput.trim().length >= AI_FIELD_DEFAULTS.hasUserInputMinChars;
   
   let prompt = '';
 

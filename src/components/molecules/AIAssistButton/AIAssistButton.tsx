@@ -5,6 +5,7 @@
 
 import { useState } from 'react';
 import { openAIService, getFieldExamples } from '@/lib/ai';
+import { AI_RATE_LIMIT, AI_MESSAGES } from '@/constants';
 import type { AIAssistRequest } from '@/lib/api/openai-service';
 
 interface AIAssistButtonProps {
@@ -33,7 +34,7 @@ export function AIAssistButton({
 
     // Check rate limits before starting
     const rateLimitStatus = openAIService.getRateLimitStatus();
-    if (rateLimitStatus.tokensAvailable < 1) {
+    if (rateLimitStatus.tokensAvailable < AI_RATE_LIMIT.minTokensAvailable) {
       const retrySeconds = Math.ceil(rateLimitStatus.retryAfter / 1000);
       alert(`Rate limit reached. Please wait ${retrySeconds} seconds before trying again.`);
       return;
@@ -53,13 +54,13 @@ export function AIAssistButton({
       const response = await openAIService.generateSuggestion(request);
       onSuggestionAccept(response.suggestion);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      const errorMessage = err instanceof Error ? err.message : AI_MESSAGES.errors.unknownError;
       setError(errorMessage);
       
       // Show user-friendly error messages
       if (errorMessage.includes('Rate limit exceeded')) {
-        alert('You\'re making requests too quickly. Please wait a moment and try again.');
-      } else if (errorMessage.includes('Request was cancelled')) {
+        alert(AI_MESSAGES.errors.rateLimitAlert);
+      } else if (errorMessage.includes(AI_MESSAGES.errors.requestCancelled)) {
         // Don't show alert for cancelled requests
       } else {
         alert(`AI Error: ${errorMessage}`);
@@ -79,7 +80,7 @@ export function AIAssistButton({
         className={className}
         onClick={handleClick}
         disabled={isLoading}
-        title={isLoading ? 'Generating suggestion...' : 'Get AI writing assistance'}
+          title={isLoading ? AI_MESSAGES.button.generating : AI_MESSAGES.button.defaultTitle}
       >
         {isLoading ? (
           <>
@@ -101,7 +102,7 @@ export function AIAssistButton({
               onSuggestionAccept(exampleText);
             }
           }}
-          title="Use a sample response"
+              title={AI_MESSAGES.button.useSampleTitle}
         >
           Use example
         </button>

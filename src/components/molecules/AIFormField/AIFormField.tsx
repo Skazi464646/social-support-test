@@ -6,6 +6,7 @@
 import { forwardRef } from 'react';
 import { Control, useController } from 'react-hook-form';
 import { AIEnhancedTextarea } from '@/components/molecules/AIEnhancedTextarea';
+import { FORM_MESSAGES } from '@/constants';
 
 interface AIFormFieldProps {
   name: string;
@@ -43,14 +44,14 @@ export const AIFormField = forwardRef<HTMLTextAreaElement, AIFormFieldProps>(
     } = useController({
       name,
       control,
-      rules: { required: required ? 'This field is required' : false },
+      rules: { required: required ? FORM_MESSAGES.required : false },
     });
 
     return (
       <div className={className}>
         <label className="block text-sm font-medium text-text-primary mb-1">
           {label}
-          {required && <span className="text-destructive ml-1">*</span>}
+          {required && <span className="text-destructive ml-1">{FORM_MESSAGES.requiredStar}</span>}
         </label>
         
         {helperText && (
