@@ -5,11 +5,7 @@ import { Button } from '@/components/atoms/Button';
 import { LanguageSwitcher } from '@/components/molecules/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { cn } from '@/lib/utils';
-import type { ReactNode } from 'react';
-
-interface AppLayoutProps {
-  children: ReactNode;
-}
+import type { AppLayoutProps } from './AppLayout.types';
 
 export function AppLayout({ children }: AppLayoutProps) {
   const { t } = useTranslation();

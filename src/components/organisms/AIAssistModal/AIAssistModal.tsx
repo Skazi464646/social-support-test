@@ -8,31 +8,10 @@ import { AI_RELEVANCY, AI_FIELD_DEFAULTS, AI_RATE_LIMIT, AI_MESSAGES } from '@/c
 import { openAIService, getFieldExamples } from '@/lib/ai';
 import { getFieldModalConfig } from '@/lib/ai/prompt-templates';
 import { cn } from '@/lib/utils';
-import type { AIAssistRequest, AIExampleRequest, AIRelevancyRequest } from '@/lib/api/openai-service';
+
 import { useNoScrollBody } from '@/hooks';
-
-interface AIAssistModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  fieldName: string;
-  fieldLabel: string;
-  currentValue: string;
-  onAccept: (value: string) => void;
-  userContext?: any;
-  intelligentContext?: any;
-  fieldConstraints?: {
-    minLength?: number;
-    maxLength?: number;
-    required?: boolean;
-  };
-}
-
-interface Suggestion {
-  id: string;
-  text: string;
-  isEdited: boolean;
-  confidence?: number;
-}
+import type { AIAssistModalProps, Suggestion } from './AIAssistModal.types';
+import { AIExampleRequest, AIRelevancyRequest,AIAssistRequest } from '@/lib/api/interface';
 
 export function AIAssistModal({
   isOpen,

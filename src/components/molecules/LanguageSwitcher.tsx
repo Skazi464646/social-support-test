@@ -2,12 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Globe, Loader2 } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { cn } from '@/lib/utils';
-
-interface LanguageSwitcherProps {
-  className?: string;
-  showLabel?: boolean;
-  variant?: 'button' | 'dropdown';
-}
+import type { LanguageSwitcherProps } from './LanguageSwitcher.types';
 
 export function LanguageSwitcher({ 
   className = '', 

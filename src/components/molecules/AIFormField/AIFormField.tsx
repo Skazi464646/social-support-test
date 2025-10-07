@@ -4,24 +4,10 @@
  */
 
 import { forwardRef } from 'react';
-import { Control, useController } from 'react-hook-form';
+import { useController } from 'react-hook-form';
 import { AIEnhancedTextarea } from '@/components/molecules/AIEnhancedTextarea';
 import { FORM_MESSAGES } from '@/constants';
-
-interface AIFormFieldProps {
-  name: string;
-  control: Control<any>;
-  label?: string;
-  helperText?: string;
-  placeholder?: string;
-  fieldName?: string;
-  rows?: number;
-  maxLength?: number;
-  minLength?: number;
-  required?: boolean;
-  userContext?: any;
-  className?: string;
-}
+import type { AIFormFieldProps } from './AIFormField.types';
 
 export const AIFormField = forwardRef<HTMLTextAreaElement, AIFormFieldProps>(
   ({

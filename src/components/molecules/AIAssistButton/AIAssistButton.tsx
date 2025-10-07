@@ -7,14 +7,7 @@ import { useState } from 'react';
 import { openAIService, getFieldExamples } from '@/lib/ai';
 import { AI_RATE_LIMIT, AI_MESSAGES } from '@/constants';
 import type { AIAssistRequest } from '@/lib/api/openai-service';
-
-interface AIAssistButtonProps {
-  fieldName: string;
-  currentValue: string;
-  onSuggestionAccept: (suggestion: string) => void;
-  userContext?: any;
-  className?: string;
-}
+import type { AIAssistButtonProps } from './AIAssistButton.types';
 
 export function AIAssistButton({
   fieldName,

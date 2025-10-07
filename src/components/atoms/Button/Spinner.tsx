@@ -1,6 +1,4 @@
-interface SpinnerProps {
-  className?: string;
-}
+import type { SpinnerProps } from './Spinner.types';
 
 export function Spinner({ className = '' }: SpinnerProps) {
   return (

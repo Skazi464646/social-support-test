@@ -7,22 +7,7 @@ import { forwardRef, useState } from 'react';
 import { AIAssistModal } from '@/components/organisms/AIAssistModal';
 import { useAIAssist } from '@/hooks/useAIAssist';
 import { useTranslation } from 'react-i18next';
-
-interface AIEnhancedInputProps {
-  fieldName: string;
-  fieldLabel: string;
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  maxLength?: number;
-  type?: 'text' | 'email' | 'tel';
-  required?: boolean;
-  disabled?: boolean;
-  className?: string;
-  userContext?: any;
-  error?: string;
-  showAIAssist?: boolean; // Option to show/hide AI assist for specific fields
-}
+import type { AIEnhancedInputProps } from './AIEnhancedInput.types';
 
 export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps>(
   ({

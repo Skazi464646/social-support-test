@@ -6,6 +6,27 @@
  * Will be moved to serverless endpoint in future step.
  */
 
+
+import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
+import { FormSubmissionError } from './form-submission';
+import { API_DEFAULTS, ERROR_MESSAGES } from '@/constants';
+
+
+
+const OPEN_AI_BASE_URL = import.meta.env.VITE_OPENAI_API_KEY;;
+const REQUEST_TIMEOUT = API_DEFAULTS.requestTimeoutMs; // 30 seconds
+
+// Create axios instance with base configuration
+export const openaiApiClient = axios.create({
+  baseURL: OPEN_AI_BASE_URL,
+  timeout: REQUEST_TIMEOUT,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
+});
+
+
 import { 
   aiRateLimiter,
   requestDeduplicator,
@@ -30,87 +51,14 @@ import {
   type PromptContext,
   type EnhancedPromptContext 
 } from '@/lib/ai/prompt-templates';
-import type { AIFormContext } from '@/hooks/useAIFormContext';
 import { 
   optimizePromptLength, 
   validatePromptContext, 
   calculatePromptEfficiency 
 } from '@/lib/ai/prompt-optimizer';
+import { AIAssistRequest, AIAssistResponse, AIExampleRequest, AIExampleResponse, AIRelevancyRequest, AIRelevancyResponse, OpenAIRequest, OpenAIStreamChunk } from './interface';
 
-interface OpenAIMessage {
-  role: 'system' | 'user' | 'assistant';
-  content: string;
-}
 
-interface OpenAIRequest {
-  model: string;
-  messages: OpenAIMessage[];
-  max_tokens: number;
-  temperature: number;
-  stream: boolean;
-}
-
-interface OpenAIStreamChunk {
-  choices: Array<{
-    delta: {
-      content?: string;
-    };
-    finish_reason?: string;
-  }>;
-}
-
-export interface AIAssistRequest {
-  fieldName: string;
-  currentValue: string;
-  userContext: any;
-  intelligentContext?: AIFormContext;
-  language: 'en' | 'ar';
-}
-
-export interface AIExampleRequest {
-  fieldName: string;
-  userInput: string;
-  userContext: any;
-  intelligentContext?: AIFormContext;
-  language: 'en' | 'ar';
-}
-
-export interface AIRelevancyRequest {
-  fieldName: string;
-  userInput: string;
-  intelligentContext?: AIFormContext;
-  language: 'en' | 'ar';
-}
-
-export interface AIRelevancyResponse {
-  isRelevant: boolean;
-  relevancyScore: number; // 0-100
-  reason: string;
-  requestId: string;
-  metadata: {
-    timestamp: number;
-    tokensUsed: number;
-  };
-}
-
-export interface AIExampleResponse {
-  examples: string[];
-  requestId: string;
-  metadata: {
-    timestamp: number;
-    tokensUsed: number;
-    basedinput: string;
-  };
-}
-
-export interface AIAssistResponse {
-  suggestion: string;
-  requestId: string;
-  metadata: {
-    timestamp: number;
-    tokensUsed: number;
-  };
-}
 
 class OpenAIService {
   private readonly baseURL = AI_ENDPOINTS.openaiChatCompletions;

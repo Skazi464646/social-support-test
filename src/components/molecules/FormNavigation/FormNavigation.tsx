@@ -26,20 +26,11 @@ const BUTTON_TOKENS = {
   },
 } as const;
 
+import type { FormNavigationProps } from './FormNavigation.types';
+
 // =============================================================================
 // TYPES
 // =============================================================================
-
-interface FormNavigationProps {
-  currentStep: number;
-  completedSteps: Set<number>;
-  isSubmitting: boolean;
-  isSubmitted: boolean;
-  hasError: boolean;
-  onPrevious: () => void;
-  onRetry: () => void;
-  onDebug?: () => void;
-}
 
 // =============================================================================
 // SUB-COMPONENTS
