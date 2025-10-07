@@ -23,20 +23,28 @@ export function ComponentsPage() {
   };
 
   return (
-    <div className="container py-8 space-y-8">
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-foreground mb-8">
-          {t('components.title', 'Component Showcase')}
-        </h1>
+      <div className="container py-8 space-y-10">
+        <div className="max-w-6xl mx-auto space-y-10">
+        <div className="text-center mb-16">
+          <h1 className="text-display-md font-bold text-foreground mb-4">
+            {t('components.title', 'Component Showcase')}
+          </h1>
+          <p className="text-xl text-muted-foreground leading-relaxed text-center">
+            Explore our comprehensive UI component library built with the UAE government design system
+          </p>
+        </div>
 
         {/* Button Variants */}
-        <Card className="p-6 space-y-6">
-          <h2 className="text-xl font-semibold">Button Variants - UAE Design System</h2>
+        <Card className="p-8 space-y-8">
+          <div className="text-center mb-6">
+            <h2 className="text-display-sm font-bold text-foreground mb-2">Button Variants</h2>
+            <p className="text-base text-muted-foreground">UAE Government Design System</p>
+          </div>
           
           {/* Solid/Primary Buttons */}
-          <div>
-            <h3 className="text-sm font-medium text-text-secondary mb-3">Solid (Primary) - Main Actions</h3>
-            <div className="flex flex-wrap gap-3">
+          <div className="space-y-4 text-center">
+            <h3 className="text-lg font-semibold text-foreground">Solid (Primary) - Main Actions</h3>
+            <div className="flex flex-wrap justify-center gap-3">
               <Button variant="primary" size="lg">Large button</Button>
               <Button variant="primary" size="base">Base button</Button>
               <Button variant="primary" size="sm">Small button</Button>
@@ -45,9 +53,9 @@ export function ComponentsPage() {
           </div>
 
           {/* Outline/Secondary Buttons */}
-          <div>
-            <h3 className="text-sm font-medium text-text-secondary mb-3">Outline (Secondary) - Alternative Actions</h3>
-            <div className="flex flex-wrap gap-3">
+          <div className="space-y-4 text-center">
+            <h3 className="text-lg font-semibold text-foreground">Outline (Secondary) - Alternative Actions</h3>
+            <div className="flex flex-wrap justify-center gap-3">
               <Button variant="outline" size="lg">Large button</Button>
               <Button variant="outline" size="base">Base button</Button>
               <Button variant="outline" size="sm">Small button</Button>
@@ -56,9 +64,9 @@ export function ComponentsPage() {
           </div>
 
           {/* Soft/Ghost Buttons */}
-          <div>
-            <h3 className="text-sm font-medium text-text-secondary mb-3">Soft (Ghost) - Subtle Actions</h3>
-            <div className="flex flex-wrap gap-3">
+          <div className="space-y-4 text-center">
+            <h3 className="text-lg font-semibold text-foreground">Soft (Ghost) - Subtle Actions</h3>
+            <div className="flex flex-wrap justify-center gap-3">
               <Button variant="ghost" size="lg">Large button</Button>
               <Button variant="ghost" size="base">Base button</Button>
               <Button variant="ghost" size="sm">Small button</Button>
@@ -67,9 +75,9 @@ export function ComponentsPage() {
           </div>
 
           {/* Semantic Variants */}
-          <div>
-            <h3 className="text-sm font-medium text-text-secondary mb-3">Semantic Variants</h3>
-            <div className="flex flex-wrap gap-3">
+          <div className="space-y-4 text-center">
+            <h3 className="text-lg font-semibold text-foreground">Semantic Variants</h3>
+            <div className="flex flex-wrap justify-center gap-3">
               <Button variant="destructive">Destructive</Button>
               <Button variant="success" onClick={() => success({ title: 'Success!', description: 'Action completed.' })}>
                 Success
@@ -81,9 +89,9 @@ export function ComponentsPage() {
           </div>
 
           {/* Interactive Examples */}
-          <div>
-            <h3 className="text-sm font-medium text-text-secondary mb-3">Interactive Examples</h3>
-            <div className="flex flex-wrap gap-3">
+          <div className="space-y-4 text-center">
+            <h3 className="text-lg font-semibold text-foreground">Interactive Examples</h3>
+            <div className="flex flex-wrap justify-center gap-3">
               <Button 
                 variant="primary"
                 onClick={() => success({ title: 'Success!', description: 'This is a success toast.' })}
@@ -102,9 +110,12 @@ export function ComponentsPage() {
         </Card>
 
         {/* Form Controls */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Form Controls</h2>
-          <div className="space-y-4 max-w-md">
+        <Card className="p-8">
+          <div className="text-center mb-6">
+            <h2 className="text-display-sm font-bold text-foreground mb-2">Form Controls</h2>
+            <p className="text-base text-muted-foreground">Input fields and form elements</p>
+          </div>
+          <div className="space-y-6 max-w-lg mx-auto">
             <div>
               <Label htmlFor="sample-input">Sample Input</Label>
               <Input id="sample-input" placeholder="Enter some text..." />
@@ -121,9 +132,12 @@ export function ComponentsPage() {
         </Card>
 
         {/* Progress Bar */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Progress Bar</h2>
-          <div className="space-y-4">
+        <Card className="p-8">
+          <div className="text-center mb-6">
+            <h2 className="text-display-sm font-bold text-foreground mb-2">Progress Indicator</h2>
+            <p className="text-base text-muted-foreground">Multi-step form progress visualization</p>
+          </div>
+          <div className="space-y-8 max-w-2xl mx-auto">
             <ProgressBar currentStep={1} totalSteps={3} completedSteps={new Set()} />
             <ProgressBar currentStep={2} totalSteps={3} completedSteps={new Set([1])} />
             <ProgressBar currentStep={3} totalSteps={3} completedSteps={new Set([1, 2])} />
@@ -131,9 +145,12 @@ export function ComponentsPage() {
         </Card>
 
         {/* AI Enhanced Components */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">AI Enhanced Components</h2>
-          <div className="space-y-6 max-w-2xl">
+        <Card className="p-8">
+          <div className="text-center mb-6">
+            <h2 className="text-display-sm font-bold text-foreground mb-2">AI Enhanced Components</h2>
+            <p className="text-base text-muted-foreground">Intelligent form assistance with AI-powered suggestions</p>
+          </div>
+          <div className="space-y-8 max-w-3xl mx-auto">
             <div>
               <Label htmlFor="ai-textarea">AI Enhanced Textarea</Label>
               <AIEnhancedTextarea
@@ -161,42 +178,54 @@ export function ComponentsPage() {
         </Card>
 
         {/* Theme Controls */}
-        <Card className="p-6">
-          <h2 className="text-xl font-semibold mb-4">Theme & Language Controls</h2>
-          <div className="flex flex-wrap gap-4">
+        <Card className="p-8">
+          <div className="text-center mb-6">
+            <h2 className="text-display-sm font-bold text-foreground mb-2">Theme & Language Controls</h2>
+            <p className="text-base text-muted-foreground">Accessibility and internationalization options</p>
+          </div>
+          <div className="flex flex-wrap justify-center gap-6">
             <LanguageSwitcher />
             <ThemeToggle />
           </div>
         </Card>
 
         {/* Cards Showcase */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <Card className="p-6">
-            <h3 className="font-semibold mb-2">Default Card</h3>
-            <p className="text-muted-foreground">
-              This is a default card with some content.
-            </p>
-          </Card>
-          <Card className="p-6 bg-primary/5 border-primary/20">
-            <h3 className="font-semibold mb-2">Accent Card</h3>
-            <p className="text-muted-foreground">
-              This card has accent styling.
-            </p>
-          </Card>
-          <Card className="p-6 bg-muted/50">
-            <h3 className="font-semibold mb-2">Muted Card</h3>
-            <p className="text-muted-foreground">
-              This card has muted background.
-            </p>
-          </Card>
+        <div className="space-y-8">
+          <div className="text-center">
+            <h2 className="text-display-sm font-bold text-foreground mb-2">Card Variants</h2>
+            <p className="text-base text-muted-foreground">Different card styles and layouts</p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="p-6 text-center">
+              <h3 className="text-lg font-semibold mb-3">Default Card</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                This is a default card with some content and proper typography.
+              </p>
+            </Card>
+            <Card className="p-6 text-center bg-primary/5 border-primary/20">
+              <h3 className="text-lg font-semibold mb-3">Accent Card</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                This card has accent styling with golden theme.
+              </p>
+            </Card>
+            <Card className="p-6 text-center bg-muted/50">
+              <h3 className="text-lg font-semibold mb-3">Muted Card</h3>
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                This card has muted background styling.
+              </p>
+            </Card>
+          </div>
         </div>
 
         {/* Development Status */}
         {import.meta.env.DEV && (
-          <Card className="p-6 bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
-            <h2 className="text-xl font-semibold mb-4 text-green-800 dark:text-green-200">
-              Development Status
-            </h2>
+          <Card className="p-8 bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800">
+            <div className="text-center mb-6">
+              <h2 className="text-display-sm font-bold mb-2 text-green-800 dark:text-green-200">
+                Development Status
+              </h2>
+              <p className="text-base text-green-600 dark:text-green-400">Project progress and completed features</p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
                 <h3 className="font-medium text-green-700 dark:text-green-300 mb-2">Completed Modules:</h3>

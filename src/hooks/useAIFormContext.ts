@@ -166,7 +166,17 @@ const extractSafeContext = (stepData: Record<string, any>, stepKey: string): Rec
  */
 export function useAIFormContext(): AIFormContextResult {
   const { i18n } = useTranslation();
-  const formWizardContext = useFormWizard();
+  
+  // Try to get FormWizard context, but handle gracefully if not available
+  let formWizardContext: any = null;
+  try {
+    formWizardContext = useFormWizard();
+  } catch (error) {
+    // FormWizard context not available - this is expected outside wizard components
+    if (process.env.NODE_ENV === 'development') {
+      console.debug('[useAIFormContext] FormWizard context not available, using fallback context');
+    }
+  }
   
   // Try to get React Hook Form context (may not be available in all components)
   let reactHookFormContext: any = null;
@@ -194,8 +204,11 @@ export function useAIFormContext(): AIFormContextResult {
 
   // Get all form data from FormWizard context with error handling
   const getAllFormData = (): FormStepData => {
+    if (!formWizardContext) {
+      return {};
+    }
     try {
-      return formWizardContext.state.formData || {};
+      return formWizardContext.state?.formData || {};
     } catch (error) {
       console.warn('[useAIFormContext] Error accessing FormWizard context:', error);
       return {};
@@ -206,7 +219,7 @@ export function useAIFormContext(): AIFormContextResult {
   const getCombinedFormData = (): FormStepData => {
     const storedData = getAllFormData();
     const currentStepData = getCurrentStepData();
-    const currentStep = formWizardContext.state.currentStep;
+    const currentStep = formWizardContext?.state?.currentStep || 1;
 
     if (Object.keys(currentStepData).length > 0) {
       const stepKey = `step${currentStep}` as keyof FormStepData;
@@ -257,7 +270,7 @@ export function useAIFormContext(): AIFormContextResult {
       );
 
       return {
-        currentStep: formWizardContext.state.currentStep,
+        currentStep: formWizardContext?.state?.currentStep || 1,
         language: i18n.language,
         completeness: {
           step1: step1Metrics.percentage,
@@ -330,18 +343,30 @@ export function useAIFormContext(): AIFormContextResult {
  * Get user context with backward compatibility fallback
  */
 export function useAIUserContext(): AIFormContext {
-  const { userContext, isAvailable } = useAIFormContext();
+  try {
+    const { userContext, isAvailable } = useAIFormContext();
 
-  // Provide backward compatibility fallback
-  if (!isAvailable) {
+    // Provide backward compatibility fallback
+    if (!isAvailable) {
+      return {
+        step1: {},
+        step2: {},
+        step3: {},
+      };
+    }
+
+    return userContext;
+  } catch (error) {
+    // FormWizard context not available - return empty context
+    if (process.env.NODE_ENV === 'development') {
+      console.debug('[useAIUserContext] FormWizard context not available, returning empty context');
+    }
     return {
       step1: {},
       step2: {},
       step3: {},
     };
   }
-
-  return userContext;
 }
 
 /**
@@ -352,13 +377,25 @@ export function useFormCompletenessCheck(threshold: number = 70): {
   currentStepCompleteness: number;
   overallCompleteness: number;
 } {
-  const { metrics } = useAIFormContext();
-  const currentStepKey = `step${metrics.currentStep}` as keyof typeof metrics.completeness;
-  const currentStepCompleteness = metrics.completeness[currentStepKey] || 0;
+  try {
+    const { metrics } = useAIFormContext();
+    const currentStepKey = `step${metrics.currentStep}` as keyof typeof metrics.completeness;
+    const currentStepCompleteness = metrics.completeness[currentStepKey] || 0;
 
-  return {
-    meetsThreshold: currentStepCompleteness >= threshold,
-    currentStepCompleteness,
-    overallCompleteness: metrics.completeness.overall,
-  };
+    return {
+      meetsThreshold: currentStepCompleteness >= threshold,
+      currentStepCompleteness,
+      overallCompleteness: metrics.completeness.overall,
+    };
+  } catch (error) {
+    // FormWizard context not available - return default values
+    if (process.env.NODE_ENV === 'development') {
+      console.debug('[useFormCompletenessCheck] FormWizard context not available, returning default values');
+    }
+    return {
+      meetsThreshold: false,
+      currentStepCompleteness: 0,
+      overallCompleteness: 0,
+    };
+  }
 }

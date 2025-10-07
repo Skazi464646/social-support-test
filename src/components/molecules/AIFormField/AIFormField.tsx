@@ -41,7 +41,7 @@ export const AIFormField = forwardRef<HTMLTextAreaElement, AIFormFieldProps>(
         </label>
         
         {helperText && (
-          <p className="text-xs text-text-secondary mb-2">{helperText}</p>
+          <p className="text-xs text-text-tertiary mb-2 leading-snug">{helperText}</p>
         )}
         
         <AIEnhancedTextarea

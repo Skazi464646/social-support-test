@@ -1,7 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Home, FileText, Layers, ExternalLink } from 'lucide-react';
-import { Button } from '@/components/atoms/Button';
+import { Home, FileText, Layers } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/molecules/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { cn } from '@/lib/utils';

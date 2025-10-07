@@ -236,7 +236,7 @@ const FormFieldMessages = ({
   ) : helperText ? (
     <p
       id={`${fieldId}-helper`}
-      className={cn('text-sm text-text-secondary leading-relaxed', textAlignment)}
+      className={cn('text-xs text-text-tertiary leading-snug', textAlignment)}
     >
       {helperText}
     </p>
