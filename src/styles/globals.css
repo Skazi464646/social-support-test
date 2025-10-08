@@ -837,7 +837,7 @@ small {
   }
 
   .text-destructive {
-    color: hsl(var(--destructive));
+    color: hsl(var(--destructive)) !important;
   }
 
   .text-info {
