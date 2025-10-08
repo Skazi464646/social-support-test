@@ -49,3 +49,6 @@ export type { FormStepNoticeProps, FormStepNoticeVariant } from './FormStepNotic
 
 export { SubmissionErrorCard } from './SubmissionErrorCard';
 export type { SubmissionErrorCardProps } from './SubmissionErrorCard';
+
+export { ModalHeader } from './ModalHeader';
+export type { ModalHeaderProps } from './ModalHeader';

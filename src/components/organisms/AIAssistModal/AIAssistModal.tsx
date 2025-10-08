@@ -14,12 +14,12 @@ import { TRANSLATION_KEY } from '@/constants/internationalization';
 import { useNoScrollBody } from '@/hooks';
 import type { AIAssistModalProps, Suggestion } from './AIAssistModal.types';
 import { AIExampleRequest, AIRelevancyRequest,AIAssistRequest } from '@/lib/api/interface';
+import { ModalHeader } from '@/components/molecules/ModalHeader';
 
 export function AIAssistModal({
   isOpen,
   onClose,
   fieldName,
-  fieldLabel,
   currentValue,
   onAccept,
   userContext = {},
@@ -317,28 +317,12 @@ export function AIAssistModal({
         aria-describedby="ai-modal-description"
       >
         {/* Header */}
-        <div className="border-b border-border px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 id="ai-modal-title" className="text-xl font-semibold text-text-primary">
-                {fieldConfig.title}
-              </h2>
-              <p id="ai-modal-description" className="text-sm text-text-secondary mt-1">
-                {fieldConfig.description}
-              </p>
-            </div>
-            <button
-              type="button"
-              onClick={onClose}
-              className="text-text-tertiary hover:text-text-secondary transition-colors"
-              aria-label={AI_MESSAGES.modal.closeAriaLabel}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
+        <ModalHeader
+          title={fieldConfig.title}
+          description={fieldConfig.description}
+          onClose={onClose}
+          closeAriaLabel={t(TRANSLATION_KEY.modalHeader.close_aria_label, AI_MESSAGES.modal.closeAriaLabel)}
+        />
 
         <div className="flex flex-col lg:flex-row lg:h-[60vh] max-h-[80vh]">
           {/* Left Panel - Suggestions */}

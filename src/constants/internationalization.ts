@@ -286,11 +286,17 @@ export const TRANSLATION_KEY = {
     "select_placeholder": "aiModal.select_placeholder",
     "min_prefix": "aiModal.min_prefix",
     "generating": "aiModal.generating",
+    "close": "common:actions.close",
     "badge": {
       "edited": "aiModal.badge.edited",
       "ai": "aiModal.badge.ai",
       "example": "aiModal.badge.example",
       "chars": "aiModal.badge.chars"
     }
+  },
+  
+  // Modal Header
+  "modalHeader": {
+    "close_aria_label": "common:accessibility.close_dialog"
   }
 } as const;
