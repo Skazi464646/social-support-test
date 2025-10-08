@@ -8,6 +8,8 @@ import { AI_RELEVANCY, AI_FIELD_DEFAULTS, AI_RATE_LIMIT, AI_MESSAGES } from '@/c
 import { openAIService, getFieldExamples } from '@/lib/ai';
 import { getFieldModalConfig } from '@/lib/ai/prompt-templates';
 import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next';
+import { TRANSLATION_KEY } from '@/constants/internationalization';
 
 import { useNoScrollBody } from '@/hooks';
 import type { AIAssistModalProps, Suggestion } from './AIAssistModal.types';
@@ -24,6 +26,7 @@ export function AIAssistModal({
   intelligentContext,
   fieldConstraints,
 }: AIAssistModalProps) {
+  const { t } = useTranslation(['common']);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [activeSuggestionId, setActiveSuggestionId] = useState<string | null>(null);
   const [editedText, setEditedText] = useState(currentValue || '');
@@ -347,17 +350,17 @@ export function AIAssistModal({
                   onClick={generateSuggestion}
                   disabled={isLoading || !isValidLength}
                   className="flex-1 px-6 py-3 text-base font-semibold rounded-lg bg-primary text-primary-foreground hover:bg-primary-hover hover:shadow-gold-md hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none shadow-sm border border-primary/20"
-                  title={AI_MESSAGES.modal.generateButton}
+                  title={t(TRANSLATION_KEY.aiModal.generate, AI_MESSAGES.modal.generateButton)}
                 >
                   {isLoading ? (
                     <>
                       <span className="animate-spin inline-block w-5 h-5 border border-current border-t-transparent rounded-full mr-3"></span>
-                      {AI_MESSAGES.modal.generating}
+                      {t(TRANSLATION_KEY.aiModal.generating, AI_MESSAGES.modal.generating)}
                     </>
                   ) : (
                     <>
                       <span className="mr-2">✨</span>
-                      {AI_MESSAGES.modal.generateButton}
+                      {t(TRANSLATION_KEY.aiModal.generate, AI_MESSAGES.modal.generateButton)}
                     </>
                   )}
                 </button>
@@ -367,7 +370,7 @@ export function AIAssistModal({
                     onClick={regenerateSuggestion}
                     disabled={isLoading}
                     className="px-4 py-3 text-base font-medium rounded-lg border border-primary/30 bg-background text-primary hover:bg-primary/10 hover:border-primary hover:shadow-gold-sm hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:transform-none disabled:shadow-none"
-                    title={AI_MESSAGES.modal.regenerateTitle}
+                  title={t(TRANSLATION_KEY.aiModal.regenerate_title, AI_MESSAGES.modal.regenerateTitle)}
                   >
                     🔄
                   </button>
@@ -381,21 +384,24 @@ export function AIAssistModal({
                   onClick={() => setShowExamples(!showExamples)}
                   disabled={loadingExamples}
                   className="w-full mt-3 py-2 px-3 text-sm font-medium text-primary hover:text-primary/80 hover:bg-primary/5 rounded-md border border-primary/20 hover:border-primary/40 transition-all duration-200 disabled:opacity-50"
-                  title={AI_MESSAGES.modal.regenerateTitle}
+                  title={t(TRANSLATION_KEY.aiModal.regenerate_title, AI_MESSAGES.modal.regenerateTitle)}
                 >
                   {loadingExamples ? (
                     <>
                       <span className="animate-spin inline-block w-3 h-3 border border-current border-t-transparent rounded-full mr-1"></span>
-                      Loading examples...
+                      {t(TRANSLATION_KEY.aiModal.loading_examples, 'Loading examples...')}
                     </>
                   ) : (
-                    AI_MESSAGES.modal.toggleExamples(showExamples,
-                      dynamicExamples.length > 0
+                    (() => {
+                      const exampleCount = dynamicExamples.length > 0
                         ? dynamicExamples.length
-                        : examples.length > 0
-                          ? examples.length
-                          : 0
-                    )
+                        : (examples.length > 0 ? examples.length : 0);
+                      const key = showExamples
+                        ? TRANSLATION_KEY.aiModal.hide_examples
+                        : TRANSLATION_KEY.aiModal.show_examples;
+                      const fallback = showExamples ? 'Hide examples ({{count}})' : 'Show examples ({{count}})';
+                      return t(key, { count: exampleCount, defaultValue: fallback });
+                    })()
                   )}
                 </button>
               )}
@@ -406,7 +412,7 @@ export function AIAssistModal({
               {error && (
                 <div className="p-4 bg-destructive-light border-b border-destructive-border">
                   <div className="text-destructive text-sm">
-                    <strong>Error:</strong> {error}
+                    <strong>{t(TRANSLATION_KEY.aiModal.error_label, 'Error')}:</strong> {error}
                   </div>
                 </div>
               )}
@@ -418,7 +424,7 @@ export function AIAssistModal({
                     {dynamicExamples.length > 0 ? (
                       <>
                         <h4 className="text-sm font-medium text-text-secondary mb-2">
-                          ✨ Examples Similar to Yours
+                          {t(TRANSLATION_KEY.aiModal.examples_similar_title, TRANSLATION_KEY.translation_values.examples_similar_title)}
                         </h4>
                         <div className="space-y-2">
                           {dynamicExamples.map((example, index) => (
@@ -429,7 +435,7 @@ export function AIAssistModal({
                               className="w-full text-left p-2 text-xs border rounded transition-colors
                               border-primary hover:border-primary-hover bg-primary-light text-primary-light-foreground"
                             >
-                              <div className="font-medium text-primary-light-foreground mb-1">Example {index + 1}:</div>
+                              <div className="font-medium text-primary-light-foreground mb-1">{t(TRANSLATION_KEY.aiModal.example_label, TRANSLATION_KEY.translation_values.show_examples)} {index + 1}:</div>
                               <div className="text-primary-light-foreground/90">
                                 {example.length > 120 ? `${example.substring(0, 120)}...` : example}
                               </div>
@@ -439,7 +445,7 @@ export function AIAssistModal({
                       </>
                     ) : examples.length > 0 ? (
                       <>
-                        <h4 className="text-sm font-medium text-text-secondary mb-2">Sample Responses</h4>
+                        <h4 className="text-sm font-medium text-text-secondary mb-2">{t(TRANSLATION_KEY.aiModal.sample_responses_title, TRANSLATION_KEY.translation_values.sample_responses_title)}</h4>
                         <div className="space-y-2">
                           {examples.map((example, index) => (
                             <button
@@ -455,7 +461,7 @@ export function AIAssistModal({
                       </>
                     ) : examplesError ? (
                       <div className="text-sm text-destructive p-2">
-                        <div className="font-medium">Failed to load personalized examples</div>
+                        <div className="font-medium">{t(TRANSLATION_KEY.aiModal.failed_examples, TRANSLATION_KEY.translation_values.failed_examples)}</div>
                         <div className="text-xs mt-1">{examplesError}</div>
                       </div>
                     ) : null}
@@ -466,12 +472,12 @@ export function AIAssistModal({
               {/* Suggestions List */}
               <div className="p-4 space-y-3">
                 {suggestions.length === 0 ? (
-                  <div className="text-center text-text-secondary text-sm py-8">
+                    <div className="text-center text-text-secondary text-sm py-8">
                     <div className="mb-2">💡</div>
-                    <p className="font-medium">{AI_MESSAGES.modal.generatePrompt}</p>
-                    <p className="text-xs mt-1 text-text-tertiary">AI will help you write about your {fieldLabel.toLowerCase()}</p>
-                    {examples.length > 0 && (
-                      <p className="text-xs mt-1">or use an example to get started</p>
+                      <p className="font-medium">{t(TRANSLATION_KEY.aiModal.generate_prompt, AI_MESSAGES.modal.generatePrompt)}</p>
+                      <p className="text-xs mt-1 text-text-tertiary">{t(TRANSLATION_KEY.aiModal.assist_intro, TRANSLATION_KEY.translation_values.assist_intro)}</p>
+                      {examples.length > 0 && (
+                        <p className="text-xs mt-1">{t(TRANSLATION_KEY.aiModal.use_example_hint, TRANSLATION_KEY.translation_values.use_example_hint)}</p>
                     )}
                   </div>
                 ) : (
@@ -489,9 +495,9 @@ export function AIAssistModal({
                       </div>
                       <div className="flex items-center justify-between mt-2 text-xs text-text-secondary">
                         <span>
-                          {suggestion.isEdited ? '✏️ Edited' : suggestion.confidence ? '🤖 AI' : '📝 Example'}
+                          {suggestion.isEdited ? t(TRANSLATION_KEY.aiModal.badge.edited, TRANSLATION_KEY.translation_values.badge.edited) : suggestion.confidence ? t(TRANSLATION_KEY.aiModal.badge.ai, TRANSLATION_KEY.translation_values.badge.ai) : t(TRANSLATION_KEY.aiModal.badge.example, TRANSLATION_KEY.translation_values.badge.example)}
                         </span>
-                        <span>{suggestion.text.length} chars</span>
+                        <span>{suggestion.text.length} {t(TRANSLATION_KEY.aiModal.badge.chars, 'chars')}</span>
                       </div>
                     </div>
                   ))
@@ -504,7 +510,7 @@ export function AIAssistModal({
           <div className="flex-1 w-full flex flex-col">
             <div className="p-4 border-b border-border">
               <div className="flex items-center justify-between">
-                <h3 className="font-medium text-text-primary">Edit Your Response</h3>
+                <h3 className="font-medium text-text-primary">{t(TRANSLATION_KEY.aiModal.edit_your_response, TRANSLATION_KEY.translation_values.edit_your_response)}</h3>
                 <div className="flex gap-2">
                   {!isEditing ? (
                     <button
@@ -522,14 +528,14 @@ export function AIAssistModal({
                         onClick={cancelEdit}
                         className="px-3 py-1 text-sm border border-border rounded hover:bg-muted transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
                       >
-                        Cancel
+                        {t(TRANSLATION_KEY.aiModal.cancel, TRANSLATION_KEY.translation_values.cancel)}
                       </button>
                       <button
                         type="button"
                         onClick={saveEdit}
                         className="px-3 py-1 text-sm rounded bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary"
                       >
-                        Save
+                        {t(TRANSLATION_KEY.aiModal.save, 'Save')}
                       </button>
                     </>
                   )}
@@ -546,9 +552,9 @@ export function AIAssistModal({
                   readOnly={!isEditing}
                   placeholder={
                     editedText
-                      ? AI_MESSAGES.modal.editPlaceholder
+                      ? t(TRANSLATION_KEY.aiModal.edit_placeholder, AI_MESSAGES.modal.editPlaceholder)
                       : activeSuggestionId
-                        ? AI_MESSAGES.modal.selectPlaceholder
+                        ? t(TRANSLATION_KEY.aiModal.select_placeholder, AI_MESSAGES.modal.selectPlaceholder)
                         : fieldConfig.placeholder
                   }
                   className={`w-full flex-1 p-3 border rounded-md resize-none transition-all duration-200 focus:outline-none focus:border-primary focus:shadow-gold-sm ${isEditing ? 'bg-card' : 'bg-muted'
@@ -566,7 +572,7 @@ export function AIAssistModal({
                     {characterCount}/{maxLength}
                     {minLength > 0 && characterCount < minLength && (
                       <span className="ml-2 text-destructive">
-                        (min: {minLength})
+                        {t(TRANSLATION_KEY.aiModal.min_prefix, 'min:')} {minLength}
                       </span>
                     )}
                   </div>
@@ -575,7 +581,7 @@ export function AIAssistModal({
                 {/* Field-specific guidance - condensed */}
                 {!editedText && (
                   <div className="mt-4 p-3 border rounded-md border-info-border bg-info-light">
-                    <h4 className="text-sm font-medium text-info-foreground mb-1">💡 Tips:</h4>
+                    <h4 className="text-sm font-medium text-info-foreground mb-1">💡 {t(TRANSLATION_KEY.aiModal.tips_title, TRANSLATION_KEY.translation_values.tips_title)}:</h4>
                     <div className="text-xs text-info-light-foreground">
                       {fieldConfig.guidance.slice(0, 2).map((tip, index) => (
                         <div key={index} className="mb-1">• {tip}</div>
@@ -592,7 +598,7 @@ export function AIAssistModal({
         <div className="border-t border-border px-6 py-4 bg-surface/30">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="text-sm text-text-secondary leading-snug">
-              Rate limit: {openAIService.getRateLimitStatus().tokensAvailable} requests remaining
+              {t(TRANSLATION_KEY.aiModal.rate_limit_status, 'Rate limit')}: {openAIService.getRateLimitStatus().tokensAvailable}
             </div>
             <div className="flex flex-col-reverse sm:flex-row gap-3 w-full sm:w-auto">
               <button
@@ -600,7 +606,7 @@ export function AIAssistModal({
                 onClick={onClose}
                 className="px-4 py-2 border border-border rounded-md text-text-primary hover:bg-muted transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-auto"
               >
-                Cancel
+                {t('common:actions.cancel', 'Cancel')}
               </button>
               <button
                 type="button"
@@ -608,7 +614,7 @@ export function AIAssistModal({
                 disabled={!editedText.trim() || !isValidLength}
                 className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed font-medium w-full sm:w-auto"
               >
-                Use This Text
+                {t(TRANSLATION_KEY.aiModal.use_this_text, TRANSLATION_KEY.translation_values.use_this_text)}
               </button>
             </div>
           </div>

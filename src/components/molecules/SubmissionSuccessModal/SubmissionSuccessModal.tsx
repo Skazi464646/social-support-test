@@ -44,7 +44,7 @@ export function SubmissionSuccessModal({
   onStartNewApplication,
   isLoading = false,
 }: SubmissionSuccessModalProps) {
-  const { t } = useTranslation(['form', 'common']);
+  const { t, i18n } = useTranslation(['form', 'common']);
   const [copied, setCopied] = React.useState(false);
   const copyTimeoutRef = useRef<NodeJS.Timeout>();
   
@@ -96,7 +96,7 @@ export function SubmissionSuccessModal({
   const formatSubmissionDate = (isoString: string) => {
     try {
       const date = new Date(isoString);
-      return new Intl.DateTimeFormat('en', {
+      return new Intl.DateTimeFormat(i18n.language || 'en', {
         dateStyle: 'medium',
         timeStyle: 'short',
       }).format(date);

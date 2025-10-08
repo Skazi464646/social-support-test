@@ -12,6 +12,31 @@ export const TRANSLATION_KEY = {
     "title": "step3.title",
     "description": "step3.description"
   },
+  "translation_values": {
+    "use_this_text": "Use This Text",
+    "tips_title_prefix": "💡",
+    "tips_title": "Tips",
+    "examples_similar_title": "Examples Similar to Yours",
+    "sample_responses_title": "Sample Responses",
+    "loading_examples": "Loading examples...",
+    "error_label": "Error",
+    "assist_intro": "AI will help you write",
+    "use_example_hint": "or use an example to get started",
+    "edit_your_response": "Edit Your Response",
+    "example_label": "Example",
+    "failed_examples": "Failed to load personalized examples",
+    "show_examples": "Show Examples",
+    "hide_examples": "Hide Examples",
+    "badge": {
+      "edited": "✏️ Edited",
+      "ai": "🤖 AI",
+      "example": "📝 Example",
+      "chars": "chars",
+    },
+    "cancel": "Cancel",
+    "save": "Save",
+  },
+
   
   // Section titles and descriptions
   "family_section": "family_section",
@@ -233,6 +258,39 @@ export const TRANSLATION_KEY = {
       "title": "home.cta.title",
       "description": "home.cta.description",
       "button": "home.cta.button"
+    }
+  },
+  
+  // AI Assist Modal
+  "aiModal": {
+    "examples_similar_title": "aiModal.examples_similar_title",
+    "sample_responses_title": "aiModal.sample_responses_title",
+    "loading_examples": "aiModal.loading_examples",
+    "error_label": "aiModal.error_label",
+    "assist_intro": "aiModal.assist_intro",
+    "use_example_hint": "aiModal.use_example_hint",
+    "edit_your_response": "aiModal.edit_your_response",
+    "tips_title": "aiModal.tips_title",
+    "rate_limit_status": "aiModal.rate_limit_status",
+    "example_label": "aiModal.example_label",
+    "failed_examples": "aiModal.failed_examples",
+    "use_this_text": "aiModal.use_this_text",
+    "cancel": "common:actions.cancel",
+    "save": "common:actions.save",
+    "generate": "common:actions.generate",
+    "show_examples": "aiModal.show_examples",
+    "hide_examples": "aiModal.hide_examples",
+    "regenerate_title": "aiModal.regenerate_title",
+    "generate_prompt": "aiModal.generate_prompt",
+    "edit_placeholder": "aiModal.edit_placeholder",
+    "select_placeholder": "aiModal.select_placeholder",
+    "min_prefix": "aiModal.min_prefix",
+    "generating": "aiModal.generating",
+    "badge": {
+      "edited": "aiModal.badge.edited",
+      "ai": "aiModal.badge.ai",
+      "example": "aiModal.badge.example",
+      "chars": "aiModal.badge.chars"
     }
   }
 } as const;

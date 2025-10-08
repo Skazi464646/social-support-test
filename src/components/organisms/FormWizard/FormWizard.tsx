@@ -17,11 +17,7 @@ import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, For
 import { TRANSLATION_KEY } from '@/constants/internationalization';
 import {Header} from '@/components/molecules/Header/Header';
 
-// =============================================================================
-// LAZY IMPORTS - Code Splitting for Form Steps
-// =============================================================================
 
-// Lazy load form steps for better performance
 const FormStep1 = lazy(() => 
   import('@/components/organisms/FormStep1').then(module => ({ default: module.FormStep1 }))
 );
@@ -33,10 +29,6 @@ const FormStep2 = lazy(() =>
 const FormStep3 = lazy(() => 
   import('@/components/organisms/FormStep3').then(module => ({ default: module.FormStep3 }))
 );
-
-// =============================================================================
-// LOADING AND ERROR COMPONENTS
-// =============================================================================
 
 const FormStepSkeleton = () => (
   <div className="space-y-6 animate-pulse">
@@ -89,9 +81,6 @@ const FormStepErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => 
   );
 };
 
-// =============================================================================
-// PREFETCHING LOGIC
-// =============================================================================
 
 const usePrefetchNextStep = (currentStep: number) => {
   useEffect(() => {
@@ -109,9 +98,6 @@ const usePrefetchNextStep = (currentStep: number) => {
   }, [currentStep]);
 };
 
-// =============================================================================
-// MAIN COMPONENT
-// =============================================================================
 
 export function FormWizard() {
   const { t, i18n } = useTranslation(['form', 'common']);
@@ -147,7 +133,6 @@ export function FormWizard() {
 
   const currentForm = getCurrentForm();
 
-  // Initialize forms with localStorage data once it's loaded
   useEffect(() => {
     // Wait for localStorage data to be loaded (using the isLoaded flag)
     if (!hasLoadedFromStorageRef.current && state.isLoaded) {
@@ -389,7 +374,14 @@ export function FormWizard() {
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
       {/* Header */}
-     <Header />
+      <div className="mb-8" >
+            <h1 className="text-3xl font-bold text-foreground mb-2" >
+                {t('title')}
+            </h1>
+            < p className="text-muted-foreground" >
+                {t('description')}
+            </p>
+        </div>
 
       {/* Progress Bar */}
       <ProgressBar 

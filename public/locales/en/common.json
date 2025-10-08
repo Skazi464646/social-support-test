@@ -154,4 +154,33 @@
       "button": "Begin Application"
     }
   }
+  ,
+  "aiModal": {
+    "examples_similar_title": "Examples Similar to Yours",
+    "sample_responses_title": "Sample Responses",
+    "loading_examples": "Loading examples...",
+    "show_examples": "Show examples ({{count}})",
+    "hide_examples": "Hide examples ({{count}})",
+    "error_label": "Error",
+    "assist_intro": "AI will help you write",
+    "use_example_hint": "or use an example to get started",
+    "edit_your_response": "Edit Your Response",
+    "tips_title": "Tips",
+    "rate_limit_status": "Rate limit",
+    "example_label": "Example",
+    "failed_examples": "Failed to load personalized examples",
+    "use_this_text": "Use This Text",
+    "regenerate_title": "Generate another suggestion",
+    "generating": "Generating...",
+    "generate_prompt": "Click \"Generate\" for AI suggestions",
+    "edit_placeholder": "Edit your text here or generate AI suggestions for improvements...",
+    "select_placeholder": "Select a suggestion to edit it here...",
+    "min_prefix": "min:",
+    "badge": {
+      "edited": "✏️ Edited",
+      "ai": "🤖 AI",
+      "example": "📝 Example",
+      "chars": "chars"
+    }
+  }
 }
