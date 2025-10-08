@@ -97,11 +97,7 @@ export function FormWizardProvider({ children }: { children: ReactNode }) {
         const parsedData = JSON.parse(saved);
         const transformedFormData = transformFromStorage(parsedData.formData || {});
         
-        if (import.meta.env?.DEV) {
-          console.log('[FormWizardContext] Loading from localStorage:');
-          console.log('Original data:', parsedData.formData);
-          console.log('Transformed data:', transformedFormData);
-        }
+        
         
         dispatch({ 
           type: 'LOAD_FROM_STORAGE', 
@@ -111,7 +107,6 @@ export function FormWizardProvider({ children }: { children: ReactNode }) {
           }
         });
       } catch (error) {
-        console.error('Failed to parse saved form data:', error);
         localStorage.removeItem('formWizardData');
         // Mark as loaded even if there was an error
         dispatch({ type: 'LOAD_FROM_STORAGE', payload: {} });

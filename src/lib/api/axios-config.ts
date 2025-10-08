@@ -43,20 +43,10 @@ apiClient.interceptors.request.use(
     config.headers.set('X-Timestamp', new Date().toISOString());
 
     // Log requests in development
-    if (import.meta.env.DEV) {
-      console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, {
-        requestId,
-        data: config.data,
-        params: config.params,
-      });
-    }
-
+  
     return config;
   },
   (error: AxiosError) => {
-    if (import.meta.env.DEV) {
-      console.error('[API Request Error]', error);
-    }
     return Promise.reject(error);
   }
 );
@@ -68,20 +58,6 @@ apiClient.interceptors.request.use(
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => {
     // Log successful responses in development
-    if (import.meta.env.DEV) {
-      const requestId = response.config.headers?.['X-Request-ID'];
-      const retryCount = response.config.metadata?.retryCount || 0;
-      console.log(`[API Response] ${response.status} ${response.config.url}`, {
-        requestId,
-        data: response.data,
-        retryCount: retryCount > 0 ? retryCount : undefined,
-         duration: response.config.metadata?.endTime &&
-        response.config.metadata?.startTime 
-                  ? response.config.metadata.endTime - 
-      response.config.metadata.startTime 
-                  : undefined,
-      });
-    }
 
     return response;
   },
@@ -93,20 +69,6 @@ apiClient.interceptors.response.use(
     if (originalRequest && !originalRequest.metadata) {
       originalRequest.metadata = { startTime: Date.now(), retryCount: 0 };
     }
-    
-    // Log errors in development
-    if (import.meta.env.DEV) {
-      console.error(`[API Error] ${error.response?.status || 'Network'} ${error.config?.url}`, {
-        requestId,
-        error: error.message,
-        response: error.response?.data,
-        retryCount: originalRequest?.metadata?.retryCount || 0,
-      });
-    }
-
-    // =============================================================================
-    // AUTOMATIC RETRY LOGIC
-    // =============================================================================
     
     // Convert error to FormSubmissionError first
     const formError = convertToFormSubmissionError(error);
@@ -124,13 +86,6 @@ apiClient.interceptors.response.use(
       // Calculate retry delay
       const delay = calculateRetryDelay(formError, retryCount);
       
-      if (import.meta.env.DEV) {
-        console.log(`[API Retry] Attempt ${retryCount}/${MAX_RETRIES} for ${originalRequest.url}`, {
-          requestId,
-          delayMs: delay,
-          errorCode: formError.code,
-        });
-      }
       
       // Wait before retrying
       await new Promise(resolve => setTimeout(resolve, delay));
@@ -395,9 +350,7 @@ export const retryRequest = async (
     // Calculate exponential backoff delay
     const delay = RETRY_DELAY * Math.pow(2, MAX_RETRIES - retries);
     
-    if (import.meta.env.DEV) {
-      console.log(`[API Retry] Retrying request in ${delay}ms. Retries left: ${retries - 1}`);
-    }
+ 
     
     await new Promise(resolve => setTimeout(resolve, delay));
     return retryRequest(requestFn, Number(retries) - 1);

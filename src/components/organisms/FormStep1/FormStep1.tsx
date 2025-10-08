@@ -15,11 +15,7 @@ export function FormStep1() {
   const { t, i18n } = useTranslation(['form', 'common', 'validation']);
   const { control, watch } = useFormContext<Step1FormData>();
 
-  // Debug logging
-  console.log('[FormStep1] Current language:', i18n.language);
-  console.log('[FormStep1] Available resources:', i18n.hasResourceBundle(i18n.language, 'form'));
-  console.log('[FormStep1] Test translation - fullName:', t('fullName', 'DEBUG_FALLBACK'));
-  console.log('[FormStep1] Form namespace available:', i18n.getResourceBundle(i18n.language, 'form'));
+  
 
   // Watch for country selection to show conditional fields
   const selectedCountry = watch(FORM_STEP1_FIELD_NAMES.country);

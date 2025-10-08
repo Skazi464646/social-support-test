@@ -43,7 +43,7 @@ export interface FormValidationReturn<T extends FieldValues> extends UseFormRetu
  * } = useFormValidation({
  *   schema: step1Schema,
  *   defaultValues: getStepDefaults(1).step1,
- *   onSubmit: (data) => console.log(data),
+ *   onSubmit: (data) => {},
  *   mode: 'onChange'
  * });
  */
@@ -77,12 +77,10 @@ export function useFormValidation<T extends FieldValues>({
         try {
           await onSubmitCallback?.(data);
         } catch (error) {
-          console.error('Form submission error:', error);
           onError?.(error);
         }
       },
       (errors) => {
-        console.log('Form validation errors:', errors);
         onError?.(errors);
       }
     ),

@@ -32,21 +32,12 @@ openaiApiClient.interceptors.request.use(
     config.headers.set('X-Request-ID', requestId);
     config.headers.set('X-Timestamp', new Date().toISOString());
 
-    // Log requests in development
-    if (import.meta.env.DEV) {
-      console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, {
-        requestId,
-        data: config.data,
-        params: config.params,
-      });
-    }
+    // Console request logging removed
 
     return config;
   },
   (error: AxiosError) => {
-    if (import.meta.env.DEV) {
-      console.error('[API Request Error]', error);
-    }
+    // Console error logging removed
     return Promise.reject(error);
   }
 );
@@ -57,21 +48,7 @@ openaiApiClient.interceptors.request.use(
 
 openaiApiClient.interceptors.response.use(
   (response: AxiosResponse) => {
-    // Log successful responses in development
-    if (import.meta.env.DEV) {
-      const requestId = response.config.headers?.['X-Request-ID'];
-      const retryCount = response.config.metadata?.retryCount || 0;
-      console.log(`[openaiApiClient API Response] ${response.status} ${response.config.url}`, {
-        requestId,
-        data: response.data,
-        retryCount: retryCount > 0 ? retryCount : undefined,
-         duration: response.config.metadata?.endTime &&
-        response.config.metadata?.startTime 
-                  ? response.config.metadata.endTime - 
-      response.config.metadata.startTime 
-                  : undefined,
-      });
-    }
+    // Console response logging removed
 
     return response;
   },
@@ -84,15 +61,7 @@ openaiApiClient.interceptors.response.use(
       originalRequest.metadata = { startTime: Date.now(), retryCount: 0 };
     }
     
-    // Log errors in development
-    if (import.meta.env.DEV) {
-      console.error(`[API Error] ${error.response?.status || 'Network'} ${error.config?.url}`, {
-        requestId,
-        error: error.message,
-        response: error.response?.data,
-        retryCount: originalRequest?.metadata?.retryCount || 0,
-      });
-    }
+    // Console error logging removed
 
     // =============================================================================
     // AUTOMATIC RETRY LOGIC
@@ -143,9 +112,7 @@ class OpenAIService {
     this.apiKey = import.meta.env.VITE_OPENAI_API_KEY;
     this.sessionId = generateSessionId();
     
-    if (!this.apiKey) {
-      console.warn('OpenAI API key not found. AI features will be disabled.');
-    }
+    // if no api key, features will be disabled
   }
 
   get isAvailable(): boolean {
@@ -193,10 +160,7 @@ class OpenAIService {
 
     // Input safety validation
     const safetyCheck = validateInputSafety(request.currentValue);
-    if (!safetyCheck.safe) {
-      console.warn('[OpenAI] Input safety issues detected:', safetyCheck.issues);
-      // Continue but log the issues for monitoring
-    }
+    // Continue even if not safe; logging removed
 
     // Use request deduplication
     return requestDeduplicator.deduplicate(
@@ -221,9 +185,7 @@ class OpenAIService {
 
             // Validate prompt context
             const validation = validatePromptContext(promptContext);
-            if (validation.warnings.length > 0) {
-              console.warn('[OpenAI] Prompt validation warnings:', validation.warnings);
-            }
+            // validation warnings ignored
 
             // Build optimized prompts with intelligent context when available
             const systemPrompt = getSystemPrompt(request.fieldName, request.language);
@@ -245,7 +207,6 @@ class OpenAIService {
 
             // Calculate efficiency metrics
             const efficiency = calculatePromptEfficiency(optimizedPrompt);
-            console.log('[OpenAI] Prompt efficiency:', efficiency);
 
             const openAIRequest: OpenAIRequest = {
               model: CONST_MODELS.defaultModel,
@@ -264,14 +225,7 @@ class OpenAIService {
               stream: AI_SUGGESTION.stream
             };
 
-            // Log request (sanitized)
-            console.log('[OpenAI] Request:', sanitizeForLogging({
-              requestId,
-              fieldName: request.fieldName,
-              language: request.language,
-              inputLength: request.currentValue.length,
-              model: openAIRequest.model,
-            }));
+            // request logging removed
 
             // Use streamingRequest which applies openaiApiClient configuration
             const response = await this.streamingRequest(openAIRequest, requestId, abortSignal);
@@ -284,13 +238,7 @@ class OpenAIService {
             const suggestion = await this.handleStreamResponse(response, abortSignal);
             const responseTime = Date.now() - startTime;
             
-            // Log successful response (sanitized)
-            console.log('[OpenAI] Success:', sanitizeForLogging({
-              requestId,
-              responseTime,
-              suggestionLength: suggestion.length,
-              tokensEstimate: Math.ceil(suggestion.length / 4),
-            }));
+            // success logging removed
 
             return {
               suggestion: suggestion.trim(),
@@ -302,12 +250,7 @@ class OpenAIService {
             };
 
           } catch (error) {
-            // Log error (sanitized)
-            console.error('[OpenAI] Error:', sanitizeForLogging({
-              requestId,
-              error: error instanceof Error ? error.message : 'Unknown error',
-              responseTime: Date.now() - startTime,
-            }));
+            // error logging removed
             
             throw error;
           }
@@ -364,9 +307,7 @@ class OpenAIService {
 
     // Input safety validation
     const safetyCheck = validateInputSafety(request.userInput);
-    if (!safetyCheck.safe) {
-      console.warn('[OpenAI] Input safety issues detected:', safetyCheck.issues);
-    }
+    // safety check logging removed
 
     return retryOpenAICall(async () => {
       const startTime = Date.now();
@@ -393,14 +334,7 @@ class OpenAIService {
           stream: AI_EXAMPLES.stream
         };
 
-        // Log request (sanitized)
-        console.log('[OpenAI Examples] Request:', sanitizeForLogging({
-          requestId,
-          fieldName: request.fieldName,
-          language: request.language,
-          inputLength: request.userInput.length,
-          model: openAIRequest.model,
-        }));
+        // request logging removed
 
         // Use openaiApiClient for non-streaming requests
         const response = await openaiApiClient.post('', openAIRequest);
@@ -412,13 +346,7 @@ class OpenAIService {
         const examples = parseExamplesFromResponse(content);
         const responseTime = Date.now() - startTime;
         
-        // Log successful response (sanitized)
-        console.log('[OpenAI Examples] Success:', sanitizeForLogging({
-          requestId,
-          responseTime,
-          exampleCount: examples.length,
-          tokensEstimate: Math.ceil(content.length / 4),
-        }));
+        // success logging removed
 
         return {
           examples,
@@ -431,12 +359,7 @@ class OpenAIService {
         };
 
       } catch (error) {
-        // Log error (sanitized)
-        console.error('[OpenAI Examples] Error:', sanitizeForLogging({
-          requestId,
-          error: error instanceof Error ? error.message : 'Unknown error',
-          responseTime: Date.now() - startTime,
-        }));
+        // error logging removed
         
         throw error;
       }
@@ -540,14 +463,7 @@ class OpenAIService {
           stream: AI_RELEVANCY.stream
         };
 
-        // Log request (sanitized)
-        console.log('[OpenAI Relevancy] Request:', sanitizeForLogging({
-          requestId,
-          fieldName: request.fieldName,
-          language: request.language,
-          inputLength: request.userInput.length,
-          model: openAIRequest.model,
-        }));
+        // request logging removed
 
         // Use openaiApiClient for non-streaming requests
         const response = await openaiApiClient.post('', openAIRequest);
@@ -559,14 +475,7 @@ class OpenAIService {
         const relevancyResult = parseRelevancyResponse(content);
         const responseTime = Date.now() - startTime;
         
-        // Log successful response (sanitized)
-        console.log('[OpenAI Relevancy] Success:', sanitizeForLogging({
-          requestId,
-          responseTime,
-          isRelevant: relevancyResult.isRelevant,
-          relevancyScore: relevancyResult.relevancyScore,
-          tokensEstimate: Math.ceil(content.length / 4),
-        }));
+        // success logging removed
 
         return {
           isRelevant: relevancyResult.isRelevant,
@@ -580,12 +489,7 @@ class OpenAIService {
         };
 
       } catch (error) {
-        // Log error (sanitized)
-        console.error('[OpenAI Relevancy] Error:', sanitizeForLogging({
-          requestId,
-          error: error instanceof Error ? error.message : 'Unknown error',
-          responseTime: Date.now() - startTime,
-        }));
+        // error logging removed
         
         throw error;
       }

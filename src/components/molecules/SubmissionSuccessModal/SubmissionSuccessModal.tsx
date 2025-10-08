@@ -81,8 +81,7 @@ export function SubmissionSuccessModal({
       }
       copyTimeoutRef.current = setTimeout(() => setCopied(false), 3000);
     } catch (error) {
-      console.error('Failed to copy to clipboard:', error);
-      // Fallback: select text for manual copy
+      
       const textArea = document.createElement('textarea');
       textArea.value = submissionDetails.applicationId;
       document.body.appendChild(textArea);

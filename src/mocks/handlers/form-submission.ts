@@ -69,11 +69,7 @@ export const formSubmissionHandlers = [
         metadata: Record<string, any>;
       };
       
-      console.log('📋 [MSW] Form submission received:', {
-        timestamp: new Date().toISOString(),
-        formData: Object.keys(body.formData),
-        metadata: body.metadata
-      });
+    
       
       // Validate form data
       const validation = validateFormData(body.formData);
@@ -95,7 +91,6 @@ export const formSubmissionHandlers = [
       const testScenario = url.searchParams.get('test');
       
       if (testScenario && import.meta.env.DEV) {
-        console.log(`🧪 [MSW] Testing scenario: ${testScenario}`);
         return handleTestScenario(testScenario);
       }
       
@@ -104,7 +99,6 @@ export const formSubmissionHandlers = [
       
       // 5% chance of server error
       if (random < 0.05) {
-        console.log('❌ [MSW] Simulating server error');
         return HttpResponse.json(
           {
             success: false,
@@ -117,7 +111,6 @@ export const formSubmissionHandlers = [
       
       // 3% chance of service unavailable
       if (random < 0.08) {
-        console.log('⚠️ [MSW] Simulating service unavailable');
         return HttpResponse.json(
           {
             success: false,
@@ -130,7 +123,6 @@ export const formSubmissionHandlers = [
       
       // 2% chance of rate limiting
       if (random < 0.10) {
-        console.log('🚦 [MSW] Simulating rate limit');
         return HttpResponse.json(
           {
             success: false,
@@ -150,7 +142,7 @@ export const formSubmissionHandlers = [
       const applicationId = generateApplicationId();
       const submittedAt = new Date().toISOString();
       
-      console.log('✅ [MSW] Form submission successful:', { applicationId });
+      
       
       return HttpResponse.json({
         success: true,
@@ -166,7 +158,6 @@ export const formSubmissionHandlers = [
       });
       
     } catch (error) {
-      console.error('❌ [MSW] Error processing submission:', error);
       return HttpResponse.json(
         {
           success: false,
@@ -184,7 +175,7 @@ export const formSubmissionHandlers = [
     
     const { applicationId } = params;
     
-    console.log('📊 [MSW] Status check for:', applicationId);
+    
     
     // Simulate different statuses based on application ID
     const statuses = ['pending', 'processing', 'approved', 'rejected'] as const;
@@ -211,7 +202,7 @@ export const formSubmissionHandlers = [
     
     const { errorType } = params;
     
-    console.log(`🧪 [MSW] Testing error type: ${errorType}`);
+    
     
     switch (errorType) {
       case '404':

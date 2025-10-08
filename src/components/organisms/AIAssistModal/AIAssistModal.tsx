@@ -129,15 +129,7 @@ export function AIAssistModal({
           intelligentContext,
           language: 'en',
         };
-
-        console.log('[AI Suggestion Relevancy] Checking relevancy for:', editedText.substring(0, 50));
         const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
-
-        console.log('[AI Suggestion Relevancy] Result:', {
-          isRelevant: relevancyResponse.isRelevant,
-          score: relevancyResponse.relevancyScore,
-          reason: relevancyResponse.reason
-        });
 
         if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < AI_RELEVANCY.threshold) {
           // Input is not relevant - create a suggestion with feedback
@@ -269,15 +261,7 @@ export function AIAssistModal({
           intelligentContext,
           language: 'en',
         };
-
-        console.log('[AI Relevancy] Checking relevancy for:', editedText.substring(0, 50));
         const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
-
-        console.log('[AI Relevancy] Result:', {
-          isRelevant: relevancyResponse.isRelevant,
-          score: relevancyResponse.relevancyScore,
-          reason: relevancyResponse.reason
-        });
 
         if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < AI_RELEVANCY.threshold) {
           // Input is not relevant - show helpful feedback
@@ -304,7 +288,6 @@ export function AIAssistModal({
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : AI_MESSAGES.errors.failedExamples;
       setExamplesError(errorMessage);
-      console.error('Dynamic examples generation error:', err);
     } finally {
       setLoadingExamples(false);
     }

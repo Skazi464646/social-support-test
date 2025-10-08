@@ -105,20 +105,6 @@ export function HomePage() {
             </div>
           </Card>
         </section>
-
-        {/* Development Info */}
-        {import.meta.env.DEV && (
-          <section className="mx-auto w-full max-w-3xl">
-            <Card className="bg-muted/50 p-6">
-              <h3 className="mb-4 text-lg font-semibold">{HOME_PAGE_FALLBACKS.devInfo.title}</h3>
-              <div className="space-y-2 text-sm text-muted-foreground">
-                {HOME_PAGE_FALLBACKS.devInfo.items.map((item) => (
-                  <p key={item}>{item}</p>
-                ))}
-              </div>
-            </Card>
-          </section>
-        )}
       </div>
     </div>
   );

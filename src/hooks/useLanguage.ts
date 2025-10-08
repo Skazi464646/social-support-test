@@ -103,7 +103,6 @@ export function useLanguage(): UseLanguageReturn {
           if (response.ok) {
             const data = await response.json();
             i18n.addResourceBundle(language, ns, data, true, true);
-            console.log(`[useLanguage] Loaded ${language}/${ns} manually`);
           }
         } catch (error) {
           console.warn(`[useLanguage] Failed to load ${language}/${ns}:`, error);
@@ -125,10 +124,6 @@ export function useLanguage(): UseLanguageReturn {
         },
       }));
 
-      // Analytics tracking (optional)
-      if (import.meta.env.DEV) {
-        console.log(`Language changed from ${currentLanguage} to ${language}`);
-      }
 
     } catch (error) {
       console.error('Failed to change language:', error);

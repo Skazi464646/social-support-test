@@ -173,9 +173,7 @@ export function useAIFormContext(): AIFormContextResult {
     formWizardContext = useFormWizard();
   } catch (error) {
     // FormWizard context not available - this is expected outside wizard components
-    if (process.env.NODE_ENV === 'development') {
-      console.debug('[useAIFormContext] FormWizard context not available, using fallback context');
-    }
+    
   }
   
   // Try to get React Hook Form context (may not be available in all components)
@@ -184,9 +182,7 @@ export function useAIFormContext(): AIFormContextResult {
     reactHookFormContext = useFormContext();
   } catch (error) {
     // useFormContext not available - this is expected outside form components
-    if (process.env.NODE_ENV === 'development') {
-      console.debug('[useAIFormContext] React Hook Form context not available, using FormWizard context only');
-    }
+    
   }
 
   // Get current step data from React Hook Form (if available)
@@ -195,7 +191,6 @@ export function useAIFormContext(): AIFormContextResult {
       try {
         return reactHookFormContext.getValues() || {};
       } catch (error) {
-        console.warn('[useAIFormContext] Error getting current form values:', error);
         return {};
       }
     }
@@ -210,7 +205,6 @@ export function useAIFormContext(): AIFormContextResult {
     try {
       return formWizardContext.state?.formData || {};
     } catch (error) {
-      console.warn('[useAIFormContext] Error accessing FormWizard context:', error);
       return {};
     }
   };
@@ -246,7 +240,6 @@ export function useAIFormContext(): AIFormContextResult {
         step3: extractSafeContext(combinedData.step3 || {}, 'step3'),
       };
     } catch (error) {
-      console.warn('[useAIFormContext] Error building user context, falling back to empty context:', error);
       // Graceful fallback to empty context (backward compatibility)
       return {
         step1: {},
@@ -285,7 +278,6 @@ export function useAIFormContext(): AIFormContextResult {
         },
       };
     } catch (error) {
-      console.warn('[useAIFormContext] Error calculating metrics, falling back to defaults:', error);
       // Graceful fallback to zero metrics
       return {
         currentStep: 1,
@@ -315,16 +307,7 @@ export function useAIFormContext(): AIFormContextResult {
                      Object.keys(currentStepData).length > 0;
 
   // Debug logging in development
-  if (process.env.NODE_ENV === 'development') {
-    console.debug('[useAIFormContext] Context extracted:', {
-      isAvailable,
-      metrics,
-      userContextKeys: Object.keys(userContext),
-      step1Keys: Object.keys(userContext.step1),
-      step2Keys: Object.keys(userContext.step2),
-      step3Keys: Object.keys(userContext.step3),
-    });
-  }
+  
 
   return {
     userContext,
@@ -358,9 +341,7 @@ export function useAIUserContext(): AIFormContext {
     return userContext;
   } catch (error) {
     // FormWizard context not available - return empty context
-    if (process.env.NODE_ENV === 'development') {
-      console.debug('[useAIUserContext] FormWizard context not available, returning empty context');
-    }
+    
     return {
       step1: {},
       step2: {},
@@ -389,9 +370,7 @@ export function useFormCompletenessCheck(threshold: number = 70): {
     };
   } catch (error) {
     // FormWizard context not available - return default values
-    if (process.env.NODE_ENV === 'development') {
-      console.debug('[useFormCompletenessCheck] FormWizard context not available, returning default values');
-    }
+    
     return {
       meetsThreshold: false,
       currentStepCompleteness: 0,

@@ -103,10 +103,6 @@ class PerformanceMonitor {
 
     this.metrics.push(metric);
 
-    // Log in development
-    if (import.meta.env.DEV) {
-      console.log(`[Performance] ${name}:`, value, metadata);
-    }
 
     // Send to analytics in production
     if (!import.meta.env.DEV && (window as any).gtag) {
@@ -319,16 +315,7 @@ export const performanceMonitor = new PerformanceMonitor();
 // Utility functions
 export { PerformanceMonitor };
 
-// Development helpers
-export function logPerformanceSummary() {
-  if (import.meta.env.DEV) {
-    console.group('[Performance Summary]');
-    console.table(performanceMonitor.getPerformanceSummary());
-    console.log('Bundle Analysis:', analyzeBundleSize());
-    console.groupEnd();
-  }
-}
-
+// Development helper
 export function enablePerformanceDebugging() {
   if (import.meta.env.DEV) {
     // Add performance debugging to window for manual inspection
@@ -336,7 +323,6 @@ export function enablePerformanceDebugging() {
       monitor: performanceMonitor,
       analyze: analyzeBundleSize,
       summary: () => performanceMonitor.getPerformanceSummary(),
-      log: logPerformanceSummary,
     };
     
     console.log('[Performance] Debugging enabled. Use window.__performance');

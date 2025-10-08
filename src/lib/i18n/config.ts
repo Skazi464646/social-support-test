@@ -98,7 +98,6 @@ export const loadNamespace = async (language: SupportedLanguage, namespace: Name
     }
     return await response.json();
   } catch (error) {
-    console.warn(`Failed to load namespace ${namespace} for ${language}:`, error);
     return {};
   }
 };
@@ -110,7 +109,7 @@ const loadCoreResources = async (): Promise<any> => {
   try {
     const coreNamespaces = ['common', 'navigation', 'form', 'validation'] as const;
     
-    console.log('[i18n] Loading core namespaces:', coreNamespaces);
+    
     
     // Load core namespaces for both languages
     const loadPromises = [];
@@ -128,13 +127,11 @@ const loadCoreResources = async (): Promise<any> => {
     const resources: any = { en: {}, ar: {} };
     results.forEach(({ lang, ns, data }) => {
       resources[lang][ns] = data;
-      console.log(`[i18n] Loaded ${lang}/${ns}:`, Object.keys(data).slice(0, 5));
     });
     
-    console.log('[i18n] Final resources structure:', Object.keys(resources.en), Object.keys(resources.ar));
     return resources;
   } catch (error) {
-    console.warn('Failed to load core translation resources, using fallback:', error);
+    
     
     // Enhanced fallback with namespaced resources (including form and validation)
     return {
@@ -771,8 +768,8 @@ export const initializeI18n = async (): Promise<typeof i18n> => {
       .use(initReactI18next)
       .init(initOptions);
       
-    console.log('[i18n] Initialization complete. Language:', i18n.language);
-    console.log('[i18n] Available resources:', Object.keys(i18n.services.resourceStore.data));
+    
+
 
     // Add Arabic pluralization rules after initialization
     try {

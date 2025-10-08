@@ -15,6 +15,7 @@ import type { SubmissionDetails } from '@/components/molecules/SubmissionSuccess
 import { formSubmissionService, formatSubmissionError, FormSubmissionError } from '@/lib/api/form-submission';
 import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, FormStepData } from '@/lib/validation/schemas';
 import { TRANSLATION_KEY } from '@/constants/internationalization';
+import {Header} from '@/components/molecules/Header/Header';
 
 // =============================================================================
 // LAZY IMPORTS - Code Splitting for Form Steps
@@ -84,17 +85,6 @@ const FormStepErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => 
           {t('common.reload_page', FORM_WIZARD_FALLBACKS.error.reload)}
         </Button>
       </div>
-      {import.meta.env.DEV && (
-        <details className="mt-4 text-left">
-          <summary className="cursor-pointer text-sm text-muted-foreground">
-            Debug Info (Development)
-          </summary>
-          <pre className="mt-2 p-4 bg-muted rounded text-xs overflow-auto">
-            {error.message}
-            {error.stack}
-          </pre>
-        </details>
-      )}
     </div>
   );
 };
@@ -163,10 +153,6 @@ export function FormWizard() {
     if (!hasLoadedFromStorageRef.current && state.isLoaded) {
       hasLoadedFromStorageRef.current = true;
       
-      if (import.meta.env.DEV) {
-        console.log('[FormWizard] Initializing forms with localStorage data:', state.formData);
-      }
-      
       // Reset all forms with their respective data (only if data exists)
       if (state.formData.step1 && Object.keys(state.formData.step1).length > 0) {
         step1Form.reset(state.formData.step1);
@@ -189,9 +175,6 @@ export function FormWizard() {
       const stepData = state.formData[stepKey];
       
       if (stepData && Object.keys(stepData).length > 0) {
-        if (import.meta.env.DEV) {
-          console.log(`[FormWizard] Pre-filling Step ${state.currentStep} on step change`);
-        }
         currentForm.reset(stepData);
       }
     }
@@ -202,11 +185,6 @@ export function FormWizard() {
     const currentData = currentForm.getValues();
     if (currentData && Object.keys(currentData).length > 0) {
       const stepKey = `step${state.currentStep}` as keyof FormStepData;
-      
-      if (import.meta.env.DEV) {
-        console.log(`[FormWizard] Auto-saving Step ${state.currentStep} on field blur`);
-      }
-      
       updateFormData({ [stepKey]: currentData });
     }
   }, [state.currentStep, updateFormData, currentForm]);
@@ -214,13 +192,6 @@ export function FormWizard() {
   // Handle step submission
   const handleStepSubmit = async (data: Step1FormData | Step2FormData | Step3FormData) => {
     try {
-      console.log('=== STEP SUBMISSION ===');
-      console.log('Current step:', state.currentStep);
-      console.log('Form submission data:', data);
-      console.log('Form errors:', currentForm.formState.errors);
-      console.log('Form isValid:', currentForm.formState.isValid);
-      console.log('Form isDirty:', currentForm.formState.isDirty);
-      console.log('Form values:', currentForm.getValues());
       
       const stepKey = `step${state.currentStep}` as keyof FormStepData;
       
@@ -236,9 +207,12 @@ export function FormWizard() {
       } else {
         // Navigate to next step with force parameter since we just validated
         nextStep(true);
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
       }
     } catch (error) {
-      console.error('Step submission error:', error);
       // Handle step submission errors (could add specific error handling here)
     }
   };
@@ -302,7 +276,7 @@ export function FormWizard() {
         error: submissionError,
       });
 
-      console.error('Form submission error:', submissionError);
+      
       // Error handling - keep existing error cards for now
     } finally {
       dispatch({ type: 'SET_SUBMITTING', payload: false });
@@ -320,6 +294,10 @@ export function FormWizard() {
   const handlePrevious = () => {
     if (state.currentStep > 1) {
       previousStep();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
     }
   };
 
@@ -395,13 +373,8 @@ export function FormWizard() {
       <ErrorBoundary
         FallbackComponent={FormStepErrorFallback}
         resetKeys={[state.currentStep, i18n.language]}
-        onError={(error) => {
-          console.error(`Error in FormStep${state.currentStep}:`, error);
-          // Track error in production for monitoring
-          if (!import.meta.env.DEV) {
-            // Add your error tracking service here
-            // trackError(error, { step: state.currentStep, language: i18n.language });
-          }
+        onError={(_) => {
+          // kept for future use
         }}
       >
         <Suspense fallback={<FormStepSkeleton />}>
@@ -416,14 +389,7 @@ export function FormWizard() {
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-foreground mb-2">
-          {t('title')}
-        </h1>
-        <p className="text-muted-foreground">
-          {t('description')}
-        </p>
-      </div>
+     <Header />
 
       {/* Progress Bar */}
       <ProgressBar 
@@ -457,25 +423,6 @@ export function FormWizard() {
               hasError={Boolean(submissionState.error && state.currentStep === 3)}
               onPrevious={handlePrevious}
               onRetry={handleRetrySubmission}
-              onDebug={import.meta.env.DEV ? () => {
-                console.log('=== DEBUG INFO ===');
-                console.log('Current step:', state.currentStep);
-                console.log('Form data:', currentForm.getValues());
-                console.log('Form errors:', currentForm.formState.errors);
-                console.log('Form isValid:', currentForm.formState.isValid);
-                console.log('Form isDirty:', currentForm.formState.isDirty);
-                console.log('Form touchedFields:', currentForm.formState.touchedFields);
-                
-                if (state.currentStep === 2) {
-                  const values = currentForm.getValues() as any;
-                  console.log('--- STEP 2 SPECIFIC DEBUG ---');
-                  console.log('numberOfDependents:', values.numberOfDependents, typeof values.numberOfDependents);
-                  console.log('monthlyIncome:', values.monthlyIncome, typeof values.monthlyIncome);
-                  console.log('receivingBenefits:', values.receivingBenefits, typeof values.receivingBenefits);
-                  console.log('maritalStatus:', values.maritalStatus);
-                  console.log('employmentStatus:', values.employmentStatus);
-                }
-              } : undefined}
             />
           </form>
           </FormBlurProvider>
@@ -649,25 +596,6 @@ export function FormWizard() {
             </div>
           </details>
 
-          <details>
-            <summary className="text-sm text-muted-foreground cursor-pointer">
-              Debug Info (Development Only)
-            </summary>
-            <pre className="mt-2 p-4 bg-muted rounded text-xs overflow-auto">
-              {JSON.stringify({
-                currentStep: state.currentStep,
-                completedSteps: Array.from(state.completedSteps),
-                formDataKeys: Object.keys(state.formData),
-                lastSaved: state.lastSaved,
-                testMode,
-                submissionState: {
-                  isSubmitting: submissionState.isSubmitting,
-                  applicationId: submissionState.applicationId,
-                  errorCode: submissionState.error?.code,
-                },
-              }, null, 2)}
-            </pre>
-          </details>
         </div>
       )}
     </div>
