@@ -11,7 +11,8 @@ import {
 } from '@/constants/formStep3';
 import { TRANSLATION_KEY } from '@/constants/internationalization';
 import { useAIUserContext } from '@/hooks/useAIFormContext';
-import { CARD_PADDING, SPACING, ICON_SIZE, FORM_FIELD_MARGIN } from '@/constants/ui';
+import { CARD_PADDING, SPACING, FORM_FIELD_MARGIN } from '@/constants/ui';
+import { FormStepNotice } from '@/components/molecules/FormStepNotice';
 import type { Step3FormData } from '@/lib/validation/schemas';
 
 // =============================================================================
@@ -185,23 +186,12 @@ export function FormStep3() {
       </Card>
 
       {/* Final Notice */}
-      <div className="border border-success-border bg-success-light rounded-lg p-4">
-        <div className="flex items-start gap-3">
-          <div className="text-success mt-0.5">
-            <svg className={ICON_SIZE.DEFAULT} fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <div>
-            <h4 className="font-medium text-success-light-foreground mb-1">
-              {t(TRANSLATION_KEY.final_notice_title, FORM_STEP3_FALLBACKS.finalNotice.title)}
-            </h4>
-            <p className="text-sm text-success-light-foreground/90">
-              {t(TRANSLATION_KEY.final_notice_text, FORM_STEP3_FALLBACKS.finalNotice.text)}
-            </p>
-          </div>
-        </div>
-      </div>
+      <FormStepNotice
+        variant="success"
+        titleKey={TRANSLATION_KEY.final_notice_title}
+        descriptionKey={TRANSLATION_KEY.final_notice_text}
+        fallbacks={FORM_STEP3_FALLBACKS.finalNotice}
+      />
     </div>
   );
 }

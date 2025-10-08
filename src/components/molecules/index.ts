@@ -43,3 +43,6 @@ export type {
 
 export { FormStepHeader } from './FormStepHeader';
 export type { FormStepHeaderProps } from './FormStepHeader';
+
+export { FormStepNotice } from './FormStepNotice';
+export type { FormStepNoticeProps, FormStepNoticeVariant } from './FormStepNotice';

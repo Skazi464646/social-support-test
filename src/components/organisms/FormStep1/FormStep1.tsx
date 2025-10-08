@@ -6,7 +6,8 @@ import { FormStepHeader } from '@/components/molecules/FormStepHeader';
 import { FORM_STEP1_FALLBACKS, FORM_STEP1_FIELD_NAMES, FORM_STEP1_VALUES } from '@/constants/formStep1';
 import type { Step1FormData } from '@/lib/validation/schemas';
 import { TRANSLATION_KEY } from '@/constants/internationalization';
-import { CARD_PADDING, GRID_LAYOUTS, SPACING, ICON_SIZE } from '@/constants/ui';
+import { CARD_PADDING, GRID_LAYOUTS, SPACING } from '@/constants/ui';
+import { FormStepNotice } from '@/components/molecules/FormStepNotice';
 
 // =============================================================================
 // COMPONENT
@@ -16,11 +17,11 @@ export function FormStep1() {
   const { t } = useTranslation(['form', 'common', 'validation']);
   const { control, watch } = useFormContext<Step1FormData>();
 
-  
+
 
   // Watch for country selection to show conditional fields
   const selectedCountry = watch(FORM_STEP1_FIELD_NAMES.country);
-  
+
   return (
     <div className={SPACING.SECTION}>
       {/* Header */}
@@ -206,23 +207,12 @@ export function FormStep1() {
       </Card>
 
       {/* Important Notice */}
-      <div className="border border-info-border bg-info-light rounded-lg p-4">
-        <div className="flex items-start gap-3">
-          <div className="text-info mt-0.5">
-            <svg className={ICON_SIZE.DEFAULT} fill="currentColor" viewBox="0 0 20 20">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-            </svg>
-          </div>
-          <div>
-            <h4 className="font-medium text-info-foreground mb-1">
-              {t(TRANSLATION_KEY.notice_title, FORM_STEP1_FALLBACKS.notice.title)}
-            </h4>
-            <p className="text-sm text-info-light-foreground">
-              {t(TRANSLATION_KEY.notice_text, FORM_STEP1_FALLBACKS.notice.text)}
-            </p>
-          </div>
-        </div>
-      </div>
+      <FormStepNotice
+        variant="info"
+        titleKey={TRANSLATION_KEY.notice_title}
+        descriptionKey={TRANSLATION_KEY.notice_text}
+        fallbacks={FORM_STEP1_FALLBACKS.notice}
+      />
     </div>
   );
 }
