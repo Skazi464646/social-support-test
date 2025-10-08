@@ -2,6 +2,7 @@ import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ValidatedFormField } from '@/components/molecules/ValidatedFormField';
 import { Card } from '@/components/molecules/Card';
+import { FormStepHeader } from '@/components/molecules/FormStepHeader';
 import { FORM_STEP1_FALLBACKS, FORM_STEP1_FIELD_NAMES, FORM_STEP1_VALUES } from '@/constants/formStep1';
 import type { Step1FormData } from '@/lib/validation/schemas';
 import { TRANSLATION_KEY } from '@/constants/internationalization';
@@ -12,7 +13,7 @@ import { CARD_PADDING, GRID_LAYOUTS, SPACING, ICON_SIZE } from '@/constants/ui';
 // =============================================================================
 
 export function FormStep1() {
-  const { t, i18n } = useTranslation(['form', 'common', 'validation']);
+  const { t } = useTranslation(['form', 'common', 'validation']);
   const { control, watch } = useFormContext<Step1FormData>();
 
   
@@ -23,14 +24,11 @@ export function FormStep1() {
   return (
     <div className={SPACING.SECTION}>
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t(`${TRANSLATION_KEY.step1.title}`, FORM_STEP1_FALLBACKS.header.title)}
-        </h2>
-        <p className="text-muted-foreground">
-          {t(TRANSLATION_KEY.step1.description, FORM_STEP1_FALLBACKS.header.description)}
-        </p>
-      </div>
+      <FormStepHeader
+        titleKey={TRANSLATION_KEY.step1.title}
+        descriptionKey={TRANSLATION_KEY.step1.description}
+        fallbacks={FORM_STEP1_FALLBACKS.header}
+      />
 
       {/* Personal Identity Section */}
       <Card className={CARD_PADDING.DEFAULT}>

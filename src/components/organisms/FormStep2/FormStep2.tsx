@@ -2,6 +2,7 @@ import { useFormContext } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { ValidatedFormField } from '@/components/molecules/ValidatedFormField';
 import { Card } from '@/components/molecules/Card';
+import { FormStepHeader } from '@/components/molecules/FormStepHeader';
 import { 
   FORM_STEP2_FALLBACKS, 
   FORM_STEP2_FIELD_NAMES, 
@@ -31,14 +32,11 @@ export function FormStep2() {
   return (
     <div className={SPACING.SECTION}>
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t(TRANSLATION_KEY.step2.title, FORM_STEP2_FALLBACKS.header.title)}
-        </h2>
-        <p className="text-muted-foreground">
-          {t(TRANSLATION_KEY.step2.description, FORM_STEP2_FALLBACKS.header.description)}
-        </p>
-      </div>
+      <FormStepHeader
+        titleKey={TRANSLATION_KEY.step2.title}
+        descriptionKey={TRANSLATION_KEY.step2.description}
+        fallbacks={FORM_STEP2_FALLBACKS.header}
+      />
 
       {/* Family Information Section */}
       <Card className={CARD_PADDING.DEFAULT}>

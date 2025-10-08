@@ -40,3 +40,6 @@ export type {
   DateFormFieldProps,
   TextAreaFormFieldProps,
 } from './ValidatedFormField';
+
+export { FormStepHeader } from './FormStepHeader';
+export type { FormStepHeaderProps } from './FormStepHeader';

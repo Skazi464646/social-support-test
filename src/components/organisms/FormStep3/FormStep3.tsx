@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ValidatedFormField } from '@/components/molecules/ValidatedFormField';
 import { AIFormField } from '@/components/molecules/AIFormField';
 import { Card } from '@/components/molecules/Card';
+import { FormStepHeader } from '@/components/molecules/FormStepHeader';
 import { 
   FORM_STEP3_FALLBACKS, 
   FORM_STEP3_FIELD_NAMES, 
@@ -27,14 +28,11 @@ export function FormStep3() {
   return (
     <div className={SPACING.FIELD_GROUP}>
       {/* Header */}
-      <div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t(TRANSLATION_KEY.step3.title, FORM_STEP3_FALLBACKS.header.title)}
-        </h2>
-        <p className="text-muted-foreground">
-          {t(TRANSLATION_KEY.step3.description, FORM_STEP3_FALLBACKS.header.description)}
-        </p>
-      </div>
+      <FormStepHeader
+        titleKey={TRANSLATION_KEY.step3.title}
+        descriptionKey={TRANSLATION_KEY.step3.description}
+        fallbacks={FORM_STEP3_FALLBACKS.header}
+      />
 
       {/* Financial Situation Section */}
       <Card>
