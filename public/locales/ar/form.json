@@ -159,6 +159,11 @@
   "start_new_application": "بدء طلب جديد",
   "processing_time": "وقت المعالجة",
   "next_steps": "الخطوات التالية",
+  "next_steps_items": {
+    "review_application": "سيتم مراجعة طلبك خلال يومي عمل",
+    "email_updates": "ستتلقى تحديثات عبر البريد الإلكتروني حول حالة طلبك",
+    "keep_application_id": "احتفظ برقم طلبك للرجوع إليه في المستقبل"
+  },
   "application_reference_note": "يرجى حفظ رقم طلبك للرجوع إليه في المستقبل",
   "application_id": "رقم الطلب:",
   "confirmation_email_sent": "تم إرسال رسالة تأكيد إلى عنوان بريدك الإلكتروني المسجل.",

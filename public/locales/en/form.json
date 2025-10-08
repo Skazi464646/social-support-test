@@ -192,6 +192,11 @@
   "start_new_application": "Start New Application",
   "processing_time": "Processing time",
   "next_steps": "Next Steps",
+  "next_steps_items": {
+    "review_application": "We will review your application within 2 business days",
+    "email_updates": "You will receive email updates on your application status",
+    "keep_application_id": "Keep your application ID for future reference"
+  },
   "application_reference_note": "Please save your application ID for future reference",
   "application_id": "Application ID:",
   "confirmation_email_sent": "A confirmation email has been sent to your registered email address.",

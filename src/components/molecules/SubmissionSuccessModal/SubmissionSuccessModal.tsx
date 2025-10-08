@@ -6,6 +6,7 @@ import { Button } from '@/components/atoms/Button';
 import { useNoScrollBody } from '@/hooks';
 import { cn } from '@/lib/utils';
 import { SUBMISSION_SUCCESS_MODAL_COPY } from '@/constants/submissionSuccessModal';
+import { TRANSLATION_KEY } from '@/constants/internationalization';
 
 // =============================================================================
 // TYPES
@@ -119,24 +120,24 @@ export function SubmissionSuccessModal({
         />
         <Dialog.Content
           className={cn(
-            'fixed left-[50%] top-[50%] z-50 w-full max-w-lg translate-x-[-50%] translate-y-[-50%] bg-white border border-gray-200 text-gray-900 shadow-2xl duration-200',
+            'fixed left-[50%] top-[50%] z-50 w-[calc(100%-2rem)] max-w-lg translate-x-[-50%] translate-y-[-50%] bg-white border border-gray-200 text-gray-900 shadow-2xl duration-200',
             'data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[state=closed]:slide-out-to-left-1/2 data-[state=closed]:slide-out-to-top-[48%] data-[state=open]:slide-in-from-left-1/2 data-[state=open]:slide-in-from-top-[48%]',
-            'rounded-xl overflow-hidden'
+            'rounded-xl overflow-y-auto max-h-[calc(100vh-2rem)] sm:max-h-[90vh]'
           )}
           aria-describedby="submission-success-description"
         >
           {/* Header with Close Button */}
-          <div className="flex items-start justify-between px-6 pt-6 pb-4">
-            <div className="flex items-center gap-4">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-success text-success-foreground shadow-sm">
-                <Check className="h-7 w-7" aria-hidden="true" />
+          <div className="flex items-start justify-between px-4 sm:px-6 pt-4 sm:pt-6 pb-3 sm:pb-4">
+            <div className="flex items-center gap-2 sm:gap-4 flex-1 min-w-0">
+              <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-success text-success-foreground shadow-sm flex-shrink-0">
+                <Check className="h-5 w-5 sm:h-7 sm:w-7" aria-hidden="true" />
               </div>
-              <div>
-                <Dialog.Title className="text-xl font-semibold text-text-primary">
-                  {t('submission_success')}
+              <div className="flex-1 min-w-0">
+                <Dialog.Title className="text-lg sm:text-xl font-semibold text-text-primary">
+                  {t(TRANSLATION_KEY.submission_success)}
                 </Dialog.Title>
-                <p className="text-sm text-text-secondary mt-1 max-w-sm">
-                  {submissionDetails.message || t('submission_success_message', { 
+                <p className="text-xs sm:text-sm text-text-secondary mt-1 break-words">
+                  {submissionDetails.message || t(TRANSLATION_KEY.submission_success_message, { 
                     applicationId: submissionDetails.applicationId 
                   })}
                 </p>
@@ -148,10 +149,10 @@ export function SubmissionSuccessModal({
                 ref={closeButtonRef}
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 text-text-tertiary hover:text-text-primary"
-                aria-label={t('common:actions.close')}
+                className="h-8 w-8 sm:h-9 sm:w-9 text-text-tertiary hover:text-text-primary flex-shrink-0"
+                aria-label={t(TRANSLATION_KEY.common.actions.close)}
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4 sm:h-5 sm:w-5" />
               </Button>
             </Dialog.Close>
           </div>
@@ -161,36 +162,36 @@ export function SubmissionSuccessModal({
           </Dialog.Description>
 
           {/* Application Details */}
-          <div className="px-6 space-y-6">
+          <div className="px-4 sm:px-6 space-y-4 sm:space-y-6">
             {/* Application ID */}
-            <div className="rounded-lg border border-border bg-muted p-5">
-              <div className="space-y-3">
-                <div className="flex items-center justify-between">
-                  <p className="text-sm font-medium text-text-primary">
-                    {t('application_id')}
+            <div className="rounded-lg border border-border bg-muted p-3 sm:p-5">
+              <div className="space-y-2 sm:space-y-3">
+                <div className="flex items-center justify-between gap-2">
+                  <p className="text-xs sm:text-sm font-medium text-text-primary">
+                    {t(TRANSLATION_KEY.application_id)}
                   </p>
                   <Button
                     variant="outline"
                     size="sm"
                     onClick={handleCopyApplicationId}
-                    className="gap-2 flex-shrink-0 px-3 py-2 h-auto min-w-fit"
+                    className="gap-1 sm:gap-2 flex-shrink-0 px-2 sm:px-3 py-1.5 sm:py-2 h-auto min-w-fit"
                     aria-label={`${SUBMISSION_SUCCESS_MODAL_COPY.labels.copyAriaLabel} ${submissionDetails.applicationId}`}
                   >
                     {copied ? (
                       <>
-                        <Check className="h-4 w-4 text-black" />
-                        <span className="text-black text-sm">{t('common:actions.copied', SUBMISSION_SUCCESS_MODAL_COPY.labels.copied)}</span>
+                        <Check className="h-3 w-3 sm:h-4 sm:w-4 text-black" />
+                        <span className="text-black text-xs sm:text-sm">{t(TRANSLATION_KEY.common.actions.copied, SUBMISSION_SUCCESS_MODAL_COPY.labels.copied)}</span>
                       </>
                     ) : (
                       <>
-                        <Copy className="h-4 w-4" />
-                        <span className="text-sm">{t('common:actions.copy', SUBMISSION_SUCCESS_MODAL_COPY.labels.copy)}</span>
+                        <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <span className="text-xs sm:text-sm">{t(TRANSLATION_KEY.common.actions.copy, SUBMISSION_SUCCESS_MODAL_COPY.labels.copy)}</span>
                       </>
                     )}
                   </Button>
                 </div>
                 <div className="w-full">
-                  <p className="font-mono text-sm font-semibold text-primary break-all leading-relaxed">
+                  <p className="font-mono text-xs sm:text-sm font-semibold text-primary break-all leading-relaxed">
                     {submissionDetails.applicationId}
                   </p>
                 </div>
@@ -198,23 +199,23 @@ export function SubmissionSuccessModal({
             </div>
 
             {/* Submission Details */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border">
-                <Clock className="h-5 w-5 text-text-secondary" aria-hidden="true" />
-                <div>
-                  <span className="font-medium text-text-primary">{t('common:submitted_at', SUBMISSION_SUCCESS_MODAL_COPY.labels.submittedAt)}: </span>
-                  <span className="text-text-secondary">
+            <div className="space-y-3 sm:space-y-4">
+              <div className="flex items-start sm:items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-card rounded-lg border border-border">
+                <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-text-secondary flex-shrink-0 mt-0.5 sm:mt-0" aria-hidden="true" />
+                <div className="min-w-0 flex-1">
+                  <span className="font-medium text-text-primary text-xs sm:text-sm block sm:inline">{t(TRANSLATION_KEY.common.submitted_at, SUBMISSION_SUCCESS_MODAL_COPY.labels.submittedAt)}: </span>
+                  <span className="text-text-secondary text-xs sm:text-sm break-words">
                     {formatSubmissionDate(submissionDetails.submittedAt)}
                   </span>
                 </div>
               </div>
               
               {submissionDetails.estimatedProcessingTime && (
-                <div className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border">
-                  <FileText className="h-5 w-5 text-text-secondary" aria-hidden="true" />
-                  <div>
-                    <span className="font-medium text-text-primary">{t('processing_time', SUBMISSION_SUCCESS_MODAL_COPY.labels.processingTime)}: </span>
-                    <span className="text-text-secondary">
+                <div className="flex items-start sm:items-center gap-2 sm:gap-3 p-2.5 sm:p-3 bg-card rounded-lg border border-border">
+                  <FileText className="h-4 w-4 sm:h-5 sm:w-5 text-text-secondary flex-shrink-0 mt-0.5 sm:mt-0" aria-hidden="true" />
+                  <div className="min-w-0 flex-1">
+                    <span className="font-medium text-text-primary text-xs sm:text-sm block sm:inline">{t(TRANSLATION_KEY.processing_time, SUBMISSION_SUCCESS_MODAL_COPY.labels.processingTime)}: </span>
+                    <span className="text-text-secondary text-xs sm:text-sm break-words">
                       {submissionDetails.estimatedProcessingTime}
                     </span>
                   </div>
@@ -224,16 +225,16 @@ export function SubmissionSuccessModal({
 
             {/* Next Steps */}
             {submissionDetails.nextSteps && submissionDetails.nextSteps.length > 0 && (
-              <div className="space-y-3">
-                <p className="text-sm font-medium text-text-primary">
-                  {t('next_steps', SUBMISSION_SUCCESS_MODAL_COPY.labels.nextSteps)}:
+              <div className="space-y-2 sm:space-y-3">
+                <p className="text-xs sm:text-sm font-medium text-text-primary">
+                  {t(TRANSLATION_KEY.next_steps, SUBMISSION_SUCCESS_MODAL_COPY.labels.nextSteps)}:
                 </p>
-                <div className="bg-card rounded-lg border border-border p-4">
-                  <ul className="space-y-2 text-sm">
+                <div className="bg-card rounded-lg border border-border p-3 sm:p-4">
+                  <ul className="space-y-2 text-xs sm:text-sm">
                     {submissionDetails.nextSteps.map((step, index) => (
-                      <li key={index} className="flex items-start gap-3">
-                        <span className="mt-1.5 h-2 w-2 rounded-full bg-primary flex-shrink-0" />
-                        <span className="text-text-secondary">{step}</span>
+                      <li key={index} className="flex items-start gap-2 sm:gap-3">
+                        <span className="mt-1 sm:mt-1.5 h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-primary flex-shrink-0" />
+                        <span className="text-text-secondary break-words flex-1">{step}</span>
                       </li>
                     ))}
                   </ul>
@@ -242,34 +243,34 @@ export function SubmissionSuccessModal({
             )}
 
             {/* Confirmation Email Notice */}
-            <div className="rounded-lg border border-info-border bg-info-light p-4">
-              <p className="text-sm text-info-foreground">
-                <strong>{SUBMISSION_SUCCESS_MODAL_COPY.labels.confirmationEmail}</strong>
+            <div className="rounded-lg border border-info-border bg-info-light p-3 sm:p-4">
+              <p className="text-xs sm:text-sm text-info-foreground break-words">
+                <strong>{t(TRANSLATION_KEY.confirmation_email_sent, SUBMISSION_SUCCESS_MODAL_COPY.labels.confirmationEmail)}</strong>
               </p>
             </div>
 
           </div>
 
           {/* Spacer */}
-          <div className="h-6"></div>
+          <div className="h-4 sm:h-6"></div>
           
           {/* Action Buttons */}
-          <div className="flex flex-col-reverse sm:flex-row gap-4 p-6 bg-muted border-t border-border">  
+          <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 px-4 sm:px-6 py-4 sm:py-6 bg-muted border-t border-border">  
             <Button
             variant={'outline'}
               onClick={handleStartNew}
               disabled={isLoading}
               isLoading={isLoading}
-              className="flex-1 gap-2 h-11"
+              className="flex-1 gap-2 h-10 sm:h-11 text-sm"
             >
-              {t('start_new_application', SUBMISSION_SUCCESS_MODAL_COPY.actions.startNewApplication)}
+              {t(TRANSLATION_KEY.start_new_application, SUBMISSION_SUCCESS_MODAL_COPY.actions.startNewApplication)}
             </Button>
           </div>
 
           {/* Footer Note */}
-          <div className="text-center px-6 pb-6 bg-muted">
-            <p className="text-xs text-text-secondary">
-              {t('application_reference_note', SUBMISSION_SUCCESS_MODAL_COPY.labels.referenceNote)}
+          <div className="text-center px-4 sm:px-6 pb-4 sm:pb-6 bg-muted">
+            <p className="text-xs text-text-secondary break-words">
+              {t(TRANSLATION_KEY.application_reference_note, SUBMISSION_SUCCESS_MODAL_COPY.labels.referenceNote)}
             </p>
           </div>
         </Dialog.Content>

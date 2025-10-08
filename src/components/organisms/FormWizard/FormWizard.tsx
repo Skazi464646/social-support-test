@@ -14,6 +14,7 @@ import { SubmissionSuccessModal } from '@/components/molecules/SubmissionSuccess
 import type { SubmissionDetails } from '@/components/molecules/SubmissionSuccessModal';
 import { formSubmissionService, formatSubmissionError, FormSubmissionError } from '@/lib/api/form-submission';
 import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, FormStepData } from '@/lib/validation/schemas';
+import { TRANSLATION_KEY } from '@/constants/internationalization';
 
 // =============================================================================
 // LAZY IMPORTS - Code Splitting for Form Steps
@@ -274,9 +275,9 @@ export function FormWizard() {
         submittedAt: new Date().toISOString(),
         estimatedProcessingTime: response.processingTime || '5-7 business days',
         nextSteps: [
-          'We will review your application within 2 business days',
-          'You will receive email updates on your application status',
-          'Keep your application ID for future reference'
+          t(TRANSLATION_KEY.next_steps_items.review_application, 'We will review your application within 2 business days'),
+          t(TRANSLATION_KEY.next_steps_items.email_updates, 'You will receive email updates on your application status'),
+          t(TRANSLATION_KEY.next_steps_items.keep_application_id, 'Keep your application ID for future reference')
         ],
         message: t('submission_success_message', { applicationId: response.applicationId })
       };

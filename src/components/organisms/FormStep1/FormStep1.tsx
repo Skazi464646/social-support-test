@@ -31,7 +31,7 @@ export function FormStep1() {
           {t(`${TRANSLATION_KEY.step1.title}`, FORM_STEP1_FALLBACKS.header.title)}
         </h2>
         <p className="text-muted-foreground">
-          {t('step1.description', FORM_STEP1_FALLBACKS.header.description)}
+          {t(TRANSLATION_KEY.step1.description, FORM_STEP1_FALLBACKS.header.description)}
         </p>
       </div>
 
@@ -39,10 +39,10 @@ export function FormStep1() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('identity_section', FORM_STEP1_FALLBACKS.identity.title)}
+            {t(TRANSLATION_KEY.identity_section, FORM_STEP1_FALLBACKS.identity.title)}
           </Card.Title>
           <Card.Description>
-            {t('identity_description', FORM_STEP1_FALLBACKS.identity.description)}
+            {t(TRANSLATION_KEY.identity_description, FORM_STEP1_FALLBACKS.identity.description)}
           </Card.Description>
         </Card.Header>
 
@@ -52,9 +52,8 @@ export function FormStep1() {
             <ValidatedFormField
               name="fullName"
               control={control}
-              label={t('fullName', FORM_STEP1_FALLBACKS.fields.fullName.label)}
-              placeholder={t('fullName_placeholder', FORM_STEP1_FALLBACKS.fields.fullName.placeholder)}
-              // helperText={t('fullName_help', 'Enter your full name as it appears on your official ID')}
+              label={t(TRANSLATION_KEY.fullName, FORM_STEP1_FALLBACKS.fields.fullName.label)}
+              placeholder={t(TRANSLATION_KEY.fullName_placeholder, FORM_STEP1_FALLBACKS.fields.fullName.placeholder)}
               required
               className="md:col-span-2"
             />
@@ -63,9 +62,8 @@ export function FormStep1() {
             <ValidatedFormField
               name="nationalId"
               control={control}
-              label={t('nationalId', FORM_STEP1_FALLBACKS.fields.nationalId.label)}
-              placeholder={t('nationalId_placeholder', FORM_STEP1_FALLBACKS.fields.nationalId.placeholder)}
-              // helperText={t('nationalId_help', 'Your official government-issued ID number')}
+              label={t(TRANSLATION_KEY.nationalId, FORM_STEP1_FALLBACKS.fields.nationalId.label)}
+              placeholder={t(TRANSLATION_KEY.nationalId_placeholder, FORM_STEP1_FALLBACKS.fields.nationalId.placeholder)}
               maxLength={10}
               required
             />
@@ -74,8 +72,7 @@ export function FormStep1() {
             <ValidatedFormField
               name="dateOfBirth"
               control={control}
-              label={t('dateOfBirth', FORM_STEP1_FALLBACKS.fields.dateOfBirth.label)}
-              // helperText={t('dateOfBirth_help', 'You must be at least 18 years old')}
+              label={t(TRANSLATION_KEY.dateOfBirth, FORM_STEP1_FALLBACKS.fields.dateOfBirth.label)}
               type="date"
               required
             />
@@ -84,16 +81,15 @@ export function FormStep1() {
             <ValidatedFormField
               name="gender"
               control={control}
-              label={t('gender', FORM_STEP1_FALLBACKS.fields.gender.label)}
-              // helperText={t('gender_help', 'Select your gender')}
+              label={t(TRANSLATION_KEY.gender, FORM_STEP1_FALLBACKS.fields.gender.label)}
               type="select"
               required
               options={[
-                { value: '', label: t('gender_select', FORM_STEP1_FALLBACKS.fields.gender.selectLabel) },
-                { value: 'male', label: t('gender_options.male', FORM_STEP1_FALLBACKS.fields.gender.options.male) },
-                { value: 'female', label: t('gender_options.female', FORM_STEP1_FALLBACKS.fields.gender.options.female) },
-                { value: 'other', label: t('gender_options.other', FORM_STEP1_FALLBACKS.fields.gender.options.other) },
-                { value: 'prefer_not_to_say', label: t('gender_options.prefer_not_to_say', FORM_STEP1_FALLBACKS.fields.gender.options.preferNotToSay) },
+                { value: '', label: t(TRANSLATION_KEY.gender_select, FORM_STEP1_FALLBACKS.fields.gender.selectLabel) },
+                { value: 'male', label: t(TRANSLATION_KEY.gender_options.male, FORM_STEP1_FALLBACKS.fields.gender.options.male) },
+                { value: 'female', label: t(TRANSLATION_KEY.gender_options.female, FORM_STEP1_FALLBACKS.fields.gender.options.female) },
+                { value: 'other', label: t(TRANSLATION_KEY.gender_options.other, FORM_STEP1_FALLBACKS.fields.gender.options.other) },
+                { value: 'prefer_not_to_say', label: t(TRANSLATION_KEY.gender_options.prefer_not_to_say, FORM_STEP1_FALLBACKS.fields.gender.options.preferNotToSay) },
               ]}
             />
           </div>
@@ -104,10 +100,10 @@ export function FormStep1() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('contact_section', FORM_STEP1_FALLBACKS.contact.title)}
+            {t(TRANSLATION_KEY.contact_section, FORM_STEP1_FALLBACKS.contact.title)}
           </Card.Title>
           <Card.Description>
-            {t('contact_description', FORM_STEP1_FALLBACKS.contact.description)}
+            {t(TRANSLATION_KEY.contact_description, FORM_STEP1_FALLBACKS.contact.description)}
           </Card.Description>
         </Card.Header>
 
@@ -117,9 +113,8 @@ export function FormStep1() {
             <ValidatedFormField
               name="email"
               control={control}
-              label={t('email', FORM_STEP1_FALLBACKS.fields.email.label)}
-              placeholder={t('email_placeholder', FORM_STEP1_FALLBACKS.fields.email.placeholder)}
-              // helperText={t('email_help', 'We will send important updates to this email')}
+              label={t(TRANSLATION_KEY.email, FORM_STEP1_FALLBACKS.fields.email.label)}
+              placeholder={t(TRANSLATION_KEY.email_placeholder, FORM_STEP1_FALLBACKS.fields.email.placeholder)}
               type="email"
               required
               className="md:col-span-2"
@@ -129,9 +124,8 @@ export function FormStep1() {
             <ValidatedFormField
               name="phone"
               control={control}
-              label={t('phone', FORM_STEP1_FALLBACKS.fields.phone.label)}
-              placeholder={t('phone_placeholder', FORM_STEP1_FALLBACKS.fields.phone.placeholder)}
-              // helperText={t('phone_help', 'Include country code for international numbers')}
+              label={t(TRANSLATION_KEY.phone, FORM_STEP1_FALLBACKS.fields.phone.label)}
+              placeholder={t(TRANSLATION_KEY.phone_placeholder, FORM_STEP1_FALLBACKS.fields.phone.placeholder)}
               type="tel"
               required
             />
@@ -143,10 +137,10 @@ export function FormStep1() {
       <Card className="p-6">
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('address_section', FORM_STEP1_FALLBACKS.address.title)}
+            {t(TRANSLATION_KEY.address_section, FORM_STEP1_FALLBACKS.address.title)}
           </Card.Title>
           <Card.Description>
-            {t('address_description', FORM_STEP1_FALLBACKS.address.description)}
+            {t(TRANSLATION_KEY.address_description, FORM_STEP1_FALLBACKS.address.description)}
           </Card.Description>
         </Card.Header>
 
@@ -156,9 +150,8 @@ export function FormStep1() {
             <ValidatedFormField
               name="address"
               control={control}
-              label={t('address', FORM_STEP1_FALLBACKS.fields.streetAddress.label)}
-              placeholder={t('address_placeholder', FORM_STEP1_FALLBACKS.fields.streetAddress.placeholder)}
-              // helperText={t('address_help', 'Your complete street address')}
+              label={t(TRANSLATION_KEY.address, FORM_STEP1_FALLBACKS.fields.streetAddress.label)}
+              placeholder={t(TRANSLATION_KEY.address_placeholder, FORM_STEP1_FALLBACKS.fields.streetAddress.placeholder)}
               required
               className="md:col-span-2 lg:col-span-3"
             />
@@ -167,8 +160,8 @@ export function FormStep1() {
             <ValidatedFormField
               name="city"
               control={control}
-              label={t('city', FORM_STEP1_FALLBACKS.fields.city.label)}
-              placeholder={t('city_placeholder', FORM_STEP1_FALLBACKS.fields.city.placeholder)}
+              label={t(TRANSLATION_KEY.city, FORM_STEP1_FALLBACKS.fields.city.label)}
+              placeholder={t(TRANSLATION_KEY.city_placeholder, FORM_STEP1_FALLBACKS.fields.city.placeholder)}
               required
             />
 
@@ -176,8 +169,8 @@ export function FormStep1() {
             <ValidatedFormField
               name="state"
               control={control}
-              label={t('state', FORM_STEP1_FALLBACKS.fields.state.label)}
-              placeholder={t('state_placeholder', FORM_STEP1_FALLBACKS.fields.state.placeholder)}
+              label={t(TRANSLATION_KEY.state, FORM_STEP1_FALLBACKS.fields.state.label)}
+              placeholder={t(TRANSLATION_KEY.state_placeholder, FORM_STEP1_FALLBACKS.fields.state.placeholder)}
               required
             />
 
@@ -185,12 +178,11 @@ export function FormStep1() {
             <ValidatedFormField
               name="country"
               control={control}
-              label={t('country', FORM_STEP1_FALLBACKS.fields.country.label)}
-              // helperText={t('country_help', 'Select your country of residence')}
+              label={t(TRANSLATION_KEY.country, FORM_STEP1_FALLBACKS.fields.country.label)}
               type="select"
               required
               options={[
-                { value: '', label: t('country_select', FORM_STEP1_FALLBACKS.fields.country.selectLabel) },
+                { value: '', label: t(TRANSLATION_KEY.country_select, FORM_STEP1_FALLBACKS.fields.country.selectLabel) },
                 { value: 'AE', label: t('common:countries.ae', FORM_STEP1_FALLBACKS.countries.AE) },
                 { value: 'SA', label: t('common:countries.sa', FORM_STEP1_FALLBACKS.countries.SA) },
                 { value: 'QA', label: t('common:countries.qa', FORM_STEP1_FALLBACKS.countries.QA) },
@@ -209,9 +201,8 @@ export function FormStep1() {
               <ValidatedFormField
                 name="postalCode"
                 control={control}
-                label={t('postalCode', FORM_STEP1_FALLBACKS.fields.postalCode.label)}
-                placeholder={t('postalCode_placeholder', FORM_STEP1_FALLBACKS.fields.postalCode.placeholder)}
-                // helperText={t('postalCode_help', 'Optional for some countries')}
+                label={t(TRANSLATION_KEY.postalCode, FORM_STEP1_FALLBACKS.fields.postalCode.label)}
+                placeholder={t(TRANSLATION_KEY.postalCode_placeholder, FORM_STEP1_FALLBACKS.fields.postalCode.placeholder)}
                 className="lg:col-start-1"
               />
             )}
@@ -229,10 +220,10 @@ export function FormStep1() {
           </div>
           <div>
             <h4 className="font-medium text-info-foreground mb-1">
-              {t('notice_title', FORM_STEP1_FALLBACKS.notice.title)}
+              {t(TRANSLATION_KEY.notice_title, FORM_STEP1_FALLBACKS.notice.title)}
             </h4>
             <p className="text-sm text-info-light-foreground">
-              {t('notice_text', FORM_STEP1_FALLBACKS.notice.text)}
+              {t(TRANSLATION_KEY.notice_text, FORM_STEP1_FALLBACKS.notice.text)}
             </p>
           </div>
         </div>
