@@ -5,7 +5,6 @@
 [![React](https://img.shields.io/badge/React-18.3-blue.svg)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3.4-38B2AC.svg)](https://tailwindcss.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 ## 📋 Table of Contents
 
@@ -96,7 +95,7 @@
 
 ## 🏗 Architecture 
 
-Flow Diagram SS - 
+![Flow Diagram SS](./public/images/flowdiagram/FlowDiagram.png)
 
 ### Application Flow
 
@@ -721,42 +720,6 @@ src/__tests__/
 │   └── ...
 └── setup.ts
 ```
-
-### Writing Tests
-
-```typescript
-// Example test
-import { render, screen } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { FormStep1 } from './FormStep1';
-
-describe('FormStep1', () => {
-  it('should render all fields', () => {
-    render(<FormStep1 />);
-    expect(screen.getByLabelText(/full name/i)).toBeInTheDocument();
-  });
-
-  it('should validate email format', async () => {
-    const user = userEvent.setup();
-    render(<FormStep1 />);
-    
-    const emailInput = screen.getByLabelText(/email/i);
-    await user.type(emailInput, 'invalid-email');
-    await user.tab();
-    
-    expect(screen.getByText(/invalid email/i)).toBeInTheDocument();
-  });
-});
-```
-
-### Coverage Requirements
-
-- **Overall Coverage**: > 80%
-- **Critical Paths**: 100%
-  - Form validation
-  - API service functions
-  - Custom hooks
-
 ## 🏗 Building
 
 ### Production Build
@@ -861,11 +824,8 @@ Contributions are welcome! Please follow these guidelines:
 - Update documentation if needed
 - Follow the code style guidelines
 
-## 📝 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [shadcn/ui](https://ui.shadcn.com/) - Beautiful component library
 - [Radix UI](https://www.radix-ui.com/) - Unstyled, accessible components
@@ -876,34 +836,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support
 
-- 📧 Email: support@example.com
+- 📧 Email: shantanu.bhosale0798@gmail.com
 - 🐛 Issues: [GitHub Issues](https://github.com/your-org/social-support-portal/issues)
 - 💬 Discussions: [GitHub Discussions](https://github.com/your-org/social-support-portal/discussions)
-
-## 🗺 Roadmap
-
-### v1.0.0 (Current)
-- [x] Multi-step form wizard
-- [x] AI writing assistance
-- [x] Bilingual support (EN/AR)
-- [x] Form persistence
-- [x] Responsive design
-- [x] Accessibility (WCAG AA)
-
-### v1.1.0 (Q2 2025)
-- [ ] Document upload
-- [ ] Application status tracking
-- [ ] Email notifications
-- [ ] PDF export
-- [ ] Print functionality
-
-### v2.0.0 (Q3 2025)
-- [ ] User authentication
-- [ ] Admin dashboard
-- [ ] Advanced analytics
-- [ ] Multi-language expansion
-- [ ] Mobile app (React Native)
-
----
 
 Made with ❤️ by [Your Team Name]
