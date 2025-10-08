@@ -4,6 +4,7 @@ import { ValidatedFormField } from '@/components/molecules/ValidatedFormField';
 import { Card } from '@/components/molecules/Card';
 import { FORM_STEP1_FALLBACKS } from '@/constants/formStep1';
 import type { Step1FormData } from '@/lib/validation/schemas';
+import { TRANSLATION_KEY } from '@/constants/internationalization';
 
 // =============================================================================
 // COMPONENT
@@ -27,7 +28,7 @@ export function FormStep1() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t('step1.title', FORM_STEP1_FALLBACKS.header.title)}
+          {t(`${TRANSLATION_KEY.step1.title}`, FORM_STEP1_FALLBACKS.header.title)}
         </h2>
         <p className="text-muted-foreground">
           {t('step1.description', FORM_STEP1_FALLBACKS.header.description)}
