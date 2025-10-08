@@ -373,15 +373,6 @@ export function FormWizard() {
 
   return (
     <div className="w-full max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-8">
-      {/* Header */}
-      <div className="mb-8" >
-            <h1 className="text-3xl font-bold text-foreground mb-2" >
-                {t('title')}
-            </h1>
-            < p className="text-muted-foreground" >
-                {t('description')}
-            </p>
-        </div>
 
       {/* Progress Bar */}
       <ProgressBar 
