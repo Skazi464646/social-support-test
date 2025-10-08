@@ -8,6 +8,7 @@ import {
   FORM_STEP3_FIELD_NAMES, 
   FORM_STEP3_VALIDATION 
 } from '@/constants/formStep3';
+import { TRANSLATION_KEY } from '@/constants/internationalization';
 import { useAIUserContext } from '@/hooks/useAIFormContext';
 import { CARD_PADDING, SPACING, ICON_SIZE, FORM_FIELD_MARGIN } from '@/constants/ui';
 import type { Step3FormData } from '@/lib/validation/schemas';
@@ -28,10 +29,10 @@ export function FormStep3() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t('step3.title', FORM_STEP3_FALLBACKS.header.title)}
+          {t(TRANSLATION_KEY.step3.title, FORM_STEP3_FALLBACKS.header.title)}
         </h2>
         <p className="text-muted-foreground">
-          {t('step3.description', FORM_STEP3_FALLBACKS.header.description)}
+          {t(TRANSLATION_KEY.step3.description, FORM_STEP3_FALLBACKS.header.description)}
         </p>
       </div>
 
@@ -41,10 +42,10 @@ export function FormStep3() {
           <AIFormField
             name={FORM_STEP3_FIELD_NAMES.financialSituation}
             control={control}
-            label={t('financialSituation', FORM_STEP3_FALLBACKS.financialSituation.label)}
+            label={t(TRANSLATION_KEY.financialSituation, FORM_STEP3_FALLBACKS.financialSituation.label)}
             required
-            helperText={t('financialSituation_help', FORM_STEP3_FALLBACKS.financialSituation.helperText)}
-            placeholder={t('financialSituation_placeholder', FORM_STEP3_FALLBACKS.financialSituation.placeholder)}
+            helperText={t(TRANSLATION_KEY.financialSituation_help, FORM_STEP3_FALLBACKS.financialSituation.helperText)}
+            placeholder={t(TRANSLATION_KEY.financialSituation_placeholder, FORM_STEP3_FALLBACKS.financialSituation.placeholder)}
             fieldName={FORM_STEP3_FIELD_NAMES.financialSituation}
             rows={FORM_STEP3_VALIDATION.financialSituation.ROWS}
             maxLength={FORM_STEP3_VALIDATION.financialSituation.MAX_LENGTH}
@@ -60,10 +61,10 @@ export function FormStep3() {
           <AIFormField
             name={FORM_STEP3_FIELD_NAMES.employmentCircumstances}
             control={control}
-            label={t('employmentCircumstances', FORM_STEP3_FALLBACKS.employmentCircumstances.label)}
+            label={t(TRANSLATION_KEY.employmentCircumstances, FORM_STEP3_FALLBACKS.employmentCircumstances.label)}
             required
-            helperText={t('employmentCircumstances_help', FORM_STEP3_FALLBACKS.employmentCircumstances.helperText)}
-            placeholder={t('employmentCircumstances_placeholder', FORM_STEP3_FALLBACKS.employmentCircumstances.placeholder)}
+            helperText={t(TRANSLATION_KEY.employmentCircumstances_help, FORM_STEP3_FALLBACKS.employmentCircumstances.helperText)}
+            placeholder={t(TRANSLATION_KEY.employmentCircumstances_placeholder, FORM_STEP3_FALLBACKS.employmentCircumstances.placeholder)}
             fieldName={FORM_STEP3_FIELD_NAMES.employmentCircumstances}
             rows={FORM_STEP3_VALIDATION.employmentCircumstances.ROWS}
             maxLength={FORM_STEP3_VALIDATION.employmentCircumstances.MAX_LENGTH}
@@ -79,10 +80,10 @@ export function FormStep3() {
           <AIFormField
             name={FORM_STEP3_FIELD_NAMES.reasonForApplying}
             control={control}
-            label={t('reasonForApplying', FORM_STEP3_FALLBACKS.reasonForApplying.label)}
+            label={t(TRANSLATION_KEY.reasonForApplying, FORM_STEP3_FALLBACKS.reasonForApplying.label)}
             required
-            helperText={t('reasonForApplying_help', FORM_STEP3_FALLBACKS.reasonForApplying.helperText)}
-            placeholder={t('reasonForApplying_placeholder', FORM_STEP3_FALLBACKS.reasonForApplying.placeholder)}
+            helperText={t(TRANSLATION_KEY.reasonForApplying_help, FORM_STEP3_FALLBACKS.reasonForApplying.helperText)}
+            placeholder={t(TRANSLATION_KEY.reasonForApplying_placeholder, FORM_STEP3_FALLBACKS.reasonForApplying.placeholder)}
             fieldName={FORM_STEP3_FIELD_NAMES.reasonForApplying}
             rows={FORM_STEP3_VALIDATION.reasonForApplying.ROWS}
             maxLength={FORM_STEP3_VALIDATION.reasonForApplying.MAX_LENGTH}
@@ -98,9 +99,9 @@ export function FormStep3() {
           <AIFormField
             name={FORM_STEP3_FIELD_NAMES.additionalComments}
             control={control}
-            label={t('additionalComments', FORM_STEP3_FALLBACKS.additionalComments.label)}
-            helperText={t('additionalComments_help', FORM_STEP3_FALLBACKS.additionalComments.helperText)}
-            placeholder={t('additionalComments_placeholder', FORM_STEP3_FALLBACKS.additionalComments.placeholder)}
+            label={t(TRANSLATION_KEY.additionalComments, FORM_STEP3_FALLBACKS.additionalComments.label)}
+            helperText={t(TRANSLATION_KEY.additionalComments_help, FORM_STEP3_FALLBACKS.additionalComments.helperText)}
+            placeholder={t(TRANSLATION_KEY.additionalComments_placeholder, FORM_STEP3_FALLBACKS.additionalComments.placeholder)}
             fieldName={FORM_STEP3_FIELD_NAMES.additionalComments}
             rows={FORM_STEP3_VALIDATION.additionalComments.ROWS}
             maxLength={FORM_STEP3_VALIDATION.additionalComments.MAX_LENGTH}
@@ -115,7 +116,7 @@ export function FormStep3() {
       <Card>
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('consent_section', FORM_STEP3_FALLBACKS.consent.sectionTitle)}
+            {t(TRANSLATION_KEY.consent_section, FORM_STEP3_FALLBACKS.consent.sectionTitle)}
           </Card.Title>
         </Card.Header>
 
@@ -133,11 +134,11 @@ export function FormStep3() {
               />
               <div className="flex-1">
                 <label className="text-sm text-foreground font-medium">
-                  {t('agreeToTerms', FORM_STEP3_FALLBACKS.consent.agreeToTerms.label)}
+                  {t(TRANSLATION_KEY.agreeToTerms, FORM_STEP3_FALLBACKS.consent.agreeToTerms.label)}
                   <span className="text-destructive ml-1">*</span>
                 </label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('agreeToTerms_help', FORM_STEP3_FALLBACKS.consent.agreeToTerms.helperText)}
+                  {t(TRANSLATION_KEY.agreeToTerms_help, FORM_STEP3_FALLBACKS.consent.agreeToTerms.helperText)}
                 </p>
               </div>
             </div>
@@ -154,11 +155,11 @@ export function FormStep3() {
               />
               <div className="flex-1">
                 <label className="text-sm text-foreground font-medium">
-                  {t('consentToDataProcessing', FORM_STEP3_FALLBACKS.consent.consentToDataProcessing.label)}
+                  {t(TRANSLATION_KEY.consentToDataProcessing, FORM_STEP3_FALLBACKS.consent.consentToDataProcessing.label)}
                   <span className="text-destructive ml-1">*</span>
                 </label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('consentToDataProcessing_help', FORM_STEP3_FALLBACKS.consent.consentToDataProcessing.helperText)}
+                  {t(TRANSLATION_KEY.consentToDataProcessing_help, FORM_STEP3_FALLBACKS.consent.consentToDataProcessing.helperText)}
                 </p>
               </div>
             </div>
@@ -174,10 +175,10 @@ export function FormStep3() {
               />
               <div className="flex-1">
                 <label className="text-sm text-foreground font-medium">
-                  {t('allowContactForClarification', FORM_STEP3_FALLBACKS.consent.allowContactForClarification.label)}
+                  {t(TRANSLATION_KEY.allowContactForClarification, FORM_STEP3_FALLBACKS.consent.allowContactForClarification.label)}
                 </label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('allowContactForClarification_help', FORM_STEP3_FALLBACKS.consent.allowContactForClarification.helperText)}
+                  {t(TRANSLATION_KEY.allowContactForClarification_help, FORM_STEP3_FALLBACKS.consent.allowContactForClarification.helperText)}
                 </p>
               </div>
             </div>
@@ -195,10 +196,10 @@ export function FormStep3() {
           </div>
           <div>
             <h4 className="font-medium text-success-light-foreground mb-1">
-              {t('final_notice_title', FORM_STEP3_FALLBACKS.finalNotice.title)}
+              {t(TRANSLATION_KEY.final_notice_title, FORM_STEP3_FALLBACKS.finalNotice.title)}
             </h4>
             <p className="text-sm text-success-light-foreground/90">
-              {t('final_notice_text', FORM_STEP3_FALLBACKS.finalNotice.text)}
+              {t(TRANSLATION_KEY.final_notice_text, FORM_STEP3_FALLBACKS.finalNotice.text)}
             </p>
           </div>
         </div>
