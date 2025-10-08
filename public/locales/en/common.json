@@ -113,5 +113,45 @@
     "current": "Current step",
     "pending": "Pending"
   },
-  "ai_assist": "AI Assist"
+  "ai_assist": "AI Assist",
+  "home": {
+    "hero": {
+      "title": "Social Support Portal",
+      "description": "Apply for financial assistance through our secure, AI-enhanced portal. Get intelligent writing assistance and guidance throughout your application process",
+      "start_application": "Start Application",
+      "view_components": "View Components"
+    },
+    "features": {
+      "title": "Why Choose Our Portal?",
+      "ai_assistance": {
+        "title": "AI-Powered Writing Assistance",
+        "desc": "Get intelligent suggestions to help you complete your application with confidence."
+      },
+      "multilingual": {
+        "title": "Multilingual Support",
+        "desc": "Available in English and Arabic with full RTL support."
+      },
+      "secure": {
+        "title": "Secure & Private",
+        "desc": "Your data is protected with enterprise-grade security measures."
+      },
+      "auto_save": {
+        "title": "Auto-Save Progress",
+        "desc": "Never lose your progress with automatic form saving."
+      },
+      "accessible": {
+        "title": "Accessible Design",
+        "desc": "Built with accessibility standards for all users."
+      },
+      "guided": {
+        "title": "Guided Process",
+        "desc": "Step-by-step wizard to guide you through the application."
+      }
+    },
+    "cta": {
+      "title": "Ready to Apply?",
+      "description": "Start your social support application today. Our AI-powered system will guide you through every step of the process.",
+      "button": "Begin Application"
+    }
+  }
 }
