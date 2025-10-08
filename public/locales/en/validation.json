@@ -120,6 +120,7 @@
     "too_large": "Monthly expenses cannot exceed 1,000,000"
   },
   "totalSavings": {
+    "required": "Please enter a valid savings amount",
     "negative": "Total savings cannot be negative",
     "too_large": "Total savings cannot exceed 10,000,000"
   },
@@ -131,6 +132,7 @@
     "required": "Please select your housing status"
   },
   "monthlyRent": {
+    "required": "Please enter a valid rent amount",
     "negative": "Monthly rent cannot be negative",
     "too_large": "Monthly rent cannot exceed 100,000"
   },
