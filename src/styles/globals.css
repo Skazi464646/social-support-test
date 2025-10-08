@@ -731,6 +731,32 @@ small {
      These icons maintain their semantic colors and are excluded from golden scheme */
 
   /* =============================================================================
+     RTL DATE INPUT FIX
+     ============================================================================= */
+  
+  /* Force RTL text alignment and direction for date inputs in Arabic */
+  input[type="date"][dir="rtl"] {
+    text-align: right !important;
+    direction: rtl !important;
+  }
+  
+  /* Target internal webkit elements */
+  input[type="date"][dir="rtl"]::-webkit-datetime-edit {
+    text-align: right;
+    direction: rtl;
+  }
+  
+  input[type="date"][dir="rtl"]::-webkit-datetime-edit-fields-wrapper {
+    flex-direction: row-reverse;
+  }
+  
+  /* Move calendar icon to left in RTL */
+  input[type="date"][dir="rtl"]::-webkit-calendar-picker-indicator {
+    left: 0;
+    margin-right: auto;
+  }
+
+  /* =============================================================================
      WCAG-COMPLIANT BUTTON VARIANTS
      ============================================================================= */
 
