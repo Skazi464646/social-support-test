@@ -11,11 +11,11 @@ import { Card } from '@/components/molecules/Card';
 import { FORM_WIZARD_FALLBACKS } from '@/constants/formWizard';
 import { FormNavigation } from '@/components/molecules/FormNavigation';
 import { SubmissionSuccessModal } from '@/components/molecules/SubmissionSuccessModal';
+import { SubmissionErrorCard } from '@/components/molecules/SubmissionErrorCard';
 import type { SubmissionDetails } from '@/components/molecules/SubmissionSuccessModal';
 import { formSubmissionService, formatSubmissionError, FormSubmissionError } from '@/lib/api/form-submission';
 import type { Step1FormData, Step2FormData, Step3FormData, CompleteFormData, FormStepData } from '@/lib/validation/schemas';
 import { TRANSLATION_KEY } from '@/constants/internationalization';
-import {Header} from '@/components/molecules/Header/Header';
 
 
 const FormStep1 = lazy(() => 
@@ -57,7 +57,7 @@ const FormStepSkeleton = () => (
   </div>
 );
 
-const FormStepErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => {
+const FormStepErrorFallback = ({ resetErrorBoundary }: FallbackProps) => {
   const { t } = useTranslation(['form', 'common']);
   
   return (
@@ -425,27 +425,13 @@ export function FormWizard() {
 
       {/* Submission Error */}
       {submissionState.error && (
-        <Card className="p-6 border border-destructive-border bg-destructive-light text-destructive-light-foreground">
-          <div className="text-center">
-            <div className="text-destructive text-2xl mb-2">✕</div>
-            <h3 className="text-lg font-semibold text-destructive mb-2">
-              {formatSubmissionError(submissionState.error).title}
-            </h3>
-            <p className="text-destructive mb-4 opacity-80">
-              {formatSubmissionError(submissionState.error).message}
-            </p>
-            {formatSubmissionError(submissionState.error).action && (
-              <Button
-                variant="outline"
-                onClick={handleRetrySubmission}
-                disabled={submissionState.isSubmitting}
-                className="border-destructive-border text-destructive hover:bg-destructive-light focus-visible:ring-destructive/30"
-              >
-                {formatSubmissionError(submissionState.error).action}
-              </Button>
-            )}
-          </div>
-        </Card>
+        <SubmissionErrorCard
+          title={formatSubmissionError(submissionState.error).title}
+          message={formatSubmissionError(submissionState.error).message}
+          actionLabel={formatSubmissionError(submissionState.error).action}
+          onAction={handleRetrySubmission}
+          isLoading={submissionState.isSubmitting}
+        />
       )}
 
       {/* Test Mode Panel (Development only) */}
