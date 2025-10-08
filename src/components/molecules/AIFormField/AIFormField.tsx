@@ -19,7 +19,7 @@ export const AIFormField = forwardRef<HTMLTextAreaElement, AIFormFieldProps>(
     fieldName,
     rows = 6,
     maxLength = 2000,
-    minLength = 50,
+    minLength = 20,
     required = false,
     userContext = {},
     className = '',

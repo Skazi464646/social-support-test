@@ -18,7 +18,7 @@ export const FORM_STEP3_FIELD_NAMES = {
 
 export const FORM_STEP3_VALIDATION = {
   financialSituation: {
-    MIN_LENGTH: 50,
+    MIN_LENGTH: 20,
     MAX_LENGTH: 2000,
     ROWS: 5,
   },

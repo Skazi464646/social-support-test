@@ -27,7 +27,7 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
     placeholder,
     rows = 4,
     maxLength = 1000,
-    minLength = 50,
+    minLength = 20,
     required = false,
     disabled = false,
     className = '',
