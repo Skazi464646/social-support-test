@@ -4,7 +4,7 @@
  */
 
 import { useState, useEffect, useRef, useCallback } from 'react';
-import { AI_RELEVANCY, AI_FIELD_DEFAULTS, AI_RATE_LIMIT, AI_MESSAGES } from '@/constants';
+import {  AI_FIELD_DEFAULTS, AI_RATE_LIMIT, AI_MESSAGES } from '@/constants';
 import { openAIService, getFieldExamples } from '@/lib/ai';
 import { getFieldModalConfig } from '@/lib/ai/prompt-templates';
 import { cn } from '@/lib/utils';
@@ -13,7 +13,7 @@ import { TRANSLATION_KEY } from '@/constants/internationalization';
 
 import { useNoScrollBody } from '@/hooks';
 import type { AIAssistModalProps, Suggestion } from './AIAssistModal.types';
-import { AIExampleRequest, AIRelevancyRequest,AIAssistRequest } from '@/lib/api/interface';
+import { AIExampleRequest,AIAssistRequest } from '@/lib/api/interface';
 import { ModalHeader } from '@/components/molecules/ModalHeader';
 
 export function AIAssistModal({
@@ -123,32 +123,32 @@ export function AIAssistModal({
 
     try {
       // STEP 1: If user has input, validate relevancy first
-      const hasUserInput = editedText.trim().length >= AI_FIELD_DEFAULTS.hasUserInputMinChars;
+      // const hasUserInput = editedText.trim().length >= AI_FIELD_DEFAULTS.hasUserInputMinChars;
 
-      if (hasUserInput) {
-        const relevancyRequest: AIRelevancyRequest = {
-          fieldName,
-          userInput: editedText,
-          intelligentContext,
-          language: 'en',
-        };
-        const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
+      // if (hasUserInput) {
+      //   const relevancyRequest: AIRelevancyRequest = {
+      //     fieldName,
+      //     userInput: editedText,
+      //     intelligentContext,
+      //     language: 'en',
+      //   };
+      //   const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
 
-        if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < AI_RELEVANCY.threshold) {
-          // Input is not relevant - create a suggestion with feedback
-          const irrelevantSuggestion: Suggestion = {
-            id: `irrelevant_${Date.now()}`,
-            text: AI_MESSAGES.relevancy.notRelevant(relevancyResponse.reason, fieldName),
-            isEdited: false,
-            confidence: 0,
-          };
+      //   if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < AI_RELEVANCY.threshold) {
+      //     // Input is not relevant - create a suggestion with feedback
+      //     const irrelevantSuggestion: Suggestion = {
+      //       id: `irrelevant_${Date.now()}`,
+      //       text: AI_MESSAGES.relevancy.notRelevant(relevancyResponse.reason, fieldName),
+      //       isEdited: false,
+      //       confidence: 0,
+      //     };
 
-          setSuggestions(prev => [irrelevantSuggestion, ...prev]);
-          setActiveSuggestionId(irrelevantSuggestion.id);
-          setEditedText(irrelevantSuggestion.text);
-          return;
-        }
-      }
+      //     setSuggestions(prev => [irrelevantSuggestion, ...prev]);
+      //     setActiveSuggestionId(irrelevantSuggestion.id);
+      //     setEditedText(irrelevantSuggestion.text);
+      //     return;
+      //   }
+      // }
 
       // STEP 2: If relevant (or no user input), generate suggestion
       const request: AIAssistRequest = {
@@ -257,24 +257,24 @@ export function AIAssistModal({
 
     try {
       // STEP 1: If user has input, validate relevancy first
-      if (hasUserInput) {
-        const relevancyRequest: AIRelevancyRequest = {
-          fieldName,
-          userInput: editedText,
-          intelligentContext,
-          language: 'en',
-        };
-        const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
+      // if (hasUserInput) {
+      //   const relevancyRequest: AIRelevancyRequest = {
+      //     fieldName,
+      //     userInput: editedText,
+      //     intelligentContext,
+      //     language: 'en',
+      //   };
+      //   const relevancyResponse = await openAIService.validateInputRelevancy(relevancyRequest);
 
-        if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < AI_RELEVANCY.threshold) {
-          // Input is not relevant - show helpful feedback
-          setExamplesError(
-            AI_MESSAGES.relevancy.notRelevantExamples(relevancyResponse.reason, fieldName)
-          );
-          setDynamicExamples([]);
-          return;
-        }
-      }
+      //   if (!relevancyResponse.isRelevant || relevancyResponse.relevancyScore < AI_RELEVANCY.threshold) {
+      //     // Input is not relevant - show helpful feedback
+      //     setExamplesError(
+      //       AI_MESSAGES.relevancy.notRelevantExamples(relevancyResponse.reason, fieldName)
+      //     );
+      //     setDynamicExamples([]);
+      //     return;
+      //   }
+      // }
 
       // STEP 2: If relevant (or no user input), generate examples
       const request: AIExampleRequest = {
