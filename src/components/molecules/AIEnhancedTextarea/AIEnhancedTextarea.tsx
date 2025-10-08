@@ -7,6 +7,7 @@ import { forwardRef, Suspense, lazy } from 'react';
 import { useAIAssist } from '@/hooks/useAIAssist';
 import { cn } from '@/lib/utils';
 import { useTranslation } from 'react-i18next';
+import { AI_ENHANCED_TEXTAREA_COPY } from '@/constants/aiEnhancedTextarea';
 
 // Lazy load AI components for better performance
 const AIAssistModal = lazy(() => 
@@ -110,10 +111,10 @@ export const AIEnhancedTextarea = forwardRef<HTMLTextAreaElement, AIEnhancedText
             disabled={disabled}
             className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg shadow-sm transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed
             bg-primary text-primary-foreground hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary"
-            title="Get AI writing assistance"
+            title={AI_ENHANCED_TEXTAREA_COPY.tooltip}
           >
             <span>✨</span>
-          <span>{t('ai_assist', 'AI Assist')}</span>
+          <span>{t('ai_assist', AI_ENHANCED_TEXTAREA_COPY.buttonLabel)}</span>
             
           </button>
         </div>

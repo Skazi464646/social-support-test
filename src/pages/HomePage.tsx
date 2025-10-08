@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { FileText, Sparkles, Globe, Shield, Clock, Users } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
 import { Card } from '@/components/molecules/Card';
+import { HOME_PAGE_FALLBACKS } from '@/constants/homePage';
 
 export function HomePage() {
   const { t } = useTranslation();
@@ -10,33 +11,33 @@ export function HomePage() {
   const features = [
     {
       icon: Sparkles,
-      title: t('home.features.ai_assistance.title', 'AI-Powered Writing Assistance'),
-      description: t('home.features.ai_assistance.desc', 'Get intelligent suggestions to help you complete your application with confidence.'),
+      title: t('home.features.ai_assistance.title', HOME_PAGE_FALLBACKS.featuresSection.items.aiAssistance.title),
+      description: t('home.features.ai_assistance.desc', HOME_PAGE_FALLBACKS.featuresSection.items.aiAssistance.description),
     },
     {
       icon: Globe,
-      title: t('home.features.multilingual.title', 'Multilingual Support'),
-      description: t('home.features.multilingual.desc', 'Available in English and Arabic with full RTL support.'),
+      title: t('home.features.multilingual.title', HOME_PAGE_FALLBACKS.featuresSection.items.multilingual.title),
+      description: t('home.features.multilingual.desc', HOME_PAGE_FALLBACKS.featuresSection.items.multilingual.description),
     },
     {
       icon: Shield,
-      title: t('home.features.secure.title', 'Secure & Private'),
-      description: t('home.features.secure.desc', 'Your data is protected with enterprise-grade security measures.'),
+      title: t('home.features.secure.title', HOME_PAGE_FALLBACKS.featuresSection.items.secure.title),
+      description: t('home.features.secure.desc', HOME_PAGE_FALLBACKS.featuresSection.items.secure.description),
     },
     {
       icon: Clock,
-      title: t('home.features.auto_save.title', 'Auto-Save Progress'),
-      description: t('home.features.auto_save.desc', 'Never lose your progress with automatic form saving.'),
+      title: t('home.features.auto_save.title', HOME_PAGE_FALLBACKS.featuresSection.items.autoSave.title),
+      description: t('home.features.auto_save.desc', HOME_PAGE_FALLBACKS.featuresSection.items.autoSave.description),
     },
     {
       icon: Users,
-      title: t('home.features.accessible.title', 'Accessible Design'),
-      description: t('home.features.accessible.desc', 'Built with accessibility standards for all users.'),
+      title: t('home.features.accessible.title', HOME_PAGE_FALLBACKS.featuresSection.items.accessible.title),
+      description: t('home.features.accessible.desc', HOME_PAGE_FALLBACKS.featuresSection.items.accessible.description),
     },
     {
       icon: FileText,
-      title: t('home.features.guided.title', 'Guided Process'),
-      description: t('home.features.guided.desc', 'Step-by-step wizard to guide you through the application.'),
+      title: t('home.features.guided.title', HOME_PAGE_FALLBACKS.featuresSection.items.guided.title),
+      description: t('home.features.guided.desc', HOME_PAGE_FALLBACKS.featuresSection.items.guided.description),
     },
   ];
 
@@ -46,20 +47,20 @@ export function HomePage() {
         {/* Hero Section */}
         <section className="mx-auto w-full max-w-3xl text-center">
           <h1 className="text-display-lg font-bold tracking-tight text-foreground sm:text-display-2xl">
-            {t('home.hero.title', 'Social Support Portal')}
+            {t('home.hero.title', HOME_PAGE_FALLBACKS.hero.title)}
           </h1>
           <p className="mt-6 text-xl leading-relaxed text-muted-foreground">
-            {t('home.hero.description', 'Apply for financial assistance through our secure, AI-enhanced portal. Get intelligent writing assistance and guidance throughout your application process.')}
+            {t('home.hero.description', HOME_PAGE_FALLBACKS.hero.description)}
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             <Button asChild size="lg">
               <Link to="/wizard">
-                {t('home.hero.start_application', 'Start Application')}
+                {t('home.hero.start_application', HOME_PAGE_FALLBACKS.hero.startApplication)}
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
               <Link to="/components">
-                {t('home.hero.view_components', 'View Components')}
+                {t('home.hero.view_components', HOME_PAGE_FALLBACKS.hero.viewComponents)}
               </Link>
             </Button>
           </div>
@@ -68,7 +69,7 @@ export function HomePage() {
         {/* Features Grid */}
         <section className="w-full">
           <h2 className="mb-12 text-center text-display-md font-bold tracking-tight text-foreground">
-            {t('home.features.title', 'Why Choose Our Portal?')}
+            {t('home.features.title', HOME_PAGE_FALLBACKS.featuresSection.title)}
           </h2>
           <dl className="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {features.map((feature) => (
@@ -89,15 +90,15 @@ export function HomePage() {
         <section className="mx-auto w-full max-w-3xl text-center">
           <Card className="border-primary/20 bg-primary/5 p-8">
             <h2 className="text-display-sm font-bold tracking-tight text-foreground">
-              {t('home.cta.title', 'Ready to Apply?')}
+              {t('home.cta.title', HOME_PAGE_FALLBACKS.cta.title)}
             </h2>
             <p className="mt-6 text-xl leading-relaxed text-muted-foreground">
-              {t('home.cta.description', 'Start your application today with our AI-powered assistance to help you every step of the way.')}
+              {t('home.cta.description', HOME_PAGE_FALLBACKS.cta.description)}
             </p>
             <div className="mt-8">
               <Button asChild size="lg">
                 <Link to="/wizard">
-                  {t('home.cta.button', 'Begin Application')}
+                  {t('home.cta.button', HOME_PAGE_FALLBACKS.cta.button)}
                 </Link>
               </Button>
             </div>
@@ -108,14 +109,11 @@ export function HomePage() {
         {import.meta.env.DEV && (
           <section className="mx-auto w-full max-w-3xl">
             <Card className="bg-muted/50 p-6">
-              <h3 className="mb-4 text-lg font-semibold">Development Information</h3>
+              <h3 className="mb-4 text-lg font-semibold">{HOME_PAGE_FALLBACKS.devInfo.title}</h3>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <p>• All 5 modules completed successfully</p>
-                <p>• Real OpenAI integration with streaming & security</p>
-                <p>• Multi-step form with React Hook Form + Zod validation</p>
-                <p>• Complete i18n support with Arabic RTL</p>
-                <p>• Accessible design with ARIA attributes</p>
-                <p>• Auto-save functionality with localStorage</p>
+                {HOME_PAGE_FALLBACKS.devInfo.items.map((item) => (
+                  <p key={item}>{item}</p>
+                ))}
               </div>
             </Card>
           </section>

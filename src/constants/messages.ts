@@ -35,9 +35,9 @@ export const AI_MESSAGES = {
   // Relevancy Feedback
   relevancy: {
     notRelevant: (reason: string, fieldName: string) => 
-      `Your input is not relevant to this context. ${reason}. Please provide more relevant information about your ${fieldName.replace(/([A-Z])/g, ' $1').toLowerCase()}.`,
+      `Your input is not relevant to this context. Please provide more relevant information about your ${fieldName.replace(/([A-Z])/g, ' $1').toLowerCase()}.`,
     notRelevantExamples: (reason: string, fieldName: string) => 
-      `Not relevant to this context. ${reason}. Please try to provide more relevant information about your ${fieldName.replace(/([A-Z])/g, ' $1').toLowerCase()}.`,
+      `Not relevant to this context. Please try to provide more relevant information about your ${fieldName.replace(/([A-Z])/g, ' $1').toLowerCase()}.`,
   },
   
   // Character Count

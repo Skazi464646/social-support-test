@@ -7,6 +7,8 @@ import { forwardRef, useState } from 'react';
 import { AIAssistModal } from '@/components/organisms/AIAssistModal';
 import { useAIAssist } from '@/hooks/useAIAssist';
 import { useTranslation } from 'react-i18next';
+import { AI_ENHANCED_INPUT_COPY } from '@/constants/aiEnhancedInput';
+
 import type { AIEnhancedInputProps } from './AIEnhancedInput.types';
 
 export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps>(
@@ -76,10 +78,10 @@ export const AIEnhancedInput = forwardRef<HTMLInputElement, AIEnhancedInputProps
                   onClick={() => setShowModal(true)}
                   className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg shadow-sm transition-all duration-200 w-fit
                   bg-primary text-primary-foreground hover:bg-primary-hover focus:outline-none focus:ring-2 focus:ring-primary"
-                  title="Get AI writing assistance"
+                  title={AI_ENHANCED_INPUT_COPY.tooltip}
                 >
                   <span className="text-sm">✨</span>
-                 <span>{t('ai_assist', 'AI Assist')}</span>
+                 <span>{t('ai_assist', AI_ENHANCED_INPUT_COPY.buttonLabel)}</span>
                 </button>
               )}
               {error && (

@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { ValidatedFormField } from '@/components/molecules/ValidatedFormField';
 import { AIFormField } from '@/components/molecules/AIFormField';
 import { Card } from '@/components/molecules/Card';
+import { FORM_STEP3_FALLBACKS } from '@/constants/formStep3';
 import { useAIUserContext } from '@/hooks/useAIFormContext';
 import type { Step3FormData } from '@/lib/validation/schemas';
 
@@ -22,10 +23,10 @@ export function FormStep3() {
       {/* Header */}
       <div>
         <h2 className="text-2xl font-bold text-foreground mb-2">
-          {t('step3.title', 'Detailed Information')}
+          {t('step3.title', FORM_STEP3_FALLBACKS.header.title)}
         </h2>
         <p className="text-muted-foreground">
-          {t('step3.description', 'Please provide detailed information about your situation to help us better understand your needs.')}
+          {t('step3.description', FORM_STEP3_FALLBACKS.header.description)}
         </p>
       </div>
 
@@ -35,10 +36,10 @@ export function FormStep3() {
           <AIFormField
             name="financialSituation"
             control={control}
-            label={t('financialSituation', 'Financial Situation')}
+            label={t('financialSituation', FORM_STEP3_FALLBACKS.financialSituation.label)}
             required
-            helperText={t('financialSituation_help', 'Describe your current financial challenges and circumstances. Include details about income, expenses, and any financial hardships.')}
-            placeholder={t('financialSituation_placeholder', 'Example: I am facing difficulty paying rent due to reduced income after losing my job...')}
+            helperText={t('financialSituation_help', FORM_STEP3_FALLBACKS.financialSituation.helperText)}
+            placeholder={t('financialSituation_placeholder', FORM_STEP3_FALLBACKS.financialSituation.placeholder)}
             fieldName="financialSituation"
             rows={5}
             maxLength={2000}
@@ -54,10 +55,10 @@ export function FormStep3() {
           <AIFormField
             name="employmentCircumstances"
             control={control}
-            label={t('employmentCircumstances', 'Employment Circumstances')}
+            label={t('employmentCircumstances', FORM_STEP3_FALLBACKS.employmentCircumstances.label)}
             required
-            helperText={t('employmentCircumstances_help', 'Explain your current work situation, recent changes, and any challenges finding employment.')}
-            placeholder={t('employmentCircumstances_placeholder', 'Example: I was laid off due to company downsizing and have been searching for employment...')}
+            helperText={t('employmentCircumstances_help', FORM_STEP3_FALLBACKS.employmentCircumstances.helperText)}
+            placeholder={t('employmentCircumstances_placeholder', FORM_STEP3_FALLBACKS.employmentCircumstances.placeholder)}
             fieldName="employmentCircumstances"
             rows={5}
             maxLength={2000}
@@ -73,10 +74,10 @@ export function FormStep3() {
           <AIFormField
             name="reasonForApplying"
             control={control}
-            label={t('reasonForApplying', 'Why Are You Applying for Social Support?')}
+            label={t('reasonForApplying', FORM_STEP3_FALLBACKS.reasonForApplying.label)}
             required
-            helperText={t('reasonForApplying_help', 'Explain why you need assistance, what type of support you need, and how it will help you.')}
-            placeholder={t('reasonForApplying_placeholder', 'Example: I need help covering basic living expenses while I search for stable employment...')}
+            helperText={t('reasonForApplying_help', FORM_STEP3_FALLBACKS.reasonForApplying.helperText)}
+            placeholder={t('reasonForApplying_placeholder', FORM_STEP3_FALLBACKS.reasonForApplying.placeholder)}
             fieldName="reasonForApplying"
             rows={5}
             maxLength={2000}
@@ -92,9 +93,9 @@ export function FormStep3() {
           <AIFormField
             name="additionalComments"
             control={control}
-            label={t('additionalComments', 'Additional Information (Optional)')}
-            helperText={t('additionalComments_help', 'Share any other relevant information about your circumstances.')}
-            placeholder={t('additionalComments_placeholder', 'Any additional information about family situation, health issues, or other relevant factors...')}
+            label={t('additionalComments', FORM_STEP3_FALLBACKS.additionalComments.label)}
+            helperText={t('additionalComments_help', FORM_STEP3_FALLBACKS.additionalComments.helperText)}
+            placeholder={t('additionalComments_placeholder', FORM_STEP3_FALLBACKS.additionalComments.placeholder)}
             fieldName="additionalComments"
             rows={4}
             maxLength={1000}
@@ -109,7 +110,7 @@ export function FormStep3() {
       <Card>
         <Card.Header>
           <Card.Title className="text-lg font-semibold">
-            {t('consent_section', 'Terms and Consent')}
+            {t('consent_section', FORM_STEP3_FALLBACKS.consent.sectionTitle)}
           </Card.Title>
         </Card.Header>
 
@@ -127,11 +128,11 @@ export function FormStep3() {
               />
               <div className="flex-1">
                 <label className="text-sm text-foreground font-medium">
-                  {t('agreeToTerms', 'I agree to the terms and conditions')}
+                  {t('agreeToTerms', FORM_STEP3_FALLBACKS.consent.agreeToTerms.label)}
                   <span className="text-destructive ml-1">*</span>
                 </label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('agreeToTerms_help', 'All information provided is true and accurate to the best of your knowledge.')}
+                  {t('agreeToTerms_help', FORM_STEP3_FALLBACKS.consent.agreeToTerms.helperText)}
                 </p>
               </div>
             </div>
@@ -148,11 +149,11 @@ export function FormStep3() {
               />
               <div className="flex-1">
                 <label className="text-sm text-foreground font-medium">
-                  {t('consentToDataProcessing', 'I consent to data processing')}
+                  {t('consentToDataProcessing', FORM_STEP3_FALLBACKS.consent.consentToDataProcessing.label)}
                   <span className="text-destructive ml-1">*</span>
                 </label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('consentToDataProcessing_help', 'Processing of personal data for evaluating your social support application.')}
+                  {t('consentToDataProcessing_help', FORM_STEP3_FALLBACKS.consent.consentToDataProcessing.helperText)}
                 </p>
               </div>
             </div>
@@ -168,10 +169,10 @@ export function FormStep3() {
               />
               <div className="flex-1">
                 <label className="text-sm text-foreground font-medium">
-                  {t('allowContactForClarification', 'Allow contact for clarification')}
+                  {t('allowContactForClarification', FORM_STEP3_FALLBACKS.consent.allowContactForClarification.label)}
                 </label>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {t('allowContactForClarification_help', 'Permission to contact you if additional information is needed.')}
+                  {t('allowContactForClarification_help', FORM_STEP3_FALLBACKS.consent.allowContactForClarification.helperText)}
                 </p>
               </div>
             </div>
@@ -189,10 +190,10 @@ export function FormStep3() {
           </div>
           <div>
             <h4 className="font-medium text-success-light-foreground mb-1">
-              {t('final_notice_title', 'Application Review')}
+              {t('final_notice_title', FORM_STEP3_FALLBACKS.finalNotice.title)}
             </h4>
             <p className="text-sm text-success-light-foreground/90">
-              {t('final_notice_text', 'Your application will be reviewed by our support team. We may contact you if additional information is needed. Processing typically takes 5-10 business days.')}
+              {t('final_notice_text', FORM_STEP3_FALLBACKS.finalNotice.text)}
             </p>
           </div>
         </div>

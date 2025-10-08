@@ -25,7 +25,7 @@ export const AI_RELEVANCY = {
   maxTokens: 200,
   temperature: 0.3,
   stream: false as const,
-  threshold: 60,
+  threshold: 70,
 } as const;
 
 export const AI_FIELD_DEFAULTS = {

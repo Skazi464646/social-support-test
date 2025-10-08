@@ -5,6 +5,7 @@ import { Check, Copy, X, FileText, Clock } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
 import { useNoScrollBody } from '@/hooks';
 import { cn } from '@/lib/utils';
+import { SUBMISSION_SUCCESS_MODAL_COPY } from '@/constants/submissionSuccessModal';
 
 // =============================================================================
 // TYPES
@@ -27,8 +28,6 @@ export interface SubmissionSuccessModalProps {
   submissionDetails: SubmissionDetails;
   /** Callback for starting a new application */
   onStartNewApplication: () => void;
-  /** Callback for continuing with current application */
-  onContinue: () => void;
   /** Whether actions are loading */
   isLoading?: boolean;
 }
@@ -42,7 +41,6 @@ export function SubmissionSuccessModal({
   onOpenChange,
   submissionDetails,
   onStartNewApplication,
-  onContinue,
   isLoading = false,
 }: SubmissionSuccessModalProps) {
   const { t } = useTranslation(['form', 'common']);
@@ -112,10 +110,6 @@ export function SubmissionSuccessModal({
     onOpenChange(false);
   };
 
-  const handleContinue = () => {
-    onContinue();
-    onOpenChange(false);
-  };
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -163,8 +157,7 @@ export function SubmissionSuccessModal({
           </div>
 
           <Dialog.Description id="submission-success-description" className="sr-only">
-            Your application has been successfully submitted. Your application ID is {submissionDetails.applicationId}. 
-            You can either start a new application or continue with other tasks.
+            {SUBMISSION_SUCCESS_MODAL_COPY.description.prefix} {submissionDetails.applicationId}. {SUBMISSION_SUCCESS_MODAL_COPY.description.suffix}
           </Dialog.Description>
 
           {/* Application Details */}
@@ -181,17 +174,17 @@ export function SubmissionSuccessModal({
                     size="sm"
                     onClick={handleCopyApplicationId}
                     className="gap-2 flex-shrink-0 px-3 py-2 h-auto min-w-fit"
-                    aria-label={`Copy application ID ${submissionDetails.applicationId}`}
+                    aria-label={`${SUBMISSION_SUCCESS_MODAL_COPY.labels.copyAriaLabel} ${submissionDetails.applicationId}`}
                   >
                     {copied ? (
                       <>
-                        <Check className="h-4 w-4 text-success" />
-                        <span className="text-success text-sm">{t('common:actions.copied', 'Copied')}</span>
+                        <Check className="h-4 w-4 text-black" />
+                        <span className="text-black text-sm">{t('common:actions.copied', SUBMISSION_SUCCESS_MODAL_COPY.labels.copied)}</span>
                       </>
                     ) : (
                       <>
                         <Copy className="h-4 w-4" />
-                        <span className="text-sm">{t('common:actions.copy', 'Copy')}</span>
+                        <span className="text-sm">{t('common:actions.copy', SUBMISSION_SUCCESS_MODAL_COPY.labels.copy)}</span>
                       </>
                     )}
                   </Button>
@@ -209,7 +202,7 @@ export function SubmissionSuccessModal({
               <div className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border">
                 <Clock className="h-5 w-5 text-text-secondary" aria-hidden="true" />
                 <div>
-                  <span className="font-medium text-text-primary">{t('common:submitted_at', 'Submitted at')}: </span>
+                  <span className="font-medium text-text-primary">{t('common:submitted_at', SUBMISSION_SUCCESS_MODAL_COPY.labels.submittedAt)}: </span>
                   <span className="text-text-secondary">
                     {formatSubmissionDate(submissionDetails.submittedAt)}
                   </span>
@@ -220,7 +213,7 @@ export function SubmissionSuccessModal({
                 <div className="flex items-center gap-3 p-3 bg-card rounded-lg border border-border">
                   <FileText className="h-5 w-5 text-text-secondary" aria-hidden="true" />
                   <div>
-                    <span className="font-medium text-text-primary">{t('processing_time', 'Processing time')}: </span>
+                    <span className="font-medium text-text-primary">{t('processing_time', SUBMISSION_SUCCESS_MODAL_COPY.labels.processingTime)}: </span>
                     <span className="text-text-secondary">
                       {submissionDetails.estimatedProcessingTime}
                     </span>
@@ -233,7 +226,7 @@ export function SubmissionSuccessModal({
             {submissionDetails.nextSteps && submissionDetails.nextSteps.length > 0 && (
               <div className="space-y-3">
                 <p className="text-sm font-medium text-text-primary">
-                  {t('next_steps', 'Next Steps')}:
+                  {t('next_steps', SUBMISSION_SUCCESS_MODAL_COPY.labels.nextSteps)}:
                 </p>
                 <div className="bg-card rounded-lg border border-border p-4">
                   <ul className="space-y-2 text-sm">
@@ -251,7 +244,7 @@ export function SubmissionSuccessModal({
             {/* Confirmation Email Notice */}
             <div className="rounded-lg border border-info-border bg-info-light p-4">
               <p className="text-sm text-info-foreground">
-                <strong>A confirmation email has been sent to your registered email address.</strong>
+                <strong>{SUBMISSION_SUCCESS_MODAL_COPY.labels.confirmationEmail}</strong>
               </p>
             </div>
 
@@ -261,16 +254,7 @@ export function SubmissionSuccessModal({
           <div className="h-6"></div>
           
           {/* Action Buttons */}
-          <div className="flex flex-col-reverse sm:flex-row gap-4 p-6 bg-muted border-t border-border">
-            <Button
-              variant="outline"
-              onClick={handleContinue}
-              disabled={isLoading}
-              className="flex-1 h-11"
-            >
-              <span>{t('common:actions.continue', 'Continue')}</span>
-            </Button>
-            
+          <div className="flex flex-col-reverse sm:flex-row gap-4 p-6 bg-muted border-t border-border">  
             <Button
             variant={'outline'}
               onClick={handleStartNew}
@@ -278,14 +262,14 @@ export function SubmissionSuccessModal({
               isLoading={isLoading}
               className="flex-1 gap-2 h-11"
             >
-              {t('start_new_application', 'Start New Application')}
+              {t('start_new_application', SUBMISSION_SUCCESS_MODAL_COPY.actions.startNewApplication)}
             </Button>
           </div>
 
           {/* Footer Note */}
           <div className="text-center px-6 pb-6 bg-muted">
             <p className="text-xs text-text-secondary">
-              {t('application_reference_note', 'Please save your application ID for future reference')}
+              {t('application_reference_note', SUBMISSION_SUCCESS_MODAL_COPY.labels.referenceNote)}
             </p>
           </div>
         </Dialog.Content>

@@ -100,11 +100,8 @@ export function ValidatedFormField<
         } else {
           const numericValue = parseFloat(val);
           if (isNaN(numericValue)) {
-            // Keep invalid values as strings so validation can catch them
             onChange(val);
           } else {
-            // Always send the string value - let the schema handle the conversion
-            // This ensures the schema's transform function gets the raw input
             onChange(val);
           }
         }
@@ -132,14 +129,14 @@ export function ValidatedFormField<
     const message = error.message;
     
     // Debug: Log the current error message
-    console.log('[ValidatedFormField] Error message:', message);
+    
     
     // If the message starts with 'validation.', try to translate it
     if (typeof message === 'string' && message.startsWith('validation.')) {
       // Remove the 'validation.' prefix and translate with explicit namespace
       const keyWithoutPrefix = message.replace('validation.', '');
       const translated = t(keyWithoutPrefix, { ns: 'validation' });
-      console.log('[ValidatedFormField] Translating:', message, '→ keyWithoutPrefix:', keyWithoutPrefix, '→ result:', translated);
+      
       
       return translated;
     }
@@ -264,6 +261,7 @@ export function ValidatedFormField<
           aria-invalid={hasError}
           data-dirty={isDirty}
           data-touched={isTouched}
+          lang={isRTL ? 'ar':'en'}
           dir={fieldDir}
           className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm transition-all duration-200 focus:outline-none focus:border-primary focus:shadow-gold-sm disabled:opacity-50 disabled:pointer-events-none"
         >

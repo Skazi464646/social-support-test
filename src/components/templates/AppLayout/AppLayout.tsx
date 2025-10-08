@@ -3,6 +3,8 @@ import { useTranslation } from 'react-i18next';
 import { Home, FileText, Layers } from 'lucide-react';
 import { LanguageSwitcher } from '@/components/molecules/LanguageSwitcher';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { APP_CONFIG } from '@/constants';
+import { APP_LAYOUT_FALLBACKS } from '@/constants/appLayout';
 import { cn } from '@/lib/utils';
 import type { AppLayoutProps } from './AppLayout.types';
 
@@ -12,19 +14,19 @@ export function AppLayout({ children }: AppLayoutProps) {
 
   const navigation = [
     {
-      name: t('nav.home', 'Home'),
+      name: t('nav.home', APP_LAYOUT_FALLBACKS.navigation.home),
       href: '/',
       icon: Home,
       current: location.pathname === '/',
     },
     {
-      name: t('nav.form_wizard', 'Form Wizard'),
+      name: t('nav.form_wizard', APP_LAYOUT_FALLBACKS.navigation.wizard),
       href: '/wizard',
       icon: FileText,
       current: location.pathname === '/wizard',
     },
     {
-      name: t('nav.components', 'Components'),
+      name: t('nav.components', APP_LAYOUT_FALLBACKS.navigation.components),
       href: '/components',
       icon: Layers,
       current: location.pathname === '/components',
@@ -43,7 +45,7 @@ export function AppLayout({ children }: AppLayoutProps) {
                 <FileText className="h-4 w-4" />
               </div>
               <span className="hidden text-lg font-semibold sm:inline-block truncate transition-colors duration-300 group-hover:text-primary">
-                {t('app.name', 'Social Support Portal')}
+                {t('app.name', APP_CONFIG.name)}
               </span>
             </Link>
 

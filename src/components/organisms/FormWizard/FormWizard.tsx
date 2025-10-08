@@ -8,6 +8,7 @@ import { useStep1Form, useStep2Form, useStep3Form } from '@/hooks/useFormValidat
 import { Button } from '@/components/atoms/Button';
 import { ProgressBar } from '@/components/molecules/ProgressBar';
 import { Card } from '@/components/molecules/Card';
+import { FORM_WIZARD_FALLBACKS } from '@/constants/formWizard';
 import { FormNavigation } from '@/components/molecules/FormNavigation';
 import { SubmissionSuccessModal } from '@/components/molecules/SubmissionSuccessModal';
 import type { SubmissionDetails } from '@/components/molecules/SubmissionSuccessModal';
@@ -69,17 +70,17 @@ const FormStepErrorFallback = ({ error, resetErrorBoundary }: FallbackProps) => 
     <div className="text-center py-12 space-y-4">
       <div className="text-destructive text-4xl">⚠️</div>
       <h3 className="text-lg font-semibold text-foreground">
-        {t('common.error_loading_step', 'Error Loading Form Step')}
+        {t('common.error_loading_step', FORM_WIZARD_FALLBACKS.error.title)}
       </h3>
       <p className="text-muted-foreground max-w-md mx-auto">
-        {t('common.error_loading_step_description', 'There was an error loading this form step. Please try again.')}
+        {t('common.error_loading_step_description', FORM_WIZARD_FALLBACKS.error.description)}
       </p>
       <div className="space-x-2">
         <Button variant="outline" onClick={resetErrorBoundary}>
-          {t('common.retry', 'Try Again')}
+          {t('common.retry', FORM_WIZARD_FALLBACKS.error.retry)}
         </Button>
         <Button variant="ghost" onClick={() => window.location.reload()}>
-          {t('common.reload_page', 'Reload Page')}
+          {t('common.reload_page', FORM_WIZARD_FALLBACKS.error.reload)}
         </Button>
       </div>
       {import.meta.env.DEV && (
@@ -367,12 +368,6 @@ export function FormWizard() {
     });
   };
 
-  // Handle continue action (close modal and stay on current page)
-  const handleContinue = () => {
-    setShowSuccessModal(false);
-    // Keep current state - user can view their submission details
-  };
-
   // Auto-save indicator
   const AutoSaveIndicator = () => {
     if (!state.lastSaved) return null;
@@ -493,7 +488,6 @@ export function FormWizard() {
           onOpenChange={setShowSuccessModal}
           submissionDetails={submissionDetails}
           onStartNewApplication={handleStartNewApplication}
-          onContinue={handleContinue}
           isLoading={false}
         />
       )}

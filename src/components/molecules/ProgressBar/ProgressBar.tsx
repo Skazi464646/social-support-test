@@ -2,6 +2,7 @@ import React from 'react';
 import { cn } from '@/lib/utils';
 import { CheckCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { PROGRESS_BAR_COPY } from '@/constants/progressBar';
 
 // =============================================================================
 // TYPES
@@ -44,10 +45,15 @@ export function ProgressBar({
 
     const statusText =
       status === 'current'
-        ? t('progress.status_current', 'Current step')
+        ? t('progress.status_current', PROGRESS_BAR_COPY.status.current)
         : status === 'complete'
-          ? t('progress.status_complete', 'Completed step')
-          : t('progress.status_upcoming', 'Upcoming step');
+          ? t('progress.status_complete', PROGRESS_BAR_COPY.status.complete)
+          : t('progress.status_upcoming', PROGRESS_BAR_COPY.status.upcoming);
+
+    const stepIndicatorDefault = PROGRESS_BAR_COPY.stepIndicatorTemplate
+      .replace('{step}', String(step))
+      .replace('{total}', String(totalSteps))
+      .replace('{status}', statusText);
 
     const circleClasses = cn(
       'relative z-[10] flex h-10 w-10 shrink-0 items-center justify-center rounded-full border-2 text-sm font-semibold transition-all duration-300 transform focus:outline-none',
@@ -64,7 +70,7 @@ export function ProgressBar({
               step,
               total: totalSteps,
               status: statusText,
-              defaultValue: `Step ${step} of ${totalSteps} – ${statusText}`,
+              defaultValue: stepIndicatorDefault,
             })}
           </span>
           {status === 'complete' ? (
@@ -95,7 +101,7 @@ export function ProgressBar({
   return (
     <nav
       className={cn('w-full', className)}
-      aria-label={t('progress.nav_label', 'Application progress')}
+      aria-label={t('progress.nav_label', PROGRESS_BAR_COPY.navLabel)}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="relative">
