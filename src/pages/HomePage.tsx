@@ -4,6 +4,7 @@ import { FileText, Sparkles, Globe, Shield, Clock, Users } from 'lucide-react';
 import { Button } from '@/components/atoms/Button';
 import { Card } from '@/components/molecules/Card';
 import { HOME_PAGE_FALLBACKS } from '@/constants/homePage';
+import { TRANSLATION_KEY } from '@/constants/internationalization';
 
 export function HomePage() {
   const { t } = useTranslation();
@@ -11,33 +12,33 @@ export function HomePage() {
   const features = [
     {
       icon: Sparkles,
-      title: t('home.features.ai_assistance.title', HOME_PAGE_FALLBACKS.featuresSection.items.aiAssistance.title),
-      description: t('home.features.ai_assistance.desc', HOME_PAGE_FALLBACKS.featuresSection.items.aiAssistance.description),
+      title: t(TRANSLATION_KEY.home.features.ai_assistance.title, HOME_PAGE_FALLBACKS.featuresSection.items.aiAssistance.title),
+      description: t(TRANSLATION_KEY.home.features.ai_assistance.desc, HOME_PAGE_FALLBACKS.featuresSection.items.aiAssistance.description),
     },
     {
       icon: Globe,
-      title: t('home.features.multilingual.title', HOME_PAGE_FALLBACKS.featuresSection.items.multilingual.title),
-      description: t('home.features.multilingual.desc', HOME_PAGE_FALLBACKS.featuresSection.items.multilingual.description),
+      title: t(TRANSLATION_KEY.home.features.multilingual.title, HOME_PAGE_FALLBACKS.featuresSection.items.multilingual.title),
+      description: t(TRANSLATION_KEY.home.features.multilingual.desc, HOME_PAGE_FALLBACKS.featuresSection.items.multilingual.description),
     },
     {
       icon: Shield,
-      title: t('home.features.secure.title', HOME_PAGE_FALLBACKS.featuresSection.items.secure.title),
-      description: t('home.features.secure.desc', HOME_PAGE_FALLBACKS.featuresSection.items.secure.description),
+      title: t(TRANSLATION_KEY.home.features.secure.title, HOME_PAGE_FALLBACKS.featuresSection.items.secure.title),
+      description: t(TRANSLATION_KEY.home.features.secure.desc, HOME_PAGE_FALLBACKS.featuresSection.items.secure.description),
     },
     {
       icon: Clock,
-      title: t('home.features.auto_save.title', HOME_PAGE_FALLBACKS.featuresSection.items.autoSave.title),
-      description: t('home.features.auto_save.desc', HOME_PAGE_FALLBACKS.featuresSection.items.autoSave.description),
+      title: t(TRANSLATION_KEY.home.features.auto_save.title, HOME_PAGE_FALLBACKS.featuresSection.items.autoSave.title),
+      description: t(TRANSLATION_KEY.home.features.auto_save.desc, HOME_PAGE_FALLBACKS.featuresSection.items.autoSave.description),
     },
     {
       icon: Users,
-      title: t('home.features.accessible.title', HOME_PAGE_FALLBACKS.featuresSection.items.accessible.title),
-      description: t('home.features.accessible.desc', HOME_PAGE_FALLBACKS.featuresSection.items.accessible.description),
+      title: t(TRANSLATION_KEY.home.features.accessible.title, HOME_PAGE_FALLBACKS.featuresSection.items.accessible.title),
+      description: t(TRANSLATION_KEY.home.features.accessible.desc, HOME_PAGE_FALLBACKS.featuresSection.items.accessible.description),
     },
     {
       icon: FileText,
-      title: t('home.features.guided.title', HOME_PAGE_FALLBACKS.featuresSection.items.guided.title),
-      description: t('home.features.guided.desc', HOME_PAGE_FALLBACKS.featuresSection.items.guided.description),
+      title: t(TRANSLATION_KEY.home.features.guided.title, HOME_PAGE_FALLBACKS.featuresSection.items.guided.title),
+      description: t(TRANSLATION_KEY.home.features.guided.desc, HOME_PAGE_FALLBACKS.featuresSection.items.guided.description),
     },
   ];
 
@@ -47,20 +48,20 @@ export function HomePage() {
         {/* Hero Section */}
         <section className="mx-auto w-full max-w-3xl text-center">
           <h1 className="text-display-lg font-bold tracking-tight text-foreground sm:text-display-2xl">
-            {t('home.hero.title', HOME_PAGE_FALLBACKS.hero.title)}
+            {t(TRANSLATION_KEY.home.hero.title, HOME_PAGE_FALLBACKS.hero.title)}
           </h1>
           <p className="mt-6 text-xl leading-relaxed text-muted-foreground">
-            {t('home.hero.description', HOME_PAGE_FALLBACKS.hero.description)}
+            {t(TRANSLATION_KEY.home.hero.description, HOME_PAGE_FALLBACKS.hero.description)}
           </p>
           <div className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             <Button asChild size="lg">
               <Link to="/wizard">
-                {t('home.hero.start_application', HOME_PAGE_FALLBACKS.hero.startApplication)}
+                {t(TRANSLATION_KEY.home.hero.start_application, HOME_PAGE_FALLBACKS.hero.startApplication)}
               </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
               <Link to="/components">
-                {t('home.hero.view_components', HOME_PAGE_FALLBACKS.hero.viewComponents)}
+                {t(TRANSLATION_KEY.home.hero.view_components, HOME_PAGE_FALLBACKS.hero.viewComponents)}
               </Link>
             </Button>
           </div>
@@ -69,7 +70,7 @@ export function HomePage() {
         {/* Features Grid */}
         <section className="w-full">
           <h2 className="mb-12 text-center text-display-md font-bold tracking-tight text-foreground">
-            {t('home.features.title', HOME_PAGE_FALLBACKS.featuresSection.title)}
+            {t(TRANSLATION_KEY.home.features.title, HOME_PAGE_FALLBACKS.featuresSection.title)}
           </h2>
           <dl className="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-3">
             {features.map((feature) => (
@@ -90,15 +91,15 @@ export function HomePage() {
         <section className="mx-auto w-full max-w-3xl text-center">
           <Card className="border-primary/20 bg-primary/5 p-8">
             <h2 className="text-display-sm font-bold tracking-tight text-foreground">
-              {t('home.cta.title', HOME_PAGE_FALLBACKS.cta.title)}
+              {t(TRANSLATION_KEY.home.cta.title, HOME_PAGE_FALLBACKS.cta.title)}
             </h2>
             <p className="mt-6 text-xl leading-relaxed text-muted-foreground">
-              {t('home.cta.description', HOME_PAGE_FALLBACKS.cta.description)}
+              {t(TRANSLATION_KEY.home.cta.description, HOME_PAGE_FALLBACKS.cta.description)}
             </p>
             <div className="mt-8">
               <Button asChild size="lg">
                 <Link to="/wizard">
-                  {t('home.cta.button', HOME_PAGE_FALLBACKS.cta.button)}
+                  {t(TRANSLATION_KEY.home.cta.button, HOME_PAGE_FALLBACKS.cta.button)}
                 </Link>
               </Button>
             </div>

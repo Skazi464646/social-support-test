@@ -192,5 +192,47 @@ export const TRANSLATION_KEY = {
       "copied": "common:actions.copied"
     },
     "submitted_at": "common:submitted_at"
+  },
+  
+  // Home Page
+  "home": {
+    "hero": {
+      "title": "home.hero.title",
+      "description": "home.hero.description",
+      "start_application": "home.hero.start_application",
+      "view_components": "home.hero.view_components"
+    },
+    "features": {
+      "title": "home.features.title",
+      "ai_assistance": {
+        "title": "home.features.ai_assistance.title",
+        "desc": "home.features.ai_assistance.desc"
+      },
+      "multilingual": {
+        "title": "home.features.multilingual.title",
+        "desc": "home.features.multilingual.desc"
+      },
+      "secure": {
+        "title": "home.features.secure.title",
+        "desc": "home.features.secure.desc"
+      },
+      "auto_save": {
+        "title": "home.features.auto_save.title",
+        "desc": "home.features.auto_save.desc"
+      },
+      "accessible": {
+        "title": "home.features.accessible.title",
+        "desc": "home.features.accessible.desc"
+      },
+      "guided": {
+        "title": "home.features.guided.title",
+        "desc": "home.features.guided.desc"
+      }
+    },
+    "cta": {
+      "title": "home.cta.title",
+      "description": "home.cta.description",
+      "button": "home.cta.button"
+    }
   }
 } as const;
