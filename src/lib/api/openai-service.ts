@@ -8,23 +8,97 @@
 
 
 import axios, { AxiosError, InternalAxiosRequestConfig, AxiosResponse } from 'axios';
-import { FormSubmissionError } from './form-submission';
-import { API_DEFAULTS, ERROR_MESSAGES } from '@/constants';
+import { API_DEFAULTS } from '@/constants';
 
 
 
-const OPEN_AI_BASE_URL = import.meta.env.VITE_OPENAI_API_KEY;;
 const REQUEST_TIMEOUT = API_DEFAULTS.requestTimeoutMs; // 30 seconds
 
 // Create axios instance with base configuration
 export const openaiApiClient = axios.create({
-  baseURL: OPEN_AI_BASE_URL,
+  baseURL: AI_ENDPOINTS.openaiChatCompletions,
   timeout: REQUEST_TIMEOUT,
   headers: {
+    'Authorization': `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   },
 });
+
+openaiApiClient.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    // Add request ID for tracking
+    const requestId = crypto.randomUUID();
+    config.headers.set('X-Request-ID', requestId);
+    config.headers.set('X-Timestamp', new Date().toISOString());
+
+    // Log requests in development
+    if (import.meta.env.DEV) {
+      console.log(`[API Request] ${config.method?.toUpperCase()} ${config.url}`, {
+        requestId,
+        data: config.data,
+        params: config.params,
+      });
+    }
+
+    return config;
+  },
+  (error: AxiosError) => {
+    if (import.meta.env.DEV) {
+      console.error('[API Request Error]', error);
+    }
+    return Promise.reject(error);
+  }
+);
+
+// =============================================================================
+// RESPONSE INTERCEPTOR  
+// =============================================================================
+
+openaiApiClient.interceptors.response.use(
+  (response: AxiosResponse) => {
+    // Log successful responses in development
+    if (import.meta.env.DEV) {
+      const requestId = response.config.headers?.['X-Request-ID'];
+      const retryCount = response.config.metadata?.retryCount || 0;
+      console.log(`[openaiApiClient API Response] ${response.status} ${response.config.url}`, {
+        requestId,
+        data: response.data,
+        retryCount: retryCount > 0 ? retryCount : undefined,
+         duration: response.config.metadata?.endTime &&
+        response.config.metadata?.startTime 
+                  ? response.config.metadata.endTime - 
+      response.config.metadata.startTime 
+                  : undefined,
+      });
+    }
+
+    return response;
+  },
+  async (error: AxiosError) => {
+    const requestId = error.config?.headers?.['X-Request-ID'];
+    const originalRequest = error.config;
+    
+    // Initialize retry count if not present
+    if (originalRequest && !originalRequest.metadata) {
+      originalRequest.metadata = { startTime: Date.now(), retryCount: 0 };
+    }
+    
+    // Log errors in development
+    if (import.meta.env.DEV) {
+      console.error(`[API Error] ${error.response?.status || 'Network'} ${error.config?.url}`, {
+        requestId,
+        error: error.message,
+        response: error.response?.data,
+        retryCount: originalRequest?.metadata?.retryCount || 0,
+      });
+    }
+
+    // =============================================================================
+    // AUTOMATIC RETRY LOGIC
+    // =============================================================================
+  }
+);
 
 
 import { 
@@ -76,6 +150,31 @@ class OpenAIService {
 
   get isAvailable(): boolean {
     return !!this.apiKey;
+  }
+
+  /**
+   * Make a streaming request using fetch with openaiApiClient configuration
+   * Axios doesn't support ReadableStream in browsers, so we use fetch for streaming
+   */
+  private async streamingRequest(
+    body: OpenAIRequest,
+    requestId: string,
+    signal?: AbortSignal
+  ): Promise<Response> {
+    // Build headers compatible with fetch, using openaiApiClient configuration
+    const headers = new Headers({
+      'Authorization': `Bearer ${this.apiKey}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'X-Request-ID': requestId,
+    });
+
+    return fetch(this.baseURL, {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(body),
+      signal,
+    });
   }
 
   async generateSuggestion(
@@ -174,16 +273,8 @@ class OpenAIService {
               model: openAIRequest.model,
             }));
 
-            const response = await fetch(this.baseURL, {
-              method: 'POST',
-              headers: {
-                'Authorization': `Bearer ${this.apiKey}`,
-                'Content-Type': 'application/json',
-                'X-Request-ID': requestId,
-              },
-              body: JSON.stringify(openAIRequest),
-              signal: abortSignal,
-            });
+            // Use streamingRequest which applies openaiApiClient configuration
+            const response = await this.streamingRequest(openAIRequest, requestId, abortSignal);
 
             if (!response.ok) {
               const errorText = await response.text();
@@ -311,22 +402,10 @@ class OpenAIService {
           model: openAIRequest.model,
         }));
 
-        const response = await fetch(this.baseURL, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json',
-            'X-Request-ID': requestId,
-          },
-          body: JSON.stringify(openAIRequest),
-        });
+        // Use openaiApiClient for non-streaming requests
+        const response = await openaiApiClient.post('', openAIRequest);
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`OpenAI API error: ${response.status} ${response.statusText} - ${redactPII(errorText)}`);
-        }
-
-        const data = await response.json();
+        const data = response.data;
         const content = data.choices[0]?.message?.content || '';
         
         // Parse examples from response (assuming they're separated by numbered lines or special markers)
@@ -470,22 +549,10 @@ class OpenAIService {
           model: openAIRequest.model,
         }));
 
-        const response = await fetch(this.baseURL, {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${this.apiKey}`,
-            'Content-Type': 'application/json',
-            'X-Request-ID': requestId,
-          },
-          body: JSON.stringify(openAIRequest),
-        });
+        // Use openaiApiClient for non-streaming requests
+        const response = await openaiApiClient.post('', openAIRequest);
 
-        if (!response.ok) {
-          const errorText = await response.text();
-          throw new Error(`OpenAI API error: ${response.status} ${response.statusText} - ${redactPII(errorText)}`);
-        }
-
-        const data = await response.json();
+        const data = response.data;
         const content = data.choices[0]?.message?.content || '';
         
         // Parse relevancy response
