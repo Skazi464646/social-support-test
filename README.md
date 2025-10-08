@@ -94,7 +94,9 @@
 - **Husky** - Git hooks
 - **lint-staged** - Pre-commit linting
 
-## 🏗 Architecture // move 
+## 🏗 Architecture 
+
+Flow Diagram SS - 
 
 ### Application Flow
 
