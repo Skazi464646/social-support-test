@@ -158,6 +158,7 @@
   "submission_success_message": "تم إرسال طلبك برقم: {{applicationId}}",
   "start_new_application": "بدء طلب جديد",
   "processing_time": "وقت المعالجة",
+  "estimated_processing_time_default": "من 5 إلى 7 أيام عمل",
   "next_steps": "الخطوات التالية",
   "next_steps_items": {
     "review_application": "سيتم مراجعة طلبك خلال يومي عمل",
@@ -165,6 +166,7 @@
     "keep_application_id": "احتفظ برقم طلبك للرجوع إليه في المستقبل"
   },
   "application_reference_note": "يرجى حفظ رقم طلبك للرجوع إليه في المستقبل",
+  "numberOfDependents_placeholder": "0",
   "application_id": "رقم الطلب:",
   "confirmation_email_sent": "تم إرسال رسالة تأكيد إلى عنوان بريدك الإلكتروني المسجل.",
   "notice_title": "معلومات مهمة",

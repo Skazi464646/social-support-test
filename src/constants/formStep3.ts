@@ -1,3 +1,48 @@
+// =============================================================================
+// FIELD NAMES
+// =============================================================================
+
+export const FORM_STEP3_FIELD_NAMES = {
+  financialSituation: 'financialSituation',
+  employmentCircumstances: 'employmentCircumstances',
+  reasonForApplying: 'reasonForApplying',
+  additionalComments: 'additionalComments',
+  agreeToTerms: 'agreeToTerms',
+  consentToDataProcessing: 'consentToDataProcessing',
+  allowContactForClarification: 'allowContactForClarification',
+} as const;
+
+// =============================================================================
+// VALIDATION CONSTRAINTS
+// =============================================================================
+
+export const FORM_STEP3_VALIDATION = {
+  financialSituation: {
+    MIN_LENGTH: 50,
+    MAX_LENGTH: 2000,
+    ROWS: 5,
+  },
+  employmentCircumstances: {
+    MIN_LENGTH: 50,
+    MAX_LENGTH: 2000,
+    ROWS: 5,
+  },
+  reasonForApplying: {
+    MIN_LENGTH: 50,
+    MAX_LENGTH: 2000,
+    ROWS: 5,
+  },
+  additionalComments: {
+    MIN_LENGTH: 0,
+    MAX_LENGTH: 1000,
+    ROWS: 4,
+  },
+} as const;
+
+// =============================================================================
+// FALLBACK TRANSLATIONS
+// =============================================================================
+
 export const FORM_STEP3_FALLBACKS = {
   header: {
     title: 'Detailed Information',

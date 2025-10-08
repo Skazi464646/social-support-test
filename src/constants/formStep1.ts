@@ -1,3 +1,60 @@
+// =============================================================================
+// FIELD NAMES
+// =============================================================================
+
+export const FORM_STEP1_FIELD_NAMES = {
+  fullName: 'fullName',
+  nationalId: 'nationalId',
+  dateOfBirth: 'dateOfBirth',
+  gender: 'gender',
+  email: 'email',
+  phone: 'phone',
+  address: 'address',
+  city: 'city',
+  state: 'state',
+  country: 'country',
+  postalCode: 'postalCode',
+} as const;
+
+// =============================================================================
+// FIELD VALUES
+// =============================================================================
+
+export const FORM_STEP1_VALUES = {
+  gender: {
+    MALE: 'male',
+    FEMALE: 'female',
+    OTHER: 'other',
+    PREFER_NOT_TO_SAY: 'preferNotToSay',
+    EMPTY: '',
+  },
+  country: {
+    AE: 'AE',
+    SA: 'SA',
+    QA: 'QA',
+    KW: 'KW',
+    BH: 'BH',
+    OM: 'OM',
+    JO: 'JO',
+    LB: 'LB',
+    EG: 'EG',
+    OTHER: 'OTHER',
+    EMPTY: '',
+  },
+} as const;
+
+// =============================================================================
+// VALIDATION CONSTRAINTS
+// =============================================================================
+
+export const FORM_STEP1_VALIDATION = {
+  // No specific numeric constraints for Step 1 yet
+} as const;
+
+// =============================================================================
+// FALLBACK TRANSLATIONS
+// =============================================================================
+
 export const FORM_STEP1_FALLBACKS = {
   header: {
     title: 'Personal Information',

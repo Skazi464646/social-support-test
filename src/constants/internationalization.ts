@@ -170,6 +170,7 @@ export const TRANSLATION_KEY = {
   "submission_success_message": "submission_success_message",
   "start_new_application": "start_new_application",
   "processing_time": "processing_time",
+  "estimated_processing_time_default": "estimated_processing_time_default",
   "next_steps": "next_steps",
   "next_steps_items": {
     "review_application": "next_steps_items.review_application",
@@ -179,6 +180,9 @@ export const TRANSLATION_KEY = {
   "application_reference_note": "application_reference_note",
   "application_id": "application_id",
   "confirmation_email_sent": "confirmation_email_sent",
+  
+  // Form Step 2 - Placeholders
+  "numberOfDependents_placeholder": "numberOfDependents_placeholder",
   
   // Common actions (with namespace prefix)
   "common": {

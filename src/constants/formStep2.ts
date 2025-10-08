@@ -1,3 +1,87 @@
+// =============================================================================
+// FIELD NAMES
+// =============================================================================
+
+export const FORM_STEP2_FIELD_NAMES = {
+  maritalStatus: 'maritalStatus',
+  numberOfDependents: 'numberOfDependents',
+  employmentStatus: 'employmentStatus',
+  occupation: 'occupation',
+  employer: 'employer',
+  monthlyIncome: 'monthlyIncome',
+  monthlyExpenses: 'monthlyExpenses',
+  totalSavings: 'totalSavings',
+  totalDebt: 'totalDebt',
+  housingStatus: 'housingStatus',
+  monthlyRent: 'monthlyRent',
+  receivingBenefits: 'receivingBenefits',
+  benefitTypes: 'benefitTypes',
+  previouslyApplied: 'previouslyApplied',
+} as const;
+
+// =============================================================================
+// FIELD VALUES
+// =============================================================================
+
+export const FORM_STEP2_VALUES = {
+  maritalStatus: {
+    SINGLE: 'single',
+    MARRIED: 'married',
+    DIVORCED: 'divorced',
+    WIDOWED: 'widowed',
+    SEPARATED: 'separated',
+    EMPTY: '',
+  },
+  employmentStatus: {
+    EMPLOYED_FULL_TIME: 'employed_full_time',
+    EMPLOYED_PART_TIME: 'employed_part_time',
+    SELF_EMPLOYED: 'self_employed',
+    UNEMPLOYED: 'unemployed',
+    RETIRED: 'retired',
+    STUDENT: 'student',
+    DISABLED: 'disabled',
+    EMPTY: '',
+  },
+  housingStatus: {
+    OWN: 'own',
+    RENT: 'rent',
+    LIVING_WITH_FAMILY: 'living_with_family',
+    HOMELESS: 'homeless',
+    OTHER: 'other',
+    EMPTY: '',
+  },
+  benefitTypes: {
+    UNEMPLOYMENT: 'unemployment',
+    DISABILITY: 'disability',
+    HOUSING: 'housing',
+    FOOD: 'food',
+    MEDICAL: 'medical',
+    ELDERLY: 'elderly',
+    FAMILY: 'family',
+    OTHER: 'other',
+  },
+  boolean: {
+    TRUE: 'true',
+    FALSE: 'false',
+    EMPTY: '',
+  },
+} as const;
+
+// =============================================================================
+// VALIDATION CONSTRAINTS
+// =============================================================================
+
+export const FORM_STEP2_VALIDATION = {
+  numberOfDependents: {
+    MIN: 0,
+    MAX: 20,
+  },
+} as const;
+
+// =============================================================================
+// FALLBACK TRANSLATIONS
+// =============================================================================
+
 export const FORM_STEP2_FALLBACKS = {
   header: {
     title: 'Financial Information',

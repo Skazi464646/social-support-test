@@ -191,6 +191,7 @@
   "submission_success_message": "Your application has been submitted with ID: {{applicationId}}",
   "start_new_application": "Start New Application",
   "processing_time": "Processing time",
+  "estimated_processing_time_default": "5-7 business days",
   "next_steps": "Next Steps",
   "next_steps_items": {
     "review_application": "We will review your application within 2 business days",
@@ -198,6 +199,7 @@
     "keep_application_id": "Keep your application ID for future reference"
   },
   "application_reference_note": "Please save your application ID for future reference",
+  "numberOfDependents_placeholder": "0",
   "application_id": "Application ID:",
   "confirmation_email_sent": "A confirmation email has been sent to your registered email address.",
   "notice_title": "Important Information",

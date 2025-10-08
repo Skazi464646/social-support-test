@@ -273,13 +273,13 @@ export function FormWizard() {
       const submissionDetails: SubmissionDetails = {
         applicationId: response.applicationId,
         submittedAt: new Date().toISOString(),
-        estimatedProcessingTime: response.processingTime || '5-7 business days',
+        estimatedProcessingTime: response.processingTime || t(TRANSLATION_KEY.estimated_processing_time_default, '5-7 business days'),
         nextSteps: [
           t(TRANSLATION_KEY.next_steps_items.review_application, 'We will review your application within 2 business days'),
           t(TRANSLATION_KEY.next_steps_items.email_updates, 'You will receive email updates on your application status'),
           t(TRANSLATION_KEY.next_steps_items.keep_application_id, 'Keep your application ID for future reference')
         ],
-        message: t('submission_success_message', { applicationId: response.applicationId })
+        message: t(TRANSLATION_KEY.submission_success_message, { applicationId: response.applicationId })
       };
 
       setSubmissionDetails(submissionDetails);
