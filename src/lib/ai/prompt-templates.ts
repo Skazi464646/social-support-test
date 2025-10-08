@@ -6,6 +6,7 @@
 
 import type { AIFormContext } from '@/hooks/useAIFormContext';
 import { AI_FIELD_DEFAULTS } from '@/constants';
+// import { PROMPT_TEMPLATE_SHARED, PROMPT_TEMPLATE_FIELDS, PROMPT_TEMPLATE_MODAL_CONFIG, PROMPT_TEMPLATE_FIELD_LABELS, PROMPT_TEMPLATE_MESSAGES, PROMPT_TEMPLATE_CONTEXT_HINTS, PROMPT_TEMPLATE_EXAMPLE_GENERATION, PROMPT_TEMPLATE_RELEVANCY } from '@/constants/promptTemplates';
 import { 
   analyzeFieldIntelligence, 
   detectFieldContext,
@@ -46,21 +47,31 @@ export interface PromptTemplate {
  */
 export const FIELD_PROMPT_TEMPLATES: Record<string, PromptTemplate> = {
   financialSituation: {
-    systemPrompt: `You are a helpful assistant that helps people write clear, professional descriptions of their financial circumstances for social support applications. 
+    systemPrompt: `You are a rewriting engine that helps people write clear, professional descriptions of their financial circumstances for social support applications. 
 
 Your role is to:
 - Help users articulate their financial challenges clearly and respectfully
-- Maintain dignity while communicating genuine need
 - Use appropriate tone for government/social service contexts
 - Focus on facts and circumstances rather than emotions
-- Ensure descriptions are specific enough to be useful for case workers
+- Ensure rewrite without adding any introductory or explanatory text.
 
 Guidelines:
+- Do not include you words/thoughts in the response
+- Do not add any word which you say only spit the response
+-and NO additional commentary, analysis, or explanation. 
 - Keep responses 2-4 sentences (50-200 words)
 - Use professional but accessible language
 - Focus on circumstances, not blame
 - Include specific impacts when possible
-- Maintain respectful, factual tone`,
+- Maintain respectful, factual tone
+You are a rewriting engine.
+
+Rules:
+- Never add explanations, introductions, or commentary before or after the rewritten text.
+- Return ONLY the final rewritten text. No greetings. No meta statements.
+- Do not describe what you are doing.
+- Do not explain why the text is rewritten.
+- Never say phrases like "here's the refined version", "this version", "I can help", or similar.`,
     
     userPrompt: (context: PromptContext) => {
       const { userContext, currentValue, fieldConstraints } = context;
@@ -106,7 +117,10 @@ Guidelines:
       "Should explain the cause of financial difficulty",
       "Must maintain professional tone",
       "Should indicate temporary nature if applicable",
-      "Must not include personal blame or negative language about others"
+      "Must not include personal blame or negative language about others",
+      "and NO additional commentary, analysis, or explanation. ",
+         "Do not include you words/thoughts in the response",
+      "Do not add any word which you say only spit the response"
     ]
   },
 
@@ -119,13 +133,20 @@ Your role is to:
 - Highlight any efforts being made to improve the situation
 - Focus on factual circumstances rather than personal opinions
 - Use language appropriate for case workers and administrators
+-Ensure guidance without adding any introductory or explanatory text.
 
 Guidelines:
+-Do not add introductory or explanatory text. Just raw output without your thoughts and user greeting
+- Do not include you words/thoughts in the response
+- Do not add any word which you say only spit the response
+-and NO additional commentary, analysis, or explanation. 
 - Keep responses 2-3 sentences (40-150 words)
 - Be specific about current employment status
 - Mention job search efforts if applicable
 - Include any skills development or training
-- Maintain optimistic but realistic tone`,
+- Maintain optimistic but realistic tone
+- Do not add any of your own thoughts in the response only help to craft the suggestion.
+- Do not add any of your words.`,
     
     userPrompt: (context: PromptContext) => {
       const { userContext, currentValue, fieldConstraints } = context;
@@ -164,7 +185,12 @@ Guidelines:
       "Should mention any job search or improvement efforts",
       "Must maintain professional, forward-looking tone",
       "Should be specific about challenges without being negative",
-      "Must not criticize employers or express frustration"
+      "Must not criticize employers or express frustration",
+      "and NO additional commentary, analysis, or explanation.",
+         "Do not include you words/thoughts in the response",
+      "Do not add any word which you say only spit the response",
+      "Do not add any of your own thoughts in the response only help to craft the suggestion",
+"Do not add any of your words."
     ]
   },
 
@@ -179,11 +205,16 @@ Your role is to:
 - Use language that shows responsibility and forward planning
 
 Guidelines:
+- Do not include you words/thoughts in the response
+- Do not add any word which you say only spit the response
+-and NO additional commentary, analysis, or explanation. 
 - Keep responses 2-4 sentences (60-200 words)
 - Be specific about how assistance will be used
 - Connect assistance to improving stability
 - Show forward-thinking and responsibility
-- Maintain grateful but not desperate tone`,
+- Maintain grateful but not desperate tone
+- Do not add any of your own thoughts in the response only help to craft the suggestion.
+- Do not add any of your words.`,
     
     userPrompt: (context: PromptContext) => {
       const { userContext, currentValue, fieldConstraints } = context;
@@ -211,7 +242,10 @@ Guidelines:
 1. What specific assistance is needed
 2. How this assistance will help improve the situation
 3. Any steps being taken toward self-sufficiency
-4. The expected timeframe for needing support`;
+4. The expected timeframe for needing support
+- Do not add any of your own thoughts in the response only help to craft the suggestion.
+- Do not add any of your words.
+`;
       
       return prompt;
     },
@@ -227,7 +261,11 @@ Guidelines:
       "Should explain how assistance will improve the situation",
       "Must show forward-thinking and planning",
       "Should indicate timeframe expectations",
-      "Must demonstrate responsibility and effort toward self-sufficiency"
+      "Must demonstrate responsibility and effort toward self-sufficiency",
+      "Do not include you words/thoughts in the response",
+      "Do not add any word which you say only spit the response",
+      "Do not add any of your own thoughts in the response only help to craft the suggestion",
+"Do not add any of your words."
     ]
   },
 
@@ -242,11 +280,17 @@ Your role is to:
 - Avoid redundant information already covered elsewhere
 
 Guidelines:
+- Do not include you words/thoughts in the response
+- Do not add any word which you say only spit the response
+-and NO additional commentary, analysis, or explanation. 
 - Keep responses 1-3 sentences (30-150 words)
 - Focus on unique, relevant information
 - Use professional but personal tone
 - Include specific details when helpful
-- Maintain dignity and respect`,
+- Maintain dignity and respect
+- Do not add any of your own thoughts in the response only help to craft the suggestion.
+- Do not add any of your words.
+`,
     
     userPrompt: (context: PromptContext) => {
       const { userContext, currentValue, fieldConstraints } = context;
@@ -268,7 +312,10 @@ Guidelines:
 1. Adds value to the application without repeating other sections
 2. Includes relevant personal circumstances (health, family, etc.)
 3. Maintains professional tone while being personal
-4. Provides context that helps evaluators understand the situation better`;
+4. Provides context that helps evaluators understand the situation better
+5. Do not add any of your own thoughts in the response only help to craft the suggestion.
+6. Do not add any of your words.
+`;
       
       return prompt;
     },
@@ -284,7 +331,9 @@ Guidelines:
       "Must be relevant to the support request",
       "Should maintain appropriate level of personal detail",
       "Must not include overly sensitive medical/personal information",
-      "Should demonstrate how circumstances affect the application"
+      "Should demonstrate how circumstances affect the application",
+      "Do not add any of your own thoughts in the response only help to craft the suggestion",
+  "Do not add any of your words."
     ]
   }
 };
@@ -335,9 +384,9 @@ export function buildSmartUserPrompt(
   const contentAnalysis = analyzeContentRelevance(fieldName, context.currentValue, fieldLabel);
   
   // Handle redirect strategy (irrelevant/vague content)
-  if (contentAnalysis.promptStrategy === 'redirect') {
-    return buildRedirectPrompt(fieldName, fieldLabel, contentAnalysis.redirectReason!);
-  }
+  // if (contentAnalysis.promptStrategy === 'redirect') {
+  //   return buildRedirectPrompt(fieldName, fieldLabel, contentAnalysis.redirectReason!);
+  // }
 
   // Analyze field intelligence if intelligent context is provided
   const fieldIntelligence = intelligentContext 
@@ -563,7 +612,7 @@ function getDefaultSystemPrompt(language: 'en' | 'ar'): string {
     return `أنت مساعد مفيد يساعد الأشخاص في تحسين كتابتهم لطلبات الدعم الاجتماعي. قدم اقتراحات واضحة ومهنية ومحترمة.`;
   }
   
-  return `You are a helpful assistant that helps people improve their writing for social support applications. Provide clear, professional, and respectful suggestions.If User provided a value, use it to improve the prompt.`;
+  return `You are a You are a rewriting engine that helps people improve their writing for social support applications. Provide clear, professional, and respectful suggestions.If User provided a value, use it to improve the prompt.Please only respond with the value, do not reply with extra words.-Do not add any of your own thoughts in the response only help to craft the suggestion. Do not add any of your words.`;
 }
 
 /**
@@ -734,7 +783,7 @@ function getIntelligentGuidance(
 function buildDefaultPrompt(fieldName: string, context: PromptContext): string {
   const { currentValue, fieldConstraints } = context;
   
-  let prompt = `Help improve this ${fieldName} field for a social support application.`;
+  let prompt = `You are a rewriting engine. Help improve this ${fieldName} field for a social support application.`;
   prompt += `\n\nCurrent content: "${currentValue || '[empty]'}"`;
   
   if (fieldConstraints?.minLength) {
@@ -744,7 +793,16 @@ function buildDefaultPrompt(fieldName: string, context: PromptContext): string {
     prompt += `\nMaximum length: ${fieldConstraints.maxLength} characters`;
   }
   
-  prompt += `\n\nPlease provide an improved version that is clear, professional, and appropriate for a social support application.`;
+  prompt += `\n\nPlease provide an improved version adding to the Current content  that is clear, professional, and appropriate for a social support application.
+  - Do not add any of your own thoughts in the response only help to craft the suggestion.
+- Do not add any of your words.
+
+Rules:
+- Never add explanations, introductions, or commentary before or after the rewritten text.
+- Return ONLY the final rewritten text. No greetings. No meta statements.
+- Do not describe what you are doing.
+- Do not explain why the text is rewritten.
+- Never say phrases like "here's the refined version", "this version", "I can help", or similar.`;
   
   return prompt;
 }
@@ -873,7 +931,14 @@ Instead, please describe your specific ${fieldLabel}. For example, you could sha
 - What specific support you need and why
 - Any relevant background information about your situation
 
-This will help me provide much better, more relevant assistance for your ${fieldLabel}.`;
+This will help me provide much better, more relevant assistance for your ${fieldLabel}.
+
+Rules:
+- Never add explanations, introductions, or commentary before or after the rewritten text.
+- Return ONLY the final rewritten text. No greetings. No meta statements.
+- Do not describe what you are doing.
+- Do not explain why the text is rewritten.
+- Never say phrases like "here's the refined version", "this version", "I can help", or similar.`;
 }
 
 /**
@@ -915,7 +980,17 @@ I'll improve this by:`;
     }
   }
 
-  prompt += `\n\nPlease provide an enhanced version that is:\n- More detailed and specific\n- Professional yet personal\n- Clear about your needs and circumstances\n- Appropriate for a social support application`;
+  prompt += `\n\nPlease provide an enhanced version that is:\n- More detailed and specific\n- Professional yet personal\n- Clear about your needs and circumstances\n- Appropriate for a social support application.
+  Note:
+  - Do not add any of your own thoughts in the response only help to craft the suggestion.
+  - Do not add any of your words.
+
+  Rules:
+- Never add explanations, introductions, or commentary before or after the rewritten text.
+- Return ONLY the final rewritten text. No greetings. No meta statements.
+- Do not describe what you are doing.
+- Do not explain why the text is rewritten.
+- Never say phrases like "here's the refined version", "this version", "I can help", or similar.`;
 
   return prompt;
 }
@@ -948,7 +1023,11 @@ function buildGenerationPrompt(fieldName: string, context: EnhancedPromptContext
     }
   }
 
-  prompt += `\n\nI'll create a description that is:\n- Specific to your situation\n- Professional and compelling\n- Appropriate length and detail\n- Focused on your needs and circumstances`;
+  prompt += `\n\nI'll create a description that is:\n- Specific to your situation\n- Professional and compelling\n- Appropriate length and detail\n- Focused on your needs and circumstances.
+    Note:
+    - Do not add any of your own thoughts in the response only help to craft the suggestion.
+    - Do not add any of your words.
+  `;
 
   return prompt;
 }
@@ -1123,7 +1202,7 @@ export function buildRelevancySystemPrompt(fieldName: string, language: 'en' | '
   
   return `You are an AI assistant that evaluates if user input is relevant to a specific form field.
 
-Your job is to determine if the user's input- ${userInput} is relevant to the "${fieldLabel}" field in a financial assistance application.
+Your job is to determine if the user's input- ${userInput} is relevant to the "${fieldLabel}" field in a government financial assistance/support application. If You feel that more information should be provided then directly lower the relevancyScore
 
 Evaluate the input and respond with a JSON object:
 {

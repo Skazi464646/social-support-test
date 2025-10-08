@@ -119,7 +119,7 @@ const extractSafeContext = (stepData: Record<string, any>, stepKey: string): Rec
   // Define which fields are safe to include in AI context
   const safeFields = {
     step1: ['gender', 'city', 'state', 'country'], // Exclude PII like names, IDs, emails
-    step2: ['maritalStatus', 'numberOfDependents', 'employmentStatus', 'housingStatus', 'receivingBenefits', 'previouslyApplied'],
+    step2: ['maritalStatus', 'numberOfDependents', 'employmentStatus', 'housingStatus', 'receivingBenefits', 'previouslyApplied',"monthlyExpenses","monthlyIncome","monthlyRent","totalDebt","totalSavings"],
     step3: ['agreeToTerms', 'consentToDataProcessing', 'allowContactForClarification'],
   } as const;
 
