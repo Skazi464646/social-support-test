@@ -15,9 +15,6 @@
 - [Getting Started](#-getting-started)
 - [Environment Variables](#-environment-variables)
 - [Project Structure](#-project-structure)
-- [Development](#-development)
-- [Testing](#-testing)
-- [Building](#-building)
 - [Deployment](#-deployment)
 - [Contributing](#-contributing)
 - [License](#-license)
@@ -45,13 +42,13 @@
 [Insert screenshots or GIF demo here]
 
 ### Step 1: Personal Information
-![Step 1 Screenshot](docs/screenshots/step1.png)
+![Step 1 Screenshot](./public/images/projectSS/Step1.png)
 
 ### Step 2: Family & Financial Info
-![Step 2 Screenshot](docs/screenshots/step2.png)
+![Step 2 Screenshot](./public/images/projectSS/Step2.png)
 
 ### Step 3: AI-Assisted Writing
-![Step 3 Screenshot](docs/screenshots/step3.png)
+![Step 3 Screenshot](./public/images/projectSS/Step3.png)
 
 ## 🛠 Tech Stack
 
@@ -598,8 +595,6 @@ social-support-portal/
 ├── README.md                 # This file
 └── LICENSE                   # MIT License
 ```
-
-## 💻 Development
 
 ### Available Scripts
 

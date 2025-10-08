@@ -37,12 +37,10 @@ export const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Add request ID for tracking
     const requestId = crypto.randomUUID();
     config.headers.set('X-Request-ID', requestId);
     config.headers.set('X-Timestamp', new Date().toISOString());
 
-    // Log requests in development
   
     return config;
   },
@@ -65,15 +63,12 @@ apiClient.interceptors.response.use(
     const requestId = error.config?.headers?.['X-Request-ID'];
     const originalRequest = error.config;
     
-    // Initialize retry count if not present
     if (originalRequest && !originalRequest.metadata) {
       originalRequest.metadata = { startTime: Date.now(), retryCount: 0 };
     }
     
-    // Convert error to FormSubmissionError first
     const formError = convertToFormSubmissionError(error);
     
-    // Check if we should retry
     if (originalRequest && shouldRetryRequest(formError, originalRequest)) {
       const retryCount = (originalRequest.metadata?.retryCount || 0) + 1;
       originalRequest.metadata = {
@@ -83,18 +78,14 @@ apiClient.interceptors.response.use(
         startTime: Date.now(),
       };
       
-      // Calculate retry delay
       const delay = calculateRetryDelay(formError, retryCount);
       
       
-      // Wait before retrying
       await new Promise(resolve => setTimeout(resolve, delay));
       
-      // Retry the request
       try {
         return await apiClient.request(originalRequest);
       } catch (retryError) {
-        // If retry fails, continue to error handling below
         if (import.meta.env.DEV) {
           console.error(`[API Retry Failed] Attempt ${retryCount}/${MAX_RETRIES}`, {
             requestId,
