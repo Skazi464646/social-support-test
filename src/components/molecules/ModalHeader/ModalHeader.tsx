@@ -28,11 +28,6 @@ export function ModalHeader({
           <h2 id="modal-title" className="text-xl font-semibold text-text-primary">
             {title}
           </h2>
-          {description && (
-            <p id="modal-description" className="text-sm text-text-secondary mt-1">
-              {description}
-            </p>
-          )}
         </div>
         <button
           type="button"

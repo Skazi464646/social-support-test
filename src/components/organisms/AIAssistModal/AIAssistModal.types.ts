@@ -25,3 +25,10 @@ export interface Suggestion {
   confidence?: number;
 }
 
+
+export type AiAssistModalFooterProps = {
+  onClose:()=>void,
+  acceptSuggestion:()=>void
+  editedText:string
+  isValidLength:boolean
+}

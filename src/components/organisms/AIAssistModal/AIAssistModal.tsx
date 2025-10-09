@@ -15,6 +15,7 @@ import { useNoScrollBody } from '@/hooks';
 import type { AIAssistModalProps, Suggestion } from './AIAssistModal.types';
 import { AIExampleRequest,AIAssistRequest } from '@/lib/api/interface';
 import { ModalHeader } from '@/components/molecules/ModalHeader';
+import AiAssistModalFooter from './AiAssistModalFooter';
 
 export function AIAssistModal({
   isOpen,
@@ -306,27 +307,29 @@ export function AIAssistModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-bg-black/50 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-bg-black/50 z-50 p-0 sm:p-4 sm:flex sm:items-center sm:justify-center">
       <div
         ref={modalRef}
-        className="bg-white text-gray-900 border border-gray-200 rounded-lg shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden focus:outline-none"
-
+        className="bg-white text-gray-900 border-0 sm:border sm:border-gray-200 rounded-none sm:rounded-lg shadow-2xl w-full h-full sm:max-w-4xl sm:w-full sm:max-h-[90vh] sm:h-auto overflow-y-auto focus:outline-none"
         tabIndex={-1}
         role="dialog"
         aria-labelledby="ai-modal-title"
         aria-describedby="ai-modal-description"
       >
-        {/* Header */}
-        <ModalHeader
-          title={fieldConfig.title}
-          description={fieldConfig.description}
-          onClose={onClose}
-          closeAriaLabel={t(TRANSLATION_KEY.modalHeader.close_aria_label, AI_MESSAGES.modal.closeAriaLabel)}
-        />
+        {/* Header - Sticky */}
+        <div className="sticky top-0 bg-white z-10">
+          <ModalHeader
+            title={fieldConfig.title}
+            description={fieldConfig.description}
+            onClose={onClose}
+            closeAriaLabel={t(TRANSLATION_KEY.modalHeader.close_aria_label, AI_MESSAGES.modal.closeAriaLabel)}
+          />
+        </div>
 
-        <div className="flex flex-col lg:flex-row lg:h-[60vh] max-h-[80vh]">
+        {/* Main Content */}
+        <div className="flex flex-col lg:flex-row min-h-[calc(100vh-120px)] sm:min-h-0">
           {/* Left Panel - Suggestions */}
-          <div className="w-full lg:w-1/3 flex flex-col border-border border-b lg:border-b-0 lg:border-r">
+          <div className="w-full lg:w-1/3 flex flex-col border-border border-b lg:border-b-0 lg:border-r lg:min-h-[60vh]">
             <div className="p-4 border-b border-muted-border">
               <div className="flex flex-col sm:flex-row gap-2">
                 <button
@@ -391,7 +394,7 @@ export function AIAssistModal({
               )}
             </div>
 
-            <div className="flex-1 overflow-y-auto">
+            <div className="flex-1 lg:max-h-[50vh] lg:overflow-y-auto">
               {/* Error Display */}
               {error && (
                 <div className="p-4 bg-destructive-light border-b border-destructive-border">
@@ -491,7 +494,7 @@ export function AIAssistModal({
           </div>
 
           {/* Right Panel - Editor */}
-          <div className="flex-1 w-full flex flex-col">
+          <div className="flex-1 w-full flex flex-col lg:min-h-[60vh]">
             <div className="p-4 border-b border-border">
               <div className="flex items-center justify-between">
                 <h3 className="font-medium text-text-primary">{t(TRANSLATION_KEY.aiModal.edit_your_response, TRANSLATION_KEY.translation_values.edit_your_response)}</h3>
@@ -527,7 +530,7 @@ export function AIAssistModal({
               </div>
             </div>
 
-            <div className="flex-1 p-4">
+            <div className="flex-1 p-4 lg:max-h-[50vh] lg:overflow-y-auto">
               <div className="h-full flex flex-col">
                 <textarea
                   ref={textareaRef}
@@ -541,7 +544,7 @@ export function AIAssistModal({
                         ? t(TRANSLATION_KEY.aiModal.select_placeholder, AI_MESSAGES.modal.selectPlaceholder)
                         : fieldConfig.placeholder
                   }
-                  className={`w-full flex-1 p-3 border rounded-md resize-none transition-all duration-200 focus:outline-none focus:border-primary focus:shadow-gold-sm ${isEditing ? 'bg-card' : 'bg-muted'
+                  className={`w-full min-h-[300px] lg:min-h-[200px] flex-1 p-3 border rounded-md resize-none transition-all duration-200 focus:outline-none focus:border-primary focus:shadow-gold-sm ${isEditing ? 'bg-card' : 'bg-muted'
                     }`}
                 />
 
@@ -578,31 +581,12 @@ export function AIAssistModal({
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="border-t border-border px-6 py-4 bg-surface/30">
-          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <div className="text-sm text-text-secondary leading-snug">
-              {t(TRANSLATION_KEY.aiModal.rate_limit_status, 'Rate limit')}: {openAIService.getRateLimitStatus().tokensAvailable}
-            </div>
-            <div className="flex flex-col-reverse sm:flex-row gap-3 w-full sm:w-auto">
-              <button
-                type="button"
-                onClick={onClose}
-                className="px-4 py-2 border border-border rounded-md text-text-primary hover:bg-muted transition-colors font-medium focus:outline-none focus:ring-2 focus:ring-primary w-full sm:w-auto"
-              >
-                {t('common:actions.cancel', 'Cancel')}
-              </button>
-              <button
-                type="button"
-                onClick={acceptSuggestion}
-                disabled={!editedText.trim() || !isValidLength}
-                className="px-4 py-2 rounded-md bg-primary text-primary-foreground hover:bg-primary-hover transition-colors focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50 disabled:cursor-not-allowed font-medium w-full sm:w-auto"
-              >
-                {t(TRANSLATION_KEY.aiModal.use_this_text, TRANSLATION_KEY.translation_values.use_this_text)}
-              </button>
-            </div>
-          </div>
-        </div>
+        {/* Footer - Sticky */}
+       <AiAssistModalFooter 
+       acceptSuggestion={acceptSuggestion} 
+       editedText={editedText} 
+       isValidLength={isValidLength}
+        onClose={onClose}/>
       </div>
     </div>
   );
