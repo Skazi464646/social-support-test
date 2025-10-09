@@ -331,7 +331,7 @@ export function AIAssistModal({
           {/* Left Panel - Suggestions */}
           <div className="w-full lg:w-1/3 flex flex-col border-border border-b lg:border-b-0 lg:border-r lg:min-h-[60vh]">
             <div className="p-4 border-b border-muted-border">
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={generateSuggestion}
@@ -356,7 +356,7 @@ export function AIAssistModal({
                     type="button"
                     onClick={regenerateSuggestion}
                     disabled={isLoading}
-                    className="px-4 py-3 text-base font-medium rounded-lg border border-primary/30 bg-background text-primary hover:bg-primary/10 hover:border-primary hover:shadow-gold-sm hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:transform-none disabled:shadow-none"
+                    className="px-3 py-3 text-lg rounded-lg border border-primary/30 bg-background text-primary hover:bg-primary/10 hover:border-primary hover:shadow-gold-sm hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:opacity-50 disabled:transform-none disabled:shadow-none flex-shrink-0"
                   title={t(TRANSLATION_KEY.aiModal.regenerate_title, AI_MESSAGES.modal.regenerateTitle)}
                   >
                     🔄
@@ -370,13 +370,13 @@ export function AIAssistModal({
                   type="button"
                   onClick={() => setShowExamples(!showExamples)}
                   disabled={loadingExamples}
-                  className="w-full mt-3 py-2 px-3 text-sm font-medium text-primary hover:text-primary/80 hover:bg-primary/5 rounded-md border border-primary/20 hover:border-primary/40 transition-all duration-200 disabled:opacity-50"
+                  className="w-full mt-3 py-1.5 px-3 text-xs font-normal text-primary hover:text-primary/80 hover:bg-primary/5 rounded-md border border-primary/20 hover:border-primary/40 transition-all duration-200 disabled:opacity-50"
                   title={t(TRANSLATION_KEY.aiModal.regenerate_title, AI_MESSAGES.modal.regenerateTitle)}
                 >
                   {loadingExamples ? (
                     <>
                       <span className="animate-spin inline-block w-3 h-3 border border-current border-t-transparent rounded-full mr-1"></span>
-                      {t(TRANSLATION_KEY.aiModal.loading_examples, 'Loading examples...')}
+                      {t(TRANSLATION_KEY.aiModal.loading_examples, TRANSLATION_KEY.aiModal.loading_examples)}
                     </>
                   ) : (
                     (() => {
@@ -410,9 +410,9 @@ export function AIAssistModal({
                   <div className="p-3 bg-muted rounded-b-md lg:rounded-none">
                     {dynamicExamples.length > 0 ? (
                       <>
-                        <h4 className="text-sm font-medium text-text-secondary mb-2">
+                        <span className="text-sm font-small text-text-secondary mb-2">
                           {t(TRANSLATION_KEY.aiModal.examples_similar_title, TRANSLATION_KEY.translation_values.examples_similar_title)}
-                        </h4>
+                        </span>
                         <div className="space-y-2">
                           {dynamicExamples.map((example, index) => (
                             <button
@@ -432,7 +432,7 @@ export function AIAssistModal({
                       </>
                     ) : examples.length > 0 ? (
                       <>
-                        <h4 className="text-sm font-medium text-text-secondary mb-2">{t(TRANSLATION_KEY.aiModal.sample_responses_title, TRANSLATION_KEY.translation_values.sample_responses_title)}</h4>
+                        <h4 className="text-sm font-small text-text-secondary mb-2">{t(TRANSLATION_KEY.aiModal.sample_responses_title, TRANSLATION_KEY.translation_values.sample_responses_title)}</h4>
                         <div className="space-y-2">
                           {examples.map((example, index) => (
                             <button
