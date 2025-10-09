@@ -263,7 +263,7 @@ export function ValidatedFormField<
           data-touched={isTouched}
           lang={isRTL ? 'ar':'en'}
           dir={fieldDir}
-          className="w-full px-3 py-2 border border-input bg-background rounded-md shadow-sm transition-all duration-200 focus:outline-none focus:border-primary focus:shadow-gold-sm disabled:opacity-50 disabled:pointer-events-none"
+          className="w-full h-10 px-3 py-2 border border-input bg-background rounded-md shadow-sm transition-all duration-200 focus:outline-none focus:border-primary focus:shadow-gold-sm disabled:opacity-50 disabled:pointer-events-none text-sm"
         >
           {options.map((option) => (
             <option 
