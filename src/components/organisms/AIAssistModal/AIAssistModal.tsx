@@ -27,7 +27,7 @@ export function AIAssistModal({
   intelligentContext,
   fieldConstraints,
 }: AIAssistModalProps) {
-  const { t } = useTranslation(['common']);
+  const { t } = useTranslation(['common', 'form']);
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [activeSuggestionId, setActiveSuggestionId] = useState<string | null>(null);
   const [editedText, setEditedText] = useState(currentValue || '');
@@ -45,7 +45,7 @@ export function AIAssistModal({
 
   // Get field-specific data
   const examples = getFieldExamples(fieldName);
-  const fieldConfig = getFieldModalConfig(fieldName);
+  const fieldConfig = getFieldModalConfig(fieldName, t);
 
   // Auto-resize textarea
   useEffect(() => {

@@ -13,6 +13,7 @@ import {
   type FieldIntelligence 
 } from './field-intelligence';
 import { analyzeContentRelevance, type ContentAnalysis } from './content-analysis';
+import { TFunction } from 'i18next';
 
 export interface PromptContext {
   userContext: {
@@ -618,75 +619,6 @@ function getDefaultSystemPrompt(language: 'en' | 'ar'): string {
 /**
  * Build intelligent prompt using field intelligence and context awareness
  */
-function buildIntelligentPrompt(fieldName: string, context: EnhancedPromptContext): string {
-  const { currentValue, fieldConstraints, fieldIntelligence, intelligentContext, language } = context;
-  
-  if (!fieldIntelligence || !intelligentContext) {
-    return buildDefaultPrompt(fieldName, context);
-  }
-
-  let prompt = `Help improve this ${fieldName} description for a social support application.`;
-  
-  // Add field category context
-  const category = fieldIntelligence.fieldContext.category;
-  prompt += `\n\nField Type: ${category} information`;
-  
-  // Add situation-specific context if content analysis is available
-  if (fieldIntelligence.contentAnalysis) {
-    const analysis = fieldIntelligence.contentAnalysis;
-    
-    prompt += `\n\nDetected Situation: ${analysis.situationType.replace('_', ' ')}`;
-    prompt += `\nUrgency Level: ${analysis.urgencyLevel}`;
-    
-    if (analysis.keyIndicators.length > 0) {
-      prompt += `\nKey Indicators: ${analysis.keyIndicators.slice(0, 3).join(', ')}`;
-    }
-    
-    prompt += `\n\nSuggested Approach: ${analysis.suggestedApproach}`;
-    
-    if (analysis.contextualInsights.length > 0) {
-      prompt += `\n\nContextual Insights:`;
-      analysis.contextualInsights.forEach(insight => {
-        prompt += `\n- ${insight}`;
-      });
-    }
-  }
-  
-  // Add cross-field relationship insights
-  if (fieldIntelligence.crossFieldRelationships.derivedInsights?.length > 0) {
-    prompt += `\n\nRelated Information Insights:`;
-    fieldIntelligence.crossFieldRelationships.derivedInsights.forEach((insight: string) => {
-      prompt += `\n- ${insight}`;
-    });
-  }
-  
-  // Add relevant form data context (privacy-safe)
-  const relevantContext = buildRelevantFormContext(fieldName, intelligentContext);
-  if (relevantContext) {
-    prompt += `\n\nRelevant Form Context:\n${relevantContext}`;
-  }
-  
-  // Add current content
-  prompt += `\n\nCurrent content: "${currentValue || '[empty]'}"`;
-  
-  // Add field constraints
-  if (fieldConstraints?.minLength) {
-    prompt += `\nMinimum length: ${fieldConstraints.minLength} characters`;
-  }
-  if (fieldConstraints?.maxLength) {
-    prompt += `\nMaximum length: ${fieldConstraints.maxLength} characters`;
-  }
-  
-  // Add completeness score context
-  const completeness = Math.round(fieldIntelligence.completenessScore * 100);
-  prompt += `\nForm completeness: ${completeness}% (${completeness >= 70 ? 'good context available' : 'limited context'})`;
-  
-  // Add intelligent guidance based on field type and situation
-  prompt += `\n\n${getIntelligentGuidance(fieldName, fieldIntelligence, language)}`;
-  
-  return prompt;
-}
-
 /**
  * Build relevant form context for the prompt (privacy-safe)
  */
@@ -817,11 +749,13 @@ interface FieldModalConfig {
   guidance: string[];
 }
 
-const FIELD_MODAL_CONFIG: Record<string, FieldModalConfig> = {
+// This function creates the modal config with translations
+// It needs to be called with the translation function from the component
+export const createFieldModalConfig = (t: any): Record<string, FieldModalConfig> => ({
   financialSituation: {
-    title: "💰 Describe Your Financial Situation",
-    description: "Help us understand your current financial circumstances and challenges you're facing.",
-    placeholder: "Describe your income, expenses, debts, and any financial difficulties you're experiencing...",
+    title: t('form:ai_modal_titles.financialSituation', "💰 Describe Your Financial Situation"),
+    description: t('form:ai_modal_descriptions.financialSituation', "Help us understand your current financial circumstances and challenges you're facing."),
+    placeholder: t('form:financialSituation_placeholder', "Describe your income, expenses, debts, and any financial difficulties you're experiencing..."),
     guidance: [
       "Include details about your income sources and amounts",
       "Mention any significant expenses or debts",
@@ -830,9 +764,9 @@ const FIELD_MODAL_CONFIG: Record<string, FieldModalConfig> = {
     ]
   },
   employmentCircumstances: {
-    title: "💼 Describe Your Employment Circumstances", 
-    description: "Share details about your work situation, job search, or employment challenges.",
-    placeholder: "Describe your current employment status, work history, and any barriers to employment...",
+    title: t('form:ai_modal_titles.employmentCircumstances', "💼 Describe Your Employment Circumstances"), 
+    description: t('form:ai_modal_descriptions.employmentCircumstances', "Share details about your work situation, job search, or employment challenges."),
+    placeholder: t('form:employmentCircumstances_placeholder', "Describe your current employment status, work history, and any barriers to employment..."),
     guidance: [
       "Explain your current employment status and work history",
       "Mention any job search efforts or applications",
@@ -841,9 +775,9 @@ const FIELD_MODAL_CONFIG: Record<string, FieldModalConfig> = {
     ]
   },
   reasonForApplying: {
-    title: "📋 Explain Your Reason for Applying",
-    description: "Tell us why you need social support and how it will help your situation.",
-    placeholder: "Explain why you're applying for assistance and how it will help your specific situation...",
+    title: t('form:ai_modal_titles.reasonForApplying', "📋 Explain Your Reason for Applying"),
+    description: t('form:ai_modal_descriptions.reasonForApplying', "Tell us specifically what kind of support you need and why you're applying."),
+    placeholder: t('form:reasonForApplying_placeholder', "Explain why you're applying for assistance and how it will help your specific situation..."),
     guidance: [
       "Be specific about what type of help you need",
       "Explain the urgency or timeline of your need",
@@ -884,13 +818,14 @@ const FIELD_MODAL_CONFIG: Record<string, FieldModalConfig> = {
       "Include any steps you've already taken to address it"
     ]
   }
-};
+});
 
 /**
- * Get field-specific modal configuration
+ * Get field-specific modal configuration with translations
  */
-export function getFieldModalConfig(fieldName: string): FieldModalConfig {
-  return FIELD_MODAL_CONFIG[fieldName] || {
+export function getFieldModalConfig(fieldName: string, t: TFunction<readonly ["common", "form"], undefined>): FieldModalConfig {
+  const config = createFieldModalConfig(t);
+  return config[fieldName] || {
     title: `✨ AI Writing Assistant`,
     description: `Get help writing your ${getFieldLabel(fieldName)} with AI assistance.`,
     placeholder: `Describe your ${getFieldLabel(fieldName)} in detail...`,
@@ -917,28 +852,6 @@ function getFieldLabel(fieldName: string): string {
   };
   
   return labels[fieldName] || fieldName.replace(/([A-Z])/g, ' $1').toLowerCase().trim();
-}
-
-/**
- * Build redirect prompt for irrelevant content
- */
-function buildRedirectPrompt(fieldName: string, fieldLabel: string, reason: string): string {
-  return `I understand you're looking for help, but ${reason}
-
-Instead, please describe your specific ${fieldLabel}. For example, you could share:
-- What challenges or difficulties you're currently facing
-- How your circumstances have changed recently  
-- What specific support you need and why
-- Any relevant background information about your situation
-
-This will help me provide much better, more relevant assistance for your ${fieldLabel}.
-
-Rules:
-- Never add explanations, introductions, or commentary before or after the rewritten text.
-- Return ONLY the final rewritten text. No greetings. No meta statements.
-- Do not describe what you are doing.
-- Do not explain why the text is rewritten.
-- Never say phrases like "here's the refined version", "this version", "I can help", or similar.`;
 }
 
 /**
