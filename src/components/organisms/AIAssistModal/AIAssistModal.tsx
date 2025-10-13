@@ -13,7 +13,7 @@ import { TRANSLATION_KEY } from '@/constants/internationalization';
 
 import { useNoScrollBody } from '@/hooks';
 import type { AIAssistModalProps, Suggestion } from './AIAssistModal.types';
-import { AIExampleRequest,AIAssistRequest } from '@/lib/api/interface';
+import { AIExampleRequest,AIAssistRequest } from '@/lib/api/openai-service.types';
 import { ModalHeader } from '@/components/molecules/ModalHeader';
 import AiAssistModalFooter from './AiAssistModalFooter';
 
