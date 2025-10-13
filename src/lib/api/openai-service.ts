@@ -99,7 +99,7 @@ import {
   validatePromptContext, 
   calculatePromptEfficiency 
 } from '@/lib/ai/prompt-optimizer';
-import { AIAssistRequest, AIAssistResponse, AIExampleRequest, AIExampleResponse, AIRelevancyRequest, AIRelevancyResponse, OpenAIRequest, OpenAIStreamChunk } from './interface';
+import { AIAssistRequest, AIAssistResponse, AIExampleRequest, AIExampleResponse, AIRelevancyRequest, AIRelevancyResponse, OpenAIRequest, OpenAIStreamChunk } from './openai-service.types';
 
 
 
